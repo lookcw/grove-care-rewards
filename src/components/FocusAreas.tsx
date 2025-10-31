@@ -6,19 +6,19 @@ const FocusAreas = () => {
       icon: Activity,
       title: "MSK Issues",
       description: "Musculoskeletal conditions are the leading cause of lost workdays. We keep members active with proactive care and physical therapy adherence.",
-      stats: "40% reduction in lost work days"
+      stats: "Reduced lost work days"
     },
     {
       icon: Stethoscope,
       title: "Diabetes Management",
       description: "Consistent glucose monitoring and medication adherence prevents complications and reduces hospital visits.",
-      stats: "65% improvement in A1C control"
+      stats: "Improved A1C control"
     },
     {
       icon: AlertOctagon,
       title: "ER Prevention",
       description: "Most ER visits are preventable. We guide members to appropriate care settings and reduce costly emergency visits.",
-      stats: "$2,400 avg savings per prevented ER visit"
+      stats: "Significant cost savings"
     }
   ];
 

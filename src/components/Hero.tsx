@@ -37,16 +37,16 @@ const Hero = () => {
             
             <div className="flex gap-8 pt-8 border-t border-border">
               <div>
-                <div className="text-3xl font-bold text-primary">32%</div>
-                <div className="text-sm text-muted-foreground">Cost Reduction</div>
+                <div className="text-lg font-bold text-primary">Cost Reduction</div>
+                <div className="text-sm text-muted-foreground">Significant savings</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary">2.8x</div>
-                <div className="text-sm text-muted-foreground">Higher Engagement</div>
+                <div className="text-lg font-bold text-primary">Higher Engagement</div>
+                <div className="text-sm text-muted-foreground">Increased participation</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary">94%</div>
-                <div className="text-sm text-muted-foreground">Member Satisfaction</div>
+                <div className="text-lg font-bold text-primary">Member Satisfaction</div>
+                <div className="text-sm text-muted-foreground">Improved outcomes</div>
               </div>
             </div>
           </div>

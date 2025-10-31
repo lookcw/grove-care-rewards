@@ -25,7 +25,7 @@ const features = [
   {
     icon: Clock,
     title: "Save Time",
-    description: "Reduce paperwork by 70% and spend more time on what matters - patient care."
+    description: "Reduce paperwork significantly and spend more time on what matters - patient care."
   },
   {
     icon: TrendingUp,

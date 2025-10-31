@@ -96,8 +96,8 @@ const PTAdherence = () => {
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-8 h-8 text-destructive" />
                 </div>
-                <div className="text-4xl font-bold text-destructive mb-2">70%</div>
-                <p className="text-muted-foreground">of patients don't complete their prescribed exercises</p>
+                <h3 className="text-2xl font-bold text-destructive mb-2">Low Completion</h3>
+                <p className="text-muted-foreground">Most patients don't complete their prescribed exercises</p>
               </CardContent>
             </Card>
             <Card className="border-none shadow-lg">
@@ -105,8 +105,8 @@ const PTAdherence = () => {
                 <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-secondary" />
                 </div>
-                <div className="text-4xl font-bold text-secondary mb-2">3.5x</div>
-                <p className="text-muted-foreground">better outcomes with proper adherence to therapy protocols</p>
+                <h3 className="text-2xl font-bold text-secondary mb-2">Better Outcomes</h3>
+                <p className="text-muted-foreground">Significantly improved results with proper adherence to therapy protocols</p>
               </CardContent>
             </Card>
             <Card className="border-none shadow-lg">
@@ -114,8 +114,8 @@ const PTAdherence = () => {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Target className="w-8 h-8 text-primary" />
                 </div>
-                <div className="text-4xl font-bold text-primary mb-2">85%</div>
-                <p className="text-muted-foreground">reduction in re-injury rates with consistent exercise adherence</p>
+                <h3 className="text-2xl font-bold text-primary mb-2">Reduced Re-injury</h3>
+                <p className="text-muted-foreground">Consistent exercise adherence greatly reduces re-injury rates</p>
               </CardContent>
             </Card>
           </div>
@@ -199,7 +199,7 @@ const PTAdherence = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg mb-2">Faster Recovery Times</h3>
-                      <p className="text-muted-foreground">Patients with 80%+ adherence recover 2-3 weeks faster on average</p>
+                      <p className="text-muted-foreground">Patients with high adherence recover significantly faster</p>
                     </div>
                   </div>
                 </CardContent>
@@ -212,7 +212,7 @@ const PTAdherence = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg mb-2">Reduced Re-injury Rates</h3>
-                      <p className="text-muted-foreground">Proper exercise completion reduces chronic pain recurrence by up to 60%</p>
+                      <p className="text-muted-foreground">Proper exercise completion substantially reduces chronic pain recurrence</p>
                     </div>
                   </div>
                 </CardContent>

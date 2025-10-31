@@ -31,7 +31,7 @@ const SolutionSection = () => {
             </div>
             <h3 className="text-xl font-semibold mb-3">Engagement Soars</h3>
             <p className="text-muted-foreground">
-              2.8x higher member engagement means better health outcomes across your workforce.
+              Higher member engagement means better health outcomes across your workforce.
             </p>
           </div>
 
