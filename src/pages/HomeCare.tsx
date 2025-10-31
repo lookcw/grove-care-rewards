@@ -1,23 +1,23 @@
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
+import HomeCareHero from "@/components/HomeCareHero";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import CTA from "@/components/CTA";
-import Footer from "@/components/Footer";
+import HomeCareFooter from "@/components/HomeCareFooter";
 
-const Index = () => {
+const HomeCare = () => {
   return (
     <div className="min-h-screen">
       <Header />
       <main>
-        <Hero />
+        <HomeCareHero />
         <Features />
         <HowItWorks />
         <CTA />
       </main>
-      <Footer />
+      <HomeCareFooter />
     </div>
   );
 };
 
-export default Index;
+export default HomeCare;
