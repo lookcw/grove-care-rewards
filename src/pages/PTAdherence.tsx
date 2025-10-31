@@ -13,7 +13,7 @@ const PTAdherence = () => {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/grove-care-rewards/" className="flex items-center gap-2">
+          <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
               Grove Health
