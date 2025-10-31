@@ -121,7 +121,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
             <Link to="/employee-wellness" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
@@ -165,6 +165,23 @@ const Index = () => {
                   <p className="text-muted-foreground mb-4">
                     Transform patient adherence with AI-powered verification. Help clinics
                     see more patients and improve outcomes.
+                  </p>
+                  <div className="flex items-center text-primary font-medium">
+                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/post-surgical-care" className="group">
+              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
+                <CardContent className="pt-8">
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                    Post-Surgical Care
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Reduce readmissions and improve post-op adherence for specialty surgical clinics
+                    through scalable follow-up.
                   </p>
                   <div className="flex items-center text-primary font-medium">
                     Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

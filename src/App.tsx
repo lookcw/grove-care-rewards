@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Wellthy from "./pages/Wellthy";
 import HomeCare from "./pages/HomeCare";
 import PTAdherence from "./pages/PTAdherence";
+import PostSurgicalCare from "./pages/PostSurgicalCare";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/employee-wellness" element={<Wellthy />} />
           <Route path="/home-care" element={<HomeCare />} />
           <Route path="/pt-adherence" element={<PTAdherence />} />
+          <Route path="/post-surgical-care" element={<PostSurgicalCare />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
