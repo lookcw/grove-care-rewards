@@ -122,7 +122,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Link to="/wellthy" className="group">
+            <Link to="/employee-wellness" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
