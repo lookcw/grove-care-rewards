@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex flex-col items-center space-y-4">
           <div className="flex items-center gap-2">
             <HeartPulse className="h-6 w-6 text-primary" />
-            <span className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="text-lg font-bold text-primary">
               Grove Health
             </span>
           </div>

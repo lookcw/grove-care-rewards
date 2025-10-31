@@ -7,7 +7,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <HeartPulse className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-primary">
             Grove Health
           </span>
         </div>
