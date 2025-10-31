@@ -10,26 +10,11 @@ const Navigation = () => {
             <span className="text-2xl font-bold">health</span>
           </div>
           
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#solution" className="text-sm font-medium hover:text-primary transition-colors">
-              How It Works
-            </a>
-            <a href="#focus" className="text-sm font-medium hover:text-primary transition-colors">
-              Our Focus
-            </a>
-            <a href="#results" className="text-sm font-medium hover:text-primary transition-colors">
-              Results
-            </a>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="hidden md:inline-flex">
-              Sign In
-            </Button>
-            <Button size="sm">
+          <Button size="sm" asChild>
+            <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
               Get Started
-            </Button>
-          </div>
+            </a>
+          </Button>
         </div>
       </div>
     </nav>

@@ -11,23 +11,19 @@ const CTASection = () => {
               Ready to Transform Your Healthcare Costs?
             </h2>
             <p className="text-lg lg:text-xl mb-8 text-primary-foreground/90">
-              Join the SMBs who are reducing costs, boosting productivity, and creating healthier workforces with grovehealth.
+              Join the SMBs who are reducing costs, boosting productivity, and creating healthier workforces with grove health.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button 
                 size="lg" 
                 variant="secondary"
                 className="group bg-white hover:bg-white/90 text-primary"
+                asChild
               >
-                Schedule a Demo
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-primary-foreground/20 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground"
-              >
-                Learn More
+                <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </a>
               </Button>
             </div>
           </div>
