@@ -221,9 +221,14 @@ const Index = () => {
               <HeartPulse className="h-6 w-6 text-primary" />
               <span className="text-lg font-bold text-primary">Grove Health</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              © 2025 Grove Health. All rights reserved.
-            </p>
+            <div className="flex items-center gap-6">
+              <Link to="/team" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                Team
+              </Link>
+              <p className="text-sm text-muted-foreground">
+                © 2025 Grove Health. All rights reserved.
+              </p>
+            </div>
           </div>
         </div>
       </footer>
