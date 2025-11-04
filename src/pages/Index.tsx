@@ -189,6 +189,23 @@ const Index = () => {
                 </CardContent>
               </Card>
             </Link>
+
+            <Link to="/injury-management" className="group">
+              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
+                <CardContent className="pt-8">
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                    Injury Management
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Expert workplace injury case management for small businesses. Lower workers' comp
+                    costs by 30-40% while ensuring employee care.
+                  </p>
+                  <div className="flex items-center text-primary font-medium">
+                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
