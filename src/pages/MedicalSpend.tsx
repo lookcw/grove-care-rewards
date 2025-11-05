@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, DollarSign, TrendingDown, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation } from "lucide-react";
+import { ArrowRight, DollarSign, TrendingDown, TrendingUp, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation } from "lucide-react";
 
 const MedicalSpend = () => {
   const CALENDLY_URL = "https://calendly.com/adedoyin-olagbegi/15min?month=2025-11";
@@ -119,7 +119,7 @@ const MedicalSpend = () => {
             <Card className="border-none shadow-lg">
               <CardContent className="pt-8 text-center">
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingDown className="w-8 h-8 text-destructive" />
+                  <TrendingUp className="w-8 h-8 text-destructive" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Rising Premiums</h3>
                 <p className="text-muted-foreground text-sm">
