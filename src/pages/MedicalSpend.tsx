@@ -5,12 +5,20 @@ import { useState } from "react";
 
 const MedicalSpend = () => {
   const CALENDLY_URL = "https://calendly.com/adedoyin-olagbegi/15min?month=2025-11";
-  const [employees, setEmployees] = useState<number>(100);
+  const [employeeInput, setEmployeeInput] = useState<string>("100");
 
-  const calculateSavings = (numEmployees: number) => {
+  const calculateSavings = () => {
+    const numEmployees = parseInt(employeeInput) || 0;
     const savingsPerEmployee = 100;
     const totalSavings = numEmployees * savingsPerEmployee;
     return totalSavings.toLocaleString();
+  };
+
+  const handleEmployeeChange = (value: string) => {
+    // Allow empty string or valid numbers
+    if (value === "" || /^\d+$/.test(value)) {
+      setEmployeeInput(value);
+    }
   };
 
   return (
@@ -99,10 +107,10 @@ const MedicalSpend = () => {
                     </label>
                     <input
                       id="employees"
-                      type="number"
-                      min="0"
-                      value={employees}
-                      onChange={(e) => setEmployees(parseInt(e.target.value) || 0)}
+                      type="text"
+                      inputMode="numeric"
+                      value={employeeInput}
+                      onChange={(e) => handleEmployeeChange(e.target.value)}
                       className="w-full px-4 py-3 border border-input rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="Enter number of employees"
                     />
@@ -110,7 +118,7 @@ const MedicalSpend = () => {
 
                   <div className="bg-primary/5 rounded-lg p-6 text-center">
                     <p className="text-sm text-muted-foreground mb-2">Your Estimated Annual Savings</p>
-                    <p className="text-4xl font-bold text-primary">${calculateSavings(employees)}</p>
+                    <p className="text-4xl font-bold text-primary">${calculateSavings()}</p>
                     <p className="text-sm text-muted-foreground mt-2">
                       Based on $100 per employee per year
                     </p>
