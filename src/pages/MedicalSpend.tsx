@@ -38,16 +38,15 @@ const MedicalSpend = () => {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              Connected to Next-Gen Providers,
+              Lower Your Medical Spend
               <span className="block text-primary mt-2">
-                Focused on Quality for Lower Cost
+                by 15%
               </span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              We partner with innovative healthcare providers who deliver exceptional outcomes
-              at lower costs. Our health navigators know what the right care is and guide your
-              employees to the best providers for their needs.
+              We save you money by making sure your members don't get unnecessary care that cuts
+              into your time and costs your dime. On average, that's $100 per employee per year.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -57,13 +56,13 @@ const MedicalSpend = () => {
                 onClick={() => window.open(CALENDLY_URL, '_blank')}
                 className="group"
               >
-                Discover Our Provider Network
+                See Your Savings Potential
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Access to next-generation healthcare providers committed to value-based care
+              Connected to next-gen providers focused on quality for lower cost
             </p>
           </div>
         </div>
@@ -136,11 +135,11 @@ const MedicalSpend = () => {
       <section className="py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">We Know What the Right Care Is</h2>
+            <h2 className="text-4xl font-bold mb-6">Eliminate Unnecessary Care</h2>
             <p className="text-xl text-muted-foreground">
-              Grove Health connects you with next-generation healthcare providers who focus on
-              delivering exceptional quality at lower costs — and our navigators guide your
-              employees to the right care, every time
+              We save you money by making sure your members don't get unnecessary care that cuts
+              into your time and costs your dime. Connected to next-gen providers who know what
+              the right care is.
             </p>
           </div>
 
@@ -162,9 +161,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
                   <Navigation className="w-8 h-8 text-secondary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Expert Health Navigation</h3>
+                <h3 className="text-2xl font-bold mb-4">Stop Unnecessary Care</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Our clinical navigators understand what care is actually needed and match employees with the right provider for their specific situation
+                  Our clinical navigators prevent unnecessary procedures and treatments, saving you time and money while ensuring members get the right care
                 </p>
               </CardContent>
             </Card>
@@ -403,11 +402,11 @@ const MedicalSpend = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">
-              Ready to Access Better Healthcare?
+              Ready to Lower Your Medical Spend by 15%?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join forward-thinking employers who are reducing healthcare costs through
-              next-generation providers and expert clinical guidance
+              Stop paying for unnecessary care. Save an average of $100 per employee per year
+              by ensuring your members get the right care, not excessive care.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -416,12 +415,12 @@ const MedicalSpend = () => {
                 onClick={() => window.open(CALENDLY_URL, '_blank')}
                 className="group"
               >
-                Discover Our Provider Network
+                See Your Savings Potential
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
             <p className="text-sm text-muted-foreground">
-              No obligation • See how we connect employees with the right care
+              No obligation • Learn how we eliminate unnecessary care
             </p>
           </div>
         </div>
