@@ -211,11 +211,11 @@ const Index = () => {
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Medical Spend Reduction
+                    Next-Gen Provider Network
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    Analyze claim data to cut medical spend by 20-30%. We guide employees to
-                    lower-cost, high-quality providers.
+                    Connected to innovative providers focused on quality for lower cost.
+                    We know what the right care is.
                   </p>
                   <div className="flex items-center text-primary font-medium">
                     Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />

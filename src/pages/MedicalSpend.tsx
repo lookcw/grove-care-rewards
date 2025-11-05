@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, DollarSign, TrendingDown, TrendingUp, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation } from "lucide-react";
+import { ArrowRight, DollarSign, TrendingUp, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation, Sparkles } from "lucide-react";
 
 const MedicalSpend = () => {
   const CALENDLY_URL = "https://calendly.com/adedoyin-olagbegi/15min?month=2025-11";
@@ -38,15 +38,16 @@ const MedicalSpend = () => {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              Cut Medical Spend by 20-30%,
+              Connected to Next-Gen Providers,
               <span className="block text-primary mt-2">
-                Without Compromising Quality
+                Focused on Quality for Lower Cost
               </span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              We analyze your claim data to identify high-spend areas, then redirect your employees
-              to lower-cost, high-quality providers through personal health navigation.
+              We partner with innovative healthcare providers who deliver exceptional outcomes
+              at lower costs. Our health navigators know what the right care is and guide your
+              employees to the best providers for their needs.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -56,13 +57,13 @@ const MedicalSpend = () => {
                 onClick={() => window.open(CALENDLY_URL, '_blank')}
                 className="group"
               >
-                See Your Savings Potential
+                Discover Our Provider Network
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Average client saves $2,000-$5,000 per employee annually
+              Access to next-generation healthcare providers committed to value-based care
             </p>
           </div>
         </div>
@@ -72,10 +73,10 @@ const MedicalSpend = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold mb-6">The Hidden Cost of Healthcare Waste</h2>
+            <h2 className="text-4xl font-bold mb-6">The Challenge with Traditional Healthcare</h2>
             <p className="text-xl text-muted-foreground">
-              Most employers are overspending on healthcare by 20-40% due to lack of price transparency,
-              inefficient provider networks, and employees making uninformed decisions
+              Most employers struggle with high healthcare costs because they lack access to
+              innovative providers and expert guidance on what care is actually needed
             </p>
           </div>
 
@@ -85,9 +86,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <DollarSign className="w-8 h-8 text-destructive" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Price Variation</h3>
+                <h3 className="font-semibold text-lg mb-2">High-Cost Providers</h3>
                 <p className="text-muted-foreground text-sm">
-                  Same procedure can cost 10x more at one facility vs. another in your network
+                  Traditional networks prioritize convenience over value, leading to inflated costs
                 </p>
               </CardContent>
             </Card>
@@ -97,9 +98,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="w-8 h-8 text-destructive" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">No Transparency</h3>
+                <h3 className="font-semibold text-lg mb-2">No Expert Guidance</h3>
                 <p className="text-muted-foreground text-sm">
-                  Employees can't easily compare costs and quality before making healthcare decisions
+                  Employees don't know which providers deliver the best outcomes for their condition
                 </p>
               </CardContent>
             </Card>
@@ -109,9 +110,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-destructive" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Uninformed Choices</h3>
+                <h3 className="font-semibold text-lg mb-2">Unnecessary Care</h3>
                 <p className="text-muted-foreground text-sm">
-                  Without guidance, employees default to expensive, convenient providers
+                  Without clinical expertise, employees often receive care they don't need
                 </p>
               </CardContent>
             </Card>
@@ -121,9 +122,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TrendingUp className="w-8 h-8 text-destructive" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Rising Premiums</h3>
+                <h3 className="font-semibold text-lg mb-2">Rising Costs</h3>
                 <p className="text-muted-foreground text-sm">
-                  Healthcare costs increase 5-8% annually, squeezing budgets and employee wallets
+                  Healthcare spend continues to increase without corresponding improvements in outcomes
                 </p>
               </CardContent>
             </Card>
@@ -135,10 +136,11 @@ const MedicalSpend = () => {
       <section className="py-20">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Data-Driven Savings, Human Touch</h2>
+            <h2 className="text-4xl font-bold mb-6">We Know What the Right Care Is</h2>
             <p className="text-xl text-muted-foreground">
-              Grove Health combines advanced claim data analytics with personal health navigation
-              to reduce your medical spend while improving employee care
+              Grove Health connects you with next-generation healthcare providers who focus on
+              delivering exceptional quality at lower costs — and our navigators guide your
+              employees to the right care, every time
             </p>
           </div>
 
@@ -146,11 +148,11 @@ const MedicalSpend = () => {
             <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="pt-8">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                  <BarChart3 className="w-8 h-8 text-primary" />
+                  <Sparkles className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Claim Data Analysis</h3>
+                <h3 className="text-2xl font-bold mb-4">Next-Gen Provider Network</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  We analyze your claims to identify high-spend procedures, overpriced providers, and opportunities for savings
+                  We partner exclusively with innovative providers who deliver superior outcomes at lower costs through value-based care models
                 </p>
               </CardContent>
             </Card>
@@ -160,9 +162,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-6">
                   <Navigation className="w-8 h-8 text-secondary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Personal Health Navigation</h3>
+                <h3 className="text-2xl font-bold mb-4">Expert Health Navigation</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Our health navigators guide employees to lower-cost, high-quality providers for their specific needs
+                  Our clinical navigators understand what care is actually needed and match employees with the right provider for their specific situation
                 </p>
               </CardContent>
             </Card>
@@ -172,9 +174,9 @@ const MedicalSpend = () => {
                 <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mb-6">
                   <Shield className="w-8 h-8 text-accent-foreground" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Quality Guaranteed</h3>
+                <h3 className="text-2xl font-bold mb-4">Quality First, Always</h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  We only recommend providers with proven outcomes — lower cost never means lower quality
+                  Every provider in our network is vetted for clinical excellence — we never compromise on quality to reduce costs
                 </p>
               </CardContent>
             </Card>
@@ -188,7 +190,7 @@ const MedicalSpend = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">How Grove Health Works</h2>
             <p className="text-xl text-muted-foreground">
-              A simple, proven approach to reducing healthcare costs
+              A simple approach to connecting employees with the right care
             </p>
           </div>
 
@@ -200,10 +202,10 @@ const MedicalSpend = () => {
                     <span className="text-xl font-bold text-primary">1</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Analyze Your Claim Data</h3>
+                    <h3 className="text-xl font-bold mb-2">Curated Provider Network</h3>
                     <p className="text-muted-foreground">
-                      We securely access your claims data and identify where you're overspending. Our analytics reveal price variations,
-                      utilization patterns, and specific opportunities for savings across your population.
+                      We carefully select and partner with next-generation healthcare providers who demonstrate superior clinical
+                      outcomes while maintaining lower costs through innovative, value-based care models.
                     </p>
                   </div>
                 </div>
@@ -217,10 +219,10 @@ const MedicalSpend = () => {
                     <span className="text-xl font-bold text-primary">2</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Build Your Savings Roadmap</h3>
+                    <h3 className="text-xl font-bold mb-2">Clinical Expertise</h3>
                     <p className="text-muted-foreground">
-                      We present you with a customized savings plan, showing exactly where costs can be reduced and by how much.
-                      You'll see projected savings across procedures, providers, and service categories.
+                      Our health navigators have clinical backgrounds and understand what the right care is. They evaluate each
+                      employee's needs and determine the most appropriate and effective treatment path.
                     </p>
                   </div>
                 </div>
@@ -234,10 +236,10 @@ const MedicalSpend = () => {
                     <span className="text-xl font-bold text-primary">3</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Navigate Your Employees</h3>
+                    <h3 className="text-xl font-bold mb-2">Personalized Guidance</h3>
                     <p className="text-muted-foreground">
-                      When employees need care, our personal health navigators connect with them directly — helping them find
-                      lower-cost, high-quality providers, schedule appointments, and answer questions.
+                      When employees need care, our navigators connect them directly with the best provider for their specific
+                      condition — scheduling appointments and answering questions throughout their journey.
                     </p>
                   </div>
                 </div>
@@ -251,63 +253,13 @@ const MedicalSpend = () => {
                     <span className="text-xl font-bold text-primary">4</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Track & Optimize Savings</h3>
+                    <h3 className="text-xl font-bold mb-2">Continuous Quality Monitoring</h3>
                     <p className="text-muted-foreground">
-                      You receive regular reports showing exactly how much you're saving. We continuously analyze your data
-                      to find new opportunities and refine our recommendations.
+                      We track outcomes across our provider network, ensuring every partner maintains the highest standards
+                      of care while delivering sustainable cost savings.
                     </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits/ROI Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Real Results for Your Bottom Line</h2>
-            <p className="text-xl text-muted-foreground">
-              Companies using Grove Health see immediate, measurable impact on healthcare costs
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            <Card className="border-none shadow-lg bg-gradient-accent">
-              <CardContent className="pt-8 text-center">
-                <div className="text-4xl font-bold text-primary mb-2">20-30%</div>
-                <p className="text-muted-foreground font-medium">
-                  Average reduction in medical spend
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-lg bg-gradient-accent">
-              <CardContent className="pt-8 text-center">
-                <div className="text-4xl font-bold text-primary mb-2">$3,500</div>
-                <p className="text-muted-foreground font-medium">
-                  Average savings per employee annually
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-lg bg-gradient-accent">
-              <CardContent className="pt-8 text-center">
-                <div className="text-4xl font-bold text-primary mb-2">90%</div>
-                <p className="text-muted-foreground font-medium">
-                  Employee satisfaction with navigation service
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-lg bg-gradient-accent">
-              <CardContent className="pt-8 text-center">
-                <div className="text-4xl font-bold text-primary mb-2">6 mo</div>
-                <p className="text-muted-foreground font-medium">
-                  Average time to full ROI
-                </p>
               </CardContent>
             </Card>
           </div>
@@ -318,9 +270,9 @@ const MedicalSpend = () => {
       <section className="py-20 bg-gradient-accent">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Where We Drive the Most Savings</h2>
+            <h2 className="text-4xl font-bold mb-6">Where Our Network Excels</h2>
             <p className="text-xl text-muted-foreground">
-              Our claim data analysis consistently identifies high-impact savings opportunities
+              Our next-gen providers deliver exceptional outcomes across key healthcare categories
             </p>
           </div>
 
@@ -332,7 +284,7 @@ const MedicalSpend = () => {
                   <div>
                     <h3 className="font-bold text-lg mb-1">Imaging & Diagnostics</h3>
                     <p className="text-muted-foreground text-sm">
-                      MRIs, CT scans, and lab work with 300-500% price variation across providers
+                      High-quality imaging centers with same-day results and transparent pricing
                     </p>
                   </div>
                 </div>
@@ -344,9 +296,9 @@ const MedicalSpend = () => {
                 <div className="flex items-start gap-4">
                   <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Outpatient Surgery</h3>
+                    <h3 className="font-bold text-lg mb-1">Surgical Centers</h3>
                     <p className="text-muted-foreground text-sm">
-                      Hospital outpatient departments often 2-3x more expensive than ASCs
+                      Specialized ambulatory surgery centers with superior outcomes and efficiency
                     </p>
                   </div>
                 </div>
@@ -360,7 +312,7 @@ const MedicalSpend = () => {
                   <div>
                     <h3 className="font-bold text-lg mb-1">Physical Therapy</h3>
                     <p className="text-muted-foreground text-sm">
-                      Independent PT clinics provide same outcomes at 40-60% lower cost
+                      Evidence-based PT clinics focused on functional outcomes and prevention
                     </p>
                   </div>
                 </div>
@@ -372,9 +324,9 @@ const MedicalSpend = () => {
                 <div className="flex items-start gap-4">
                   <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Specialty Drugs</h3>
+                    <h3 className="font-bold text-lg mb-1">Specialty Care</h3>
                     <p className="text-muted-foreground text-sm">
-                      Redirect to specialty pharmacies and alternative dispensing channels
+                      Top specialists using latest protocols and technology for complex conditions
                     </p>
                   </div>
                 </div>
@@ -386,9 +338,9 @@ const MedicalSpend = () => {
                 <div className="flex items-start gap-4">
                   <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Orthopedic Procedures</h3>
+                    <h3 className="font-bold text-lg mb-1">Musculoskeletal Care</h3>
                     <p className="text-muted-foreground text-sm">
-                      Hip/knee replacements with major price and outcome differences
+                      Integrated orthopedic care with proven outcomes and faster recovery times
                     </p>
                   </div>
                 </div>
@@ -400,9 +352,9 @@ const MedicalSpend = () => {
                 <div className="flex items-start gap-4">
                   <CheckCircle className="w-6 h-6 text-primary shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Emergency Care</h3>
+                    <h3 className="font-bold text-lg mb-1">Preventive Care</h3>
                     <p className="text-muted-foreground text-sm">
-                      Urgent care and telemedicine alternatives for non-emergency situations
+                      Proactive primary care providers focused on preventing costly conditions
                     </p>
                   </div>
                 </div>
@@ -418,15 +370,16 @@ const MedicalSpend = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-background rounded-2xl shadow-xl p-8 lg:p-12">
               <div className="space-y-6">
-                <h2 className="text-3xl lg:text-4xl font-bold">Built to Solve a Real Problem</h2>
+                <h2 className="text-3xl lg:text-4xl font-bold">Built on Clinical Expertise</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   I'm <a href="https://www.linkedin.com/in/adedoyin-o/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Adedoyin</a>,
-                  a former EMT now working on Grove Health. After seeing firsthand how broken healthcare pricing is — and how
-                  much employers and patients overpay for the same care — I knew we needed a better solution.
+                  a former EMT now working on Grove Health. Throughout my healthcare career, I've seen how difficult it is for
+                  patients to know what the right care is — and how often they end up with expensive, unnecessary treatments.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  We built Grove Health to bring transparency and guidance to healthcare spending. Our team combines data analytics
-                  expertise with compassionate health navigation to help companies cut costs while improving employee experiences.
+                  We built Grove Health to solve this problem by connecting employees with next-generation providers who focus on
+                  delivering the right care, not the most profitable care. Our team brings clinical expertise and a commitment
+                  to quality that ensures every recommendation we make is in the patient's best interest.
                 </p>
                 <div className="pt-4">
                   <Button
@@ -435,7 +388,7 @@ const MedicalSpend = () => {
                     onClick={() => window.open(CALENDLY_URL, '_blank')}
                     className="group"
                   >
-                    See Your Savings Potential
+                    Learn About Our Provider Network
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </div>
@@ -450,11 +403,11 @@ const MedicalSpend = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">
-              Ready to Cut Your Medical Spend?
+              Ready to Access Better Healthcare?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join forward-thinking employers reducing healthcare costs by 20-30% through
-              data-driven insights and personal health navigation
+              Join forward-thinking employers who are reducing healthcare costs through
+              next-generation providers and expert clinical guidance
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -463,12 +416,12 @@ const MedicalSpend = () => {
                 onClick={() => window.open(CALENDLY_URL, '_blank')}
                 className="group"
               >
-                Get Your Free Savings Analysis
+                Discover Our Provider Network
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
             <p className="text-sm text-muted-foreground">
-              No obligation • See exactly where you're overspending
+              No obligation • See how we connect employees with the right care
             </p>
           </div>
         </div>
@@ -482,7 +435,7 @@ const MedicalSpend = () => {
               <HeartPulse className="h-6 w-6 text-primary" />
               <p className="font-semibold text-foreground">Grove Health</p>
             </div>
-            <p className="text-sm">Reducing medical spend through data-driven health navigation</p>
+            <p className="text-sm">Connecting you with next-gen providers focused on quality for lower cost</p>
           </div>
         </div>
       </footer>
