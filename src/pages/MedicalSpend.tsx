@@ -100,9 +100,9 @@ const MedicalSpend = () => {
                     <input
                       id="employees"
                       type="number"
-                      min="1"
+                      min="0"
                       value={employees}
-                      onChange={(e) => setEmployees(Math.max(1, parseInt(e.target.value) || 0))}
+                      onChange={(e) => setEmployees(parseInt(e.target.value) || 0)}
                       className="w-full px-4 py-3 border border-input rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="Enter number of employees"
                     />
