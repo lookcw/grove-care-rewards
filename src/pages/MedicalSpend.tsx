@@ -1,9 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, DollarSign, TrendingUp, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation, Sparkles } from "lucide-react";
+import { ArrowRight, DollarSign, TrendingUp, Users, BarChart3, Shield, HeartPulse, CheckCircle, Search, UserCheck, Navigation, Sparkles, Calculator } from "lucide-react";
+import { useState } from "react";
 
 const MedicalSpend = () => {
   const CALENDLY_URL = "https://calendly.com/adedoyin-olagbegi/15min?month=2025-11";
+  const [employees, setEmployees] = useState<number>(100);
+
+  const calculateSavings = (numEmployees: number) => {
+    const savingsPerEmployee = 100;
+    const totalSavings = numEmployees * savingsPerEmployee;
+    return totalSavings.toLocaleString();
+  };
 
   return (
     <div className="min-h-screen">
@@ -46,7 +54,7 @@ const MedicalSpend = () => {
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
               We save you money by making sure your members don't get unnecessary care that cuts
-              into your time and costs your dime. On average, that's $100 per employee per year.
+              into your time and costs your dime. That's about $100 per employee per year.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -64,6 +72,61 @@ const MedicalSpend = () => {
             <p className="text-sm text-muted-foreground">
               Connected to next-gen providers focused on quality for lower cost
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Savings Calculator Section */}
+      <section className="py-20 bg-gradient-accent">
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-none shadow-xl">
+              <CardContent className="pt-8 pb-8">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Calculator className="w-8 h-8 text-primary" />
+                  </div>
+                  <h2 className="text-3xl font-bold mb-4">Calculate Your Savings</h2>
+                  <p className="text-muted-foreground">
+                    See how much you could save with Grove Health
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label htmlFor="employees" className="block text-sm font-medium mb-2">
+                      Number of Employees
+                    </label>
+                    <input
+                      id="employees"
+                      type="number"
+                      min="1"
+                      value={employees}
+                      onChange={(e) => setEmployees(Math.max(1, parseInt(e.target.value) || 0))}
+                      className="w-full px-4 py-3 border border-input rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="Enter number of employees"
+                    />
+                  </div>
+
+                  <div className="bg-primary/5 rounded-lg p-6 text-center">
+                    <p className="text-sm text-muted-foreground mb-2">Your Estimated Annual Savings</p>
+                    <p className="text-4xl font-bold text-primary">${calculateSavings(employees)}</p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Based on $100 per employee per year
+                    </p>
+                  </div>
+
+                  <Button
+                    size="lg"
+                    className="w-full"
+                    onClick={() => window.open(CALENDLY_URL, '_blank')}
+                  >
+                    Schedule a Call to Learn More
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
