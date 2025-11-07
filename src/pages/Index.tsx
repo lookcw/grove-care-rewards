@@ -36,14 +36,27 @@ const Index = () => {
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Welcome to{" "}
-              <span className="text-primary">Grove Health</span>
+              We're Making Post-Op Care Better for{" "}
+              <span className="text-primary">Providers and Patients</span>
             </h1>
 
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Reducing cost of care is our goal. We believe healthy individuals leads to healthier businesses,
-              physically and financially.
-            </p>
+            <div className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed space-y-4">
+              <p className="font-semibold">Our AI-powered solution delivers:</p>
+              <ul className="text-lg lg:text-xl space-y-3 text-left max-w-2xl mx-auto">
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span><strong>50% reduction</strong> in provider time spent fielding patient calls</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span><strong>Faster answers</strong> for patients when they need them most</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-primary mt-1">✓</span>
+                  <span><strong>Personalized AI</strong> trained on each patient's discharge and treatment plan</span>
+                </li>
+              </ul>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button variant="hero" size="lg" className="group" asChild>

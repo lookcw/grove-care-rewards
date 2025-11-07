@@ -583,7 +583,7 @@ ${baseInfo || "No clinic information provided yet."}`;
       <div className="max-w-7xl mx-auto p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            MediCare Portal
+            Grove Health Portal
           </h1>
           <p className="text-muted-foreground">Streamlined healthcare communication</p>
           <p className="text-sm text-muted-foreground mt-2">
@@ -724,6 +724,12 @@ ${baseInfo || "No clinic information provided yet."}`;
                 <div className="text-sm text-muted-foreground">
                   Today: {format(new Date(), "MMM d, yyyy")}
                 </div>
+              </div>
+
+              <div className="mb-4 p-3 bg-muted/50 rounded-lg border border-muted">
+                <p className="text-sm text-muted-foreground">
+                  💡 If I can't answer with the information I have, I'll let a nurse know so I don't tell you something incorrect.
+                </p>
               </div>
 
               <div className="space-y-4 mb-4">
