@@ -716,29 +716,6 @@ ${baseInfo || "No clinic information provided yet."}`;
 
           <TabsContent value="patient" className="space-y-6">
             <Card className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-lg font-semibold mb-2 block">
-                    Gemini API Key
-                  </label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {import.meta.env.VITE_GEMINI_API_KEY
-                      ? "API key configured from environment (domain-restricted)"
-                      : "Enter your domain-restricted Gemini API key to enable the chatbot"}
-                  </p>
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => handleApiKeyChange(e.target.value)}
-                    placeholder={import.meta.env.VITE_GEMINI_API_KEY ? "Using environment API key" : "Enter your Gemini API key..."}
-                    className="w-full px-3 py-2 border rounded-md bg-background"
-                    disabled={!!import.meta.env.VITE_GEMINI_API_KEY}
-                  />
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <MessageSquare className="h-5 w-5 text-primary" />
