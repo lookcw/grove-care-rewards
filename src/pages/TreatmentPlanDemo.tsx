@@ -12,7 +12,7 @@ import ReactMarkdown from "react-markdown";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
-type ClinicType = "ortho" | "derm" | "bariatric";
+type ClinicType = "ortho" | "derm" | "bariatric" | "";
 
 const CLINIC_DATA = {
   ortho: {
@@ -462,7 +462,7 @@ const QUICK_QUESTIONS = [
 ];
 
 const Main = () => {
-  const [clinicType, setClinicType] = useState<ClinicType>("ortho");
+  const [clinicType, setClinicType] = useState<ClinicType>("");
   const [treatmentPlan, setTreatmentPlan] = useState("");
   const [baseInfo, setBaseInfo] = useState("");
   const [surgeryDate, setSurgeryDate] = useState<Date>(() => {
@@ -479,7 +479,7 @@ const Main = () => {
     const savedData = localStorage.getItem("medicalData");
     if (savedData) {
       const data = JSON.parse(savedData);
-      setClinicType((data.clinicType as ClinicType) || "ortho");
+      setClinicType((data.clinicType as ClinicType) || "");
       setTreatmentPlan(data.treatmentPlan || "");
       setBaseInfo(data.baseInfo || "");
       if (data.surgeryDate) {
@@ -513,10 +513,15 @@ const Main = () => {
     const newClinicType = value as ClinicType;
     setClinicType(newClinicType);
     setTreatmentPlan("");
-    setBaseInfo(CLINIC_DATA[newClinicType].clinicInfo);
+    if (newClinicType && CLINIC_DATA[newClinicType]) {
+      setBaseInfo(CLINIC_DATA[newClinicType].clinicInfo);
+    } else {
+      setBaseInfo("");
+    }
   };
 
   const handleTreatmentSelect = (value: string) => {
+    if (!clinicType) return;
     const treatment = CLINIC_DATA[clinicType].treatments[value];
     if (treatment) {
       setTreatmentPlan(CLINIC_DATA[clinicType].guidance + treatment.content);
@@ -682,12 +687,12 @@ ${baseInfo || "No clinic information provided yet."}`;
                   <p className="text-sm text-muted-foreground mb-3">
                     Enter the specific treatment plan for this patient
                   </p>
-                  <Select onValueChange={handleTreatmentSelect}>
+                  <Select onValueChange={handleTreatmentSelect} disabled={!clinicType}>
                     <SelectTrigger className="mb-3">
-                      <SelectValue placeholder="Load example treatment plan..." />
+                      <SelectValue placeholder={clinicType ? "Load example treatment plan..." : "Select clinic type first..."} />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(CLINIC_DATA[clinicType].treatments).map(([key, treatment]) => (
+                      {clinicType && Object.entries(CLINIC_DATA[clinicType].treatments).map(([key, treatment]) => (
                         <SelectItem key={key} value={key}>
                           {treatment.label}
                         </SelectItem>
