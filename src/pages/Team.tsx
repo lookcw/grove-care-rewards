@@ -39,15 +39,11 @@ const Team = () => {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-              Built by People Who
-              <span className="block text-primary mt-2">
-                Care About Healthcare
-              </span>
+              Built by Clinicians and Engineers Who've Seen the Problem Up Close
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              We're a team of healthcare professionals, engineers, and caregivers on a mission
-              to make healthcare more accessible and affordable for everyone.
+              Our team has worked inside hospitals, surgical centers, and health systems — we've seen how much time clinicians spend on manual follow-up. Grove Health exists to give that time back.
             </p>
           </div>
         </div>
@@ -74,8 +70,8 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Former EMT</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    As a former EMT, Adedoyin experienced firsthand the challenges in our healthcare
-                    system. Now leading Grove Health's mission to improve patient adherence and reduce
+                    As an EMT, Adedoyin experienced firsthand the challenges in our healthcare
+                    system. Now she's leading Grove Health's mission to improve patient adherence and reduce
                     costs through innovative solutions.
                   </p>
                   <Button variant="outline" size="sm" asChild>
