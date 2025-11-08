@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { HeartPulse, TrendingDown, Users, Shield, ArrowRight } from "lucide-react";
+import { HeartPulse, Clock, Eye, Scale, ArrowRight, Stethoscope, Activity, Home, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import heroDoctorImage from "@/assets/hero-doctor-2.svg";
 
 const Index = () => {
   return (
@@ -25,46 +26,64 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-background via-accent/5 to-background pt-32 pb-20 px-4">
+      <section className="relative overflow-hidden bg-gradient-to-b from-background via-accent/5 to-background pt-20 pb-20 px-4">
         <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <div className="inline-block">
-              <span className="inline-flex items-center px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
-                <HeartPulse className="h-4 w-4 mr-2" />
-                Transforming Healthcare Economics
-              </span>
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center max-w-7xl mx-auto">
+            <div className="space-y-8">
+              <div className="inline-block">
+                <span className="inline-flex items-center px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
+                  <HeartPulse className="h-4 w-4 mr-2" />
+                  Helping Care Teams
+                </span>
+              </div>
+
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                Simplifying{" "}
+                <span className="text-primary">Post-Op and Post-Discharge Follow-Up</span>
+              </h1>
+
+              <div className="text-lg lg:text-xl text-muted-foreground leading-relaxed space-y-4">
+                <p>
+                  Grove Health builds AI tools that make it effortless for providers to track patient recovery, catch complications early, and reduce the manual work that happens after discharge or surgery.
+                </p>
+                <ul className="space-y-3 text-left">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Automates structured check-ins via text or voice</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Flags responses that need nurse or coordinator review</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Reduces time spent on routine follow-up calls</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <span>Gives every patient timely, personalized guidance at home</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Button variant="hero" size="lg" className="group" asChild>
+                  <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
+                    Get In Touch With Us
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </a>
+                </Button>
+              </div>
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              We're Making Post-Op Care Better for{" "}
-              <span className="text-primary">Providers and Patients</span>
-            </h1>
-
-            <div className="text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed space-y-4">
-              <p className="font-semibold">Our AI-powered solution delivers:</p>
-              <ul className="text-lg lg:text-xl space-y-3 text-left max-w-2xl mx-auto">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary mt-1">✓</span>
-                  <span><strong>50% reduction</strong> in provider time spent fielding patient calls</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary mt-1">✓</span>
-                  <span><strong>Faster answers</strong> for patients when they need them most</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary mt-1">✓</span>
-                  <span><strong>Personalized AI</strong> trained on each patient's discharge and treatment plan</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button variant="hero" size="lg" className="group" asChild>
-                <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
-                  Get In Touch
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </a>
-              </Button>
+            <div className="relative lg:h-[700px] xl:h-[800px] flex items-center justify-center">
+              <div className="rounded-2xl overflow-hidden shadow-lg w-full">
+                <img
+                  src={heroDoctorImage}
+                  alt="Healthcare provider conducting patient checkup"
+                  className="w-full h-full object-contain scale-110"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -76,8 +95,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground">
-              We're on a mission to make healthcare more accessible, affordable, and effective
-              by aligning incentives between individuals, businesses, and healthcare providers.
+              Our tools make recovery follow-up more efficient and less stressful for both patients and care teams. Today, nurses and coordinators spend hours making routine calls after surgery or discharge — asking about pain, wound care, and meds — just to make sure nothing's going wrong. We automate those check-ins so clinicians can focus on the cases that actually need attention, while every patient gets timely, personalized guidance at home.
             </p>
           </div>
 
@@ -85,25 +103,23 @@ const Index = () => {
             <Card className="border-none shadow-lg">
               <CardContent className="pt-8 text-center">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <TrendingDown className="w-8 h-8 text-primary" />
+                  <Clock className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Cost Reduction</h3>
+                <h3 className="text-2xl font-bold mb-4">Efficiency for Care Teams</h3>
                 <p className="text-muted-foreground">
-                  We help businesses reduce healthcare costs through innovative approaches
-                  to preventive care and wellness.
+                  We take the repetitive work out of follow-up by automating outreach, logging responses, and flagging what needs review, so staff spend more time on care, not phone calls.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="border-none shadow-lg">
               <CardContent className="pt-8 text-center">
-                <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Users className="w-8 h-8 text-secondary" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Eye className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Better Outcomes</h3>
+                <h3 className="text-2xl font-bold mb-4">Better Recovery Visibility</h3>
                 <p className="text-muted-foreground">
-                  By focusing on prevention and engagement, we improve health outcomes
-                  for individuals and communities.
+                  Structured digital check-ins surface early warning signs like pain, swelling, and missed meds, before they escalate into complications or readmissions.
                 </p>
               </CardContent>
             </Card>
@@ -111,12 +127,11 @@ const Index = () => {
             <Card className="border-none shadow-lg">
               <CardContent className="pt-8 text-center">
                 <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Shield className="w-8 h-8 text-accent-foreground" />
+                  <Scale className="w-8 h-8 text-accent-foreground" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Sustainable Solutions</h3>
+                <h3 className="text-2xl font-bold mb-4">Sustainable Care Delivery</h3>
                 <p className="text-muted-foreground">
-                  Our solutions are designed to create long-term value for all stakeholders
-                  in the healthcare ecosystem.
+                By improving how patients and providers stay connected after discharge, we make high-quality recovery care scalable for any clinic, hospital, or home health team.
                 </p>
               </CardContent>
             </Card>
@@ -128,43 +143,25 @@ const Index = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">Our Solutions</h2>
+            <h2 className="text-4xl font-bold mb-6">Our Focus Areas</h2>
             <p className="text-xl text-muted-foreground">
-              Explore how we're revolutionizing different aspects of healthcare
+              We help clinical teams automate and manage the follow-up work that happens after surgery or discharge
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            <Link to="/employee-wellness" className="group">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Link to="/post-surgical-care" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    SMB Health Benefits
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Stop rising premiums. Start rewarding health. Transform your healthcare costs
-                    with member engagement.
-                  </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                    <Stethoscope className="w-8 h-8 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link to="/home-care" className="group">
-              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
-                <CardContent className="pt-8">
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Home Care Management
+                    Recovery Outreach & Check-Ins
                   </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Making caregiving easier with simple, organized systems that help track
-                    patient needs effortlessly.
+                  <p className="text-muted-foreground">
+                    Automates post-op and post-discharge follow-ups to replace routine calls with structured text or voice check-ins by tracking pain, wounds, and meds, and alerting staff when something looks off.
                   </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
                 </CardContent>
               </Card>
             </Link>
@@ -172,67 +169,31 @@ const Index = () => {
             <Link to="/pt-adherence" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    PT Adherence
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Transform patient adherence with AI-powered verification. Help clinics
-                    see more patients and improve outcomes.
-                  </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                    <Activity className="w-8 h-8 text-primary" />
                   </div>
+                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
+                    Patient Message Management
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Streamlines how teams handle incoming messages from recovering patients — summarizing updates, flagging urgent concerns, and routing them to the right clinician.
+                  </p>
                 </CardContent>
               </Card>
             </Link>
 
-            <Link to="/post-surgical-care" className="group">
+            <Link to="/home-care" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Post-Surgical Care
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Reduce readmissions and improve post-op adherence for specialty surgical clinics
-                    through scalable follow-up.
-                  </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                    <Home className="w-8 h-8 text-primary" />
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link to="/injury-management" className="group">
-              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
-                <CardContent className="pt-8">
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Injury Management
+                    Care Coordination Across Settings
                   </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Expert workplace injury case management for small businesses. Lower workers' comp
-                    costs by 30-40% while ensuring employee care.
+                  <p className="text-muted-foreground">
+                    Bridges communication between hospitals, clinics, and home-health teams so patients stay connected instead of falling through the cracks after discharge.
                   </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link to="/medical-spend" className="group">
-              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
-                <CardContent className="pt-8">
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Lower Medical Spend by 15%
-                  </h3>
-                  <p className="text-muted-foreground mb-4">
-                    Save $100 per employee per year by eliminating unnecessary care that cuts
-                    into your time and costs your dime.
-                  </p>
-                  <div className="flex items-center text-primary font-medium">
-                    Learn more <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
                 </CardContent>
               </Card>
             </Link>
@@ -245,14 +206,16 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">
-              Questions? Let's Talk
+              Save Staff Time, Without Sacrificing Patient Care.
             </h2>
             <p className="text-xl text-muted-foreground">
-              If you have any questions, please reach out. We'd love to hear from you.
+              We're partnering with care teams to reduce the time and cost of recovery communication while keeping patients supported.
+              <br className="hidden sm:block" />
+              <span className="block sm:inline"> If your clinicians spend hours on manual follow-up calls, we'd love to chat. Reach out today!</span>
             </p>
             <Button variant="hero" size="lg" className="group" asChild>
               <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
-                Contact Us
+                Get in Touch
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>
