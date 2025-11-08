@@ -359,7 +359,7 @@ IMPORTANT OPIOID PAIN MEDICATION INSTRUCTIONS:
 - Never combine different opioid medications without consulting us first
 
 NERVE BLOCK INFORMATION:
-- The nerve block will typically wear off in 12 hours
+- The nerve block will typically wear off in 12 hours, while which you will feel numb
 - If it lasts longer than 12 hours, do not worry - this is normal for some patients
 - Contact a doctor if the nerve block lasts more than 24 hours
 
@@ -389,7 +389,7 @@ FOLLOW-UP:
 CONTACT US IF:
 - Fever over 101°F
 - Increasing pain not relieved by medication
-- Numbness or tingling in hand/fingers`},acl_reconstruction:{label:"ACL Reconstruction",content:`Post-Operative Instructions - ACL Reconstruction
+`},acl_reconstruction:{label:"ACL Reconstruction",content:`Post-Operative Instructions - ACL Reconstruction
 
 MEDICATIONS:
 - Take prescribed pain medication as directed
