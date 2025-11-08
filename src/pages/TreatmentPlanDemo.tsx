@@ -152,7 +152,12 @@ POST-OPERATIVE CARE:
 - Pain management team available 24/7
 - Home care instructions provided before discharge
 - Follow-up appointment scheduled before leaving
-- Physical therapy referrals coordinated`
+- Physical therapy referrals coordinated
+
+IMPORTANT OPIOID PAIN MEDICATION INSTRUCTIONS:
+- Do NOT take more than one opioid pain medication per day
+- You will need to contact the clinic for a refill if necessary
+- Never combine different opioid medications without consulting us first`
   },
   derm: {
     name: "Dermatology",
