@@ -22,6 +22,11 @@ const CLINIC_DATA = {
 - Pain is normal after surgery but should gradually decrease over time
 - Contact us if pain increases or is not controlled by medication
 
+IMPORTANT OPIOID PAIN MEDICATION INSTRUCTIONS:
+- Do NOT take more than one opioid pain medication per day
+- You will need to contact the clinic for a refill if necessary
+- Never combine different opioid medications without consulting us first
+
 `,
     treatments: {
       slap_tear: {
