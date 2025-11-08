@@ -358,6 +358,11 @@ IMPORTANT OPIOID PAIN MEDICATION INSTRUCTIONS:
 - You will need to contact the clinic for a refill if necessary
 - Never combine different opioid medications without consulting us first
 
+NERVE BLOCK INFORMATION:
+- The nerve block will typically wear off in 12 hours
+- If it lasts longer than 12 hours, do not worry - this is normal for some patients
+- Contact a doctor if the nerve block lasts more than 24 hours
+
 `,treatments:{slap_tear:{label:"SLAP Tear Repair",content:`Post-Operative Instructions - SLAP Tear Repair
 
 MEDICATIONS:
