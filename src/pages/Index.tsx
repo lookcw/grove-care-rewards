@@ -206,7 +206,7 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">
-              Save Staff Time, Without Sacrificing Patient Care.
+              Save Staff Time, Without Sacrificing Patient Care
             </h2>
             <p className="text-xl text-muted-foreground">
               We're partnering with care teams to reduce the time and cost of recovery communication while keeping patients supported.
