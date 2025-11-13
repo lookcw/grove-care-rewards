@@ -112,7 +112,7 @@ const Team = () => {
                   </p>
                   <Button variant="outline" size="sm" asChild>
                     <a
-                      href="https://www.linkedin.com/in/christopherlook/"
+                      href="https://www.linkedin.com/in/christopher-look/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2"
