@@ -1,0 +1,1238 @@
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Save, Stethoscope, User, MessageSquare, Send, CalendarIcon, Clock, CheckCircle2, Circle } from "lucide-react";
+import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import { format, addDays, differenceInDays } from "date-fns";
+import { cn } from "@/lib/utils";
+
+type ClinicType = "ortho" | "derm" | "bariatric" | "";
+
+interface Reminder {
+  daysBeforeSurgery: number;
+  message: string;
+}
+
+interface ChecklistItem {
+  task: string;
+  daysBeforeSurgery: number;
+  crucial?: boolean; // if true, it's a crucial task; if false/undefined, it's optional
+}
+
+interface PreOpProcedure {
+  label: string;
+  instructions: string;
+  reminders: Reminder[];
+  checklist: ChecklistItem[];
+}
+
+const PRE_OP_DATA = {
+  ortho: {
+    name: "Orthopedic Surgery",
+    guidance: `GENERAL PRE-OPERATIVE GUIDANCE:
+- Follow all pre-operative instructions carefully
+- Arrange for someone to drive you home after surgery
+- Plan for assistance at home for the first few days
+- Make sure to attend your pre-operative appointment
+
+IMPORTANT MEDICATION INSTRUCTIONS:
+- Inform your surgeon of ALL medications you are taking
+- Some medications may need to be stopped before surgery
+- Do not stop any medications without consulting your surgeon first
+
+`,
+    procedures: {
+      acl_reconstruction: {
+        label: "ACL Reconstruction",
+        instructions: `Pre-Operative Instructions - ACL Reconstruction
+
+MEDICATIONS TO STOP:
+- Stop taking anti-inflammatory medications (ibuprofen, aspirin, naproxen) 7 days before surgery
+- Stop herbal supplements 7 days before surgery
+- Continue all other medications unless instructed otherwise
+
+PHYSICAL PREPARATION:
+- Practice using crutches before surgery
+- Strengthen your upper body and good leg
+- Set up a recovery area at home on the first floor
+- Stock up on ice packs
+
+FASTING INSTRUCTIONS:
+- No food after midnight the night before surgery
+- No liquids after midnight the night before surgery
+- No gum or mints on the day of surgery
+
+WHAT TO BRING:
+- Photo ID and insurance card
+- List of current medications
+- Loose, comfortable clothing
+- Crutches (if you have them)
+
+DAY OF SURGERY:
+- Shower with antibacterial soap the morning of surgery
+- Do not wear makeup, jewelry, or contact lenses
+- Arrive 2 hours before scheduled surgery time`,
+        reminders: [
+          { daysBeforeSurgery: 30, message: "Schedule your pre-operative appointment with your surgeon" },
+          { daysBeforeSurgery: 14, message: "Complete all required pre-op testing (bloodwork, EKG, etc.)" },
+          { daysBeforeSurgery: 7, message: "Stop taking anti-inflammatory medications and herbal supplements" },
+          { daysBeforeSurgery: 3, message: "Confirm your ride home and arrange for post-op assistance" },
+          { daysBeforeSurgery: 1, message: "Begin fasting at midnight - no food or liquids after midnight" },
+          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap and arrive 2 hours early" }
+        ],
+        checklist: [
+          { task: "Attend pre-operative appointment with surgeon", daysBeforeSurgery: 30, crucial: true },
+          { task: "Complete bloodwork and EKG testing", daysBeforeSurgery: 14, crucial: true },
+          { task: "Stop anti-inflammatory medications (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, crucial: true },
+          { task: "Stop all herbal supplements", daysBeforeSurgery: 7, crucial: true },
+          { task: "Practice using crutches", daysBeforeSurgery: 7, crucial: false },
+          { task: "Arrange transportation home from surgery", daysBeforeSurgery: 3, crucial: true },
+          { task: "Set up recovery area at home", daysBeforeSurgery: 3, crucial: false },
+          { task: "Fill any prescribed post-op medications", daysBeforeSurgery: 2, crucial: true },
+          { task: "Pack bag with ID, insurance card, and comfortable clothes", daysBeforeSurgery: 1, crucial: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, crucial: true }
+        ]
+      },
+      rotator_cuff: {
+        label: "Rotator Cuff Repair",
+        instructions: `Pre-Operative Instructions - Rotator Cuff Repair
+
+MEDICATIONS:
+- Stop aspirin and anti-inflammatory medications 7 days before surgery
+- Stop blood thinners as directed by your surgeon
+- Continue blood pressure and heart medications with a small sip of water on surgery day
+
+PHYSICAL PREPARATION:
+- Practice sleeping in a semi-reclined position (use a recliner or pillows)
+- Practice dressing with one arm
+- Set up your home for one-handed activities
+- Arrange help for daily activities for first 2-3 weeks
+
+PRE-OP TESTING:
+- Complete all required lab work and medical clearance
+- Cardiac clearance if over 50 or with heart conditions
+- Bring all test results to pre-op appointment
+
+FASTING GUIDELINES:
+- No solid food after midnight before surgery
+- Clear liquids only until 2 hours before surgery
+- No liquids within 2 hours of surgery time
+
+PREPARE YOUR HOME:
+- Button-front shirts (no pullover shirts)
+- Stock refrigerator with easy-to-prepare meals
+- Move frequently used items to counter height
+- Set up sleeping area with extra pillows
+
+DAY OF SURGERY:
+- Shower with antibacterial soap
+- Wear loose, button-front shirt
+- No deodorant on surgical side
+- Arrive 90 minutes before scheduled time`,
+        reminders: [
+          { daysBeforeSurgery: 30, message: "Schedule pre-operative physical and medical clearance" },
+          { daysBeforeSurgery: 14, message: "Complete all required lab work and cardiac testing" },
+          { daysBeforeSurgery: 7, message: "Stop aspirin and anti-inflammatory medications" },
+          { daysBeforeSurgery: 5, message: "Purchase button-front shirts and arrange home setup" },
+          { daysBeforeSurgery: 3, message: "Confirm ride and post-op care assistance" },
+          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
+          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap, wear button-front shirt" }
+        ],
+        checklist: [
+          { task: "Schedule pre-op physical and get medical clearance", daysBeforeSurgery: 30, crucial: true },
+          { task: "Complete lab work (CBC, metabolic panel, coagulation studies)", daysBeforeSurgery: 14, crucial: true },
+          { task: "Get cardiac clearance if over 50 years old", daysBeforeSurgery: 14, crucial: true },
+          { task: "Stop aspirin and anti-inflammatory medications", daysBeforeSurgery: 7, crucial: true },
+          { task: "Purchase button-front shirts (3-4 shirts)", daysBeforeSurgery: 7, crucial: false },
+          { task: "Practice sleeping in recliner or semi-reclined", daysBeforeSurgery: 7, crucial: false },
+          { task: "Stock refrigerator with easy-to-prepare meals", daysBeforeSurgery: 3, crucial: false },
+          { task: "Arrange for help with daily activities for 2-3 weeks", daysBeforeSurgery: 3, crucial: true },
+          { task: "Fill post-operative prescriptions", daysBeforeSurgery: 2, crucial: true },
+          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+        ]
+      },
+      total_knee: {
+        label: "Total Knee Replacement",
+        instructions: `Pre-Operative Instructions - Total Knee Replacement
+
+MEDICAL PREPARATION:
+- Complete all pre-operative testing (bloodwork, EKG, chest X-ray)
+- Dental clearance required - no active infections
+- Stop blood thinners as directed by surgeon (typically 5-7 days before)
+- Continue all other medications unless told otherwise
+
+HOME PREPARATION:
+- Remove trip hazards (loose rugs, electrical cords)
+- Install grab bars in bathroom
+- Raise toilet seat height (use elevated seat)
+- Move bedroom to first floor if possible
+- Arrange for walker or crutches
+
+MEDICATIONS TO STOP:
+- Anti-inflammatory drugs 7 days before surgery
+- Herbal supplements 7 days before surgery
+- Blood thinners as directed (typically 5-7 days)
+
+LIFESTYLE:
+- Stop smoking at least 4 weeks before surgery
+- Lose weight if recommended by surgeon
+- Strengthen upper body for walker/crutch use
+- Practice exercises shown by physical therapist
+
+FASTING:
+- No food after midnight before surgery
+- No liquids after midnight before surgery
+- Exception: Small sip of water with essential medications only
+
+SURGERY DAY:
+- Shower with antibacterial soap (Hibiclens)
+- Do not shave surgical site
+- Wear loose, comfortable clothing
+- Bring walker or crutches
+- Arrive 2 hours before scheduled surgery`,
+        reminders: [
+          { daysBeforeSurgery: 60, message: "Begin pre-op physical therapy and strengthening exercises" },
+          { daysBeforeSurgery: 30, message: "Schedule dental clearance and pre-operative testing" },
+          { daysBeforeSurgery: 14, message: "Complete all lab work, EKG, and chest X-ray" },
+          { daysBeforeSurgery: 10, message: "Begin home preparation - install grab bars, remove trip hazards" },
+          { daysBeforeSurgery: 7, message: "Stop anti-inflammatory medications and herbal supplements" },
+          { daysBeforeSurgery: 3, message: "Confirm transportation and post-op care for first 2 weeks" },
+          { daysBeforeSurgery: 1, message: "Begin fasting at midnight - no food or liquids" },
+          { daysBeforeSurgery: 0, message: "Surgery day! Shower with Hibiclens, bring walker, arrive 2 hours early" }
+        ],
+        checklist: [
+          { task: "Complete dental exam and clearance", daysBeforeSurgery: 30, crucial: true },
+          { task: "Install grab bars in bathroom", daysBeforeSurgery: 14, crucial: false },
+          { task: "Get raised toilet seat", daysBeforeSurgery: 14, crucial: false },
+          { task: "Complete bloodwork, EKG, and chest X-ray", daysBeforeSurgery: 14, crucial: true },
+          { task: "Remove trip hazards from home (rugs, cords)", daysBeforeSurgery: 10, crucial: false },
+          { task: "Stock up on ice packs and easy-to-prepare meals", daysBeforeSurgery: 7, crucial: false },
+          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 7, crucial: true },
+          { task: "Stop herbal supplements", daysBeforeSurgery: 7, crucial: true },
+          { task: "Obtain walker or crutches", daysBeforeSurgery: 5, crucial: true },
+          { task: "Arrange for 24/7 assistance for first 3 days", daysBeforeSurgery: 3, crucial: true },
+          { task: "Fill post-operative prescriptions", daysBeforeSurgery: 2, crucial: true },
+          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+        ]
+      }
+    },
+    clinicInfo: `Orthopedic Surgery Center Information
+
+ABOUT OUR FACILITY:
+We are a state-of-the-art ambulatory surgery center specializing in orthopedic procedures. Our team includes board-certified orthopedic surgeons, anesthesiologists, and specialized surgical staff.
+
+PRE-OPERATIVE SERVICES:
+- Pre-operative education classes
+- Physical therapy consultation
+- Medical clearance coordination
+- Home safety assessments
+
+FACILITY HOURS:
+Monday - Friday: 6:00 AM - 6:00 PM
+Pre-op appointments: 8:00 AM - 4:00 PM
+
+CONTACT INFORMATION:
+Main Office: (555) 234-5678
+Surgery Scheduling: (555) 234-5679
+Pre-Op Nurse Line: (555) 234-5680
+
+PRE-OPERATIVE REQUIREMENTS:
+- Medical clearance from primary care physician
+- All required lab work and testing completed
+- Transportation arranged
+- Post-operative care assistance confirmed`
+  },
+  derm: {
+    name: "Dermatology Surgery",
+    guidance: `GENERAL SURGICAL PREPARATION:
+- Inform us of all medications, especially blood thinners
+- Arrange transportation if you will be sedated
+- Eat a light meal before your procedure
+- Wear comfortable, loose-fitting clothing
+
+`,
+    procedures: {
+      mohs_surgery: {
+        label: "Mohs Surgery",
+        instructions: `Pre-Operative Instructions - Mohs Surgery
+
+MEDICATIONS:
+- Continue all regular medications unless told otherwise
+- Stop aspirin and blood thinners 7 days before if approved by prescribing doctor
+- Avoid alcohol 48 hours before surgery
+- Do not take herbal supplements that thin blood (ginseng, ginkgo, garlic)
+
+PREPARATION:
+- Eat a normal breakfast or lunch before procedure
+- Wear comfortable clothing (procedure may take several hours)
+- Bring something to read or keep you occupied
+- Plan for a full day at the clinic
+
+WHAT TO EXPECT:
+- Procedure is done in stages with waiting between stages
+- Each stage takes about 1-2 hours
+- Average Mohs surgery takes 2-4 hours total
+- You may go home same day with bandage
+
+ARRANGE:
+- Transportation home (especially if anxious or sedated)
+- Time off work for procedure and recovery (typically 1-3 days)
+- Follow-up appointment for suture removal
+
+DO NOT:
+- Wear makeup or skincare products on treatment area
+- Wear contact lenses (glasses are fine)
+- Smoke or use nicotine 48 hours before
+- Drink alcohol 48 hours before`,
+        reminders: [
+          { daysBeforeSurgery: 14, message: "Confirm with prescribing doctor about stopping blood thinners" },
+          { daysBeforeSurgery: 7, message: "Stop aspirin and blood thinners if approved by your doctor" },
+          { daysBeforeSurgery: 3, message: "Arrange transportation and time off work" },
+          { daysBeforeSurgery: 2, message: "Stop smoking, alcohol, and blood-thinning supplements" },
+          { daysBeforeSurgery: 0, message: "Eat a normal meal, wear comfortable clothes, bring reading material" }
+        ],
+        checklist: [
+          { task: "Check with prescribing doctor about stopping blood thinners", daysBeforeSurgery: 14, crucial: true },
+          { task: "Stop aspirin if approved", daysBeforeSurgery: 7, crucial: true },
+          { task: "Stop blood-thinning supplements (ginkgo, ginseng, garlic)", daysBeforeSurgery: 7, crucial: true },
+          { task: "Arrange transportation home", daysBeforeSurgery: 3, crucial: true },
+          { task: "Request time off work (1-3 days)", daysBeforeSurgery: 3, crucial: false },
+          { task: "Stop smoking and nicotine", daysBeforeSurgery: 2, crucial: true },
+          { task: "Stop drinking alcohol", daysBeforeSurgery: 2, crucial: true },
+          { task: "Pack bag with reading material, snacks, phone charger", daysBeforeSurgery: 1, crucial: false }
+        ]
+      },
+      skin_cancer_excision: {
+        label: "Skin Cancer Excision",
+        instructions: `Pre-Operative Instructions - Skin Cancer Excision
+
+MEDICATIONS:
+- Continue all regular medications
+- Stop blood thinners 5-7 days before only if approved by your doctor
+- Inform us if you take medications for diabetes
+- Avoid anti-inflammatory drugs 3 days before
+
+BEFORE YOUR PROCEDURE:
+- Shower normally the morning of procedure
+- Do not apply makeup, lotion, or skincare to treatment area
+- Wear comfortable, loose clothing
+- Eat a light meal before arriving
+
+WHAT TO BRING:
+- Insurance card and photo ID
+- List of current medications
+- Someone to drive you home (if receiving sedation)
+
+PLAN AHEAD:
+- Take day off work
+- Avoid strenuous activity for 24-48 hours after
+- Keep wound care supplies at home (gauze, tape, antibiotic ointment)
+
+IMPORTANT:
+- Notify us if you develop a cold, infection, or fever before surgery
+- Tell us about any allergies (especially to local anesthetics)
+- Inform us if you have a pacemaker or metal implants`,
+        reminders: [
+          { daysBeforeSurgery: 7, message: "Stop blood thinners if approved by prescribing physician" },
+          { daysBeforeSurgery: 3, message: "Stop anti-inflammatory medications (ibuprofen, naproxen)" },
+          { daysBeforeSurgery: 1, message: "Arrange ride home if receiving sedation, plan for time off work" },
+          { daysBeforeSurgery: 0, message: "Eat light meal, shower, do not apply products to surgical area" }
+        ],
+        checklist: [
+          { task: "Confirm with doctor about stopping blood thinners", daysBeforeSurgery: 7, crucial: true },
+          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 3, crucial: true },
+          { task: "Arrange transportation if receiving sedation", daysBeforeSurgery: 2, crucial: true },
+          { task: "Request time off work", daysBeforeSurgery: 2, crucial: false },
+          { task: "Purchase wound care supplies (gauze, tape, antibiotic ointment)", daysBeforeSurgery: 2, crucial: false },
+          { task: "Plan light meals and rest for procedure day", daysBeforeSurgery: 1, crucial: false }
+        ]
+      }
+    },
+    clinicInfo: `Dermatology Surgery Center Information
+
+ABOUT OUR PRACTICE:
+Board-certified dermatologic surgeons specializing in skin cancer removal and reconstruction.
+
+SERVICES:
+- Mohs micrographic surgery
+- Skin cancer excision
+- Reconstructive procedures
+- Same-day pathology results
+
+OFFICE HOURS:
+Monday - Friday: 7:00 AM - 4:00 PM
+Mohs surgery: Monday - Thursday
+
+CONTACT:
+Phone: (555) 123-4567
+Pre-Op Nurse: (555) 123-4568
+
+WHAT TO EXPECT:
+- Most procedures done under local anesthesia
+- Same-day discharge
+- Pathology results typically same day (Mohs) or within 7-10 days`
+  },
+  bariatric: {
+    name: "Bariatric Surgery",
+    guidance: `PRE-OPERATIVE BARIATRIC SURGERY REQUIREMENTS:
+- Complete all required medical clearances
+- Attend nutrition education classes
+- Meet with psychologist for evaluation
+- Demonstrate commitment to lifestyle changes
+- Follow pre-operative diet as instructed
+
+`,
+    procedures: {
+      gastric_bypass: {
+        label: "Gastric Bypass Surgery",
+        instructions: `Pre-Operative Instructions - Gastric Bypass
+
+PRE-OP REQUIREMENTS (Complete 2-3 months before):
+- Nutritionist consultations (minimum 3 visits)
+- Psychological evaluation and clearance
+- Medical clearance from primary care physician
+- Sleep study if indicated
+- Cardiac clearance if risk factors present
+- Upper endoscopy
+
+PRE-OP DIET (2 weeks before surgery):
+- High-protein, low-carb diet
+- Protein shakes 2-3 times per day
+- Lean proteins and non-starchy vegetables
+- No sugar, fried foods, or high-fat foods
+- Goal: Reduce liver size for safer surgery
+
+LIQUID DIET (2 days before surgery):
+- Clear liquids only
+- Protein shakes allowed
+- Broth, sugar-free beverages
+- No solid food
+
+MEDICATIONS:
+- Stop NSAIDs 7 days before
+- Stop blood thinners as directed
+- Continue blood pressure and diabetes medications
+- Stop smoking 8 weeks before surgery
+
+HOME PREPARATION:
+- Stock protein shakes and clear liquids
+- Prepare pureed food for after surgery
+- Arrange help at home for first week
+- Set up comfortable recovery area
+
+FASTING:
+- No food after midnight before surgery
+- No liquids after midnight before surgery
+
+SURGERY DAY:
+- Shower with Hibiclens antibacterial soap
+- Arrive 2 hours early
+- Bring CPAP machine if you use one
+- Wear comfortable, loose clothing`,
+        reminders: [
+          { daysBeforeSurgery: 90, message: "Begin pre-operative program - nutrition classes and evaluations" },
+          { daysBeforeSurgery: 60, message: "Complete psychological evaluation and medical clearances" },
+          { daysBeforeSurgery: 30, message: "Complete sleep study and upper endoscopy" },
+          { daysBeforeSurgery: 14, message: "Start pre-operative high-protein diet - protein shakes 2-3x daily" },
+          { daysBeforeSurgery: 7, message: "Stop NSAIDs and confirm medication plan with surgeon" },
+          { daysBeforeSurgery: 3, message: "Stock up on protein shakes, clear liquids, and pureed foods" },
+          { daysBeforeSurgery: 2, message: "Begin liquid-only diet - protein shakes, broth, sugar-free drinks" },
+          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
+          { daysBeforeSurgery: 0, message: "Surgery day! Shower with Hibiclens, bring CPAP if needed, arrive 2 hours early" }
+        ],
+        checklist: [
+          { task: "Complete nutritionist consultations (minimum 3 visits)", daysBeforeSurgery: 90, crucial: true },
+          { task: "Complete psychological evaluation", daysBeforeSurgery: 60, crucial: true },
+          { task: "Get medical clearance from primary care doctor", daysBeforeSurgery: 60, crucial: true },
+          { task: "Complete sleep study", daysBeforeSurgery: 30, crucial: true },
+          { task: "Complete upper endoscopy", daysBeforeSurgery: 30, crucial: true },
+          { task: "Stop smoking (must be smoke-free)", daysBeforeSurgery: 56, crucial: true },
+          { task: "Start high-protein, low-carb pre-op diet", daysBeforeSurgery: 14, crucial: true },
+          { task: "Stop NSAIDs (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, crucial: true },
+          { task: "Purchase protein shakes (2-3 weeks supply)", daysBeforeSurgery: 7, crucial: false },
+          { task: "Stock clear liquids and sugar-free beverages", daysBeforeSurgery: 3, crucial: false },
+          { task: "Arrange for help at home for first week", daysBeforeSurgery: 3, crucial: true },
+          { task: "Begin liquid-only diet", daysBeforeSurgery: 2, crucial: true },
+          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+        ]
+      },
+      gastric_sleeve: {
+        label: "Gastric Sleeve Surgery",
+        instructions: `Pre-Operative Instructions - Gastric Sleeve
+
+PRE-OP PROGRAM (2-3 months before):
+- Nutrition education sessions
+- Psychological evaluation
+- Medical evaluations and clearances
+- Demonstrate 6-month supervised weight loss attempt
+- Upper GI endoscopy
+
+MEDICAL CLEARANCES REQUIRED:
+- Primary care physician clearance
+- Cardiology clearance (if risk factors)
+- Sleep study (if symptoms of sleep apnea)
+- Pulmonary clearance (if lung disease)
+
+PRE-OP DIET (14 days before):
+- Low-carb, high-protein diet (80-100g protein daily)
+- Protein shakes as meal replacements
+- Vegetables and lean proteins
+- No sugar, pasta, bread, rice
+- Goal: Shrink liver for safer surgery
+
+LIQUID PHASE (3 days before):
+- Protein shakes only
+- Clear broth
+- Sugar-free beverages
+- No solid food
+
+MEDICATIONS:
+- Stop NSAIDs 10 days before
+- Stop blood thinners as directed
+- Stop birth control pills 1 month before
+- Continue thyroid and blood pressure meds
+
+LIFESTYLE:
+- No smoking for 8 weeks before surgery
+- No alcohol 48 hours before
+- Regular exercise (walking 30 min/day)
+
+PREPARE YOUR HOME:
+- Buy protein shakes (3 weeks supply)
+- Buy clear liquid supplies
+- Small plates and utensils
+- Arrange childcare/pet care
+- Help for first 5-7 days
+
+SURGERY DAY:
+- Shower with antibacterial soap
+- No food or liquids after midnight
+- Bring CPAP if you use one
+- Arrive 90 minutes early`,
+        reminders: [
+          { daysBeforeSurgery: 90, message: "Begin bariatric surgery program - attend required education classes" },
+          { daysBeforeSurgery: 60, message: "Complete psychological evaluation and all medical clearances" },
+          { daysBeforeSurgery: 30, message: "Stop birth control pills, complete upper endoscopy" },
+          { daysBeforeSurgery: 14, message: "Start 2-week pre-op diet - high protein, low carb, protein shakes" },
+          { daysBeforeSurgery: 10, message: "Stop NSAIDs (ibuprofen, aspirin, naproxen)" },
+          { daysBeforeSurgery: 7, message: "Stock up on protein shakes and prepare home for recovery" },
+          { daysBeforeSurgery: 3, message: "Begin liquid-only phase - protein shakes, broth, sugar-free drinks" },
+          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
+          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap, bring CPAP, arrive 90 min early" }
+        ],
+        checklist: [
+          { task: "Attend all required nutrition education classes", daysBeforeSurgery: 90, crucial: true },
+          { task: "Complete psychological evaluation and get clearance", daysBeforeSurgery: 60, crucial: true },
+          { task: "Get medical clearance from primary care physician", daysBeforeSurgery: 60, crucial: true },
+          { task: "Complete sleep study if required", daysBeforeSurgery: 45, crucial: true },
+          { task: "Complete upper GI endoscopy", daysBeforeSurgery: 30, crucial: true },
+          { task: "Stop birth control pills", daysBeforeSurgery: 30, crucial: true },
+          { task: "Stop smoking completely", daysBeforeSurgery: 56, crucial: true },
+          { task: "Begin 2-week pre-op diet (high protein, low carb)", daysBeforeSurgery: 14, crucial: true },
+          { task: "Stop NSAIDs", daysBeforeSurgery: 10, crucial: true },
+          { task: "Purchase 3-week supply of protein shakes", daysBeforeSurgery: 7, crucial: false },
+          { task: "Arrange help at home for first week", daysBeforeSurgery: 7, crucial: true },
+          { task: "Begin liquid-only diet", daysBeforeSurgery: 3, crucial: true },
+          { task: "Stop alcohol consumption", daysBeforeSurgery: 2, crucial: true },
+          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+        ]
+      }
+    },
+    clinicInfo: `Bariatric Surgery Center Information
+
+ABOUT OUR PROGRAM:
+Comprehensive bariatric surgery program with multidisciplinary team support for optimal outcomes.
+
+TEAM:
+- Board-certified bariatric surgeons
+- Registered dietitians
+- Clinical psychologists
+- Exercise physiologists
+- Nurse coordinators
+
+PRE-OP PROGRAM:
+- 2-3 month pre-operative preparation
+- Required education classes
+- Nutritional counseling
+- Psychological support
+- Medical optimization
+
+CONTACT:
+Main Office: (555) 345-6789
+Program Coordinator: (555) 345-6790
+Nutritionist: (555) 345-6791
+24/7 Support Line: (555) 345-6792
+
+REQUIREMENTS:
+- Completion of all pre-op requirements
+- Insurance authorization obtained
+- Medical clearances on file
+- Demonstrated commitment to lifestyle changes`
+  }
+};
+
+const QUICK_QUESTIONS = [
+  "What should I do this week to prepare?",
+  "What medications do I need to stop?",
+  "What should I bring to surgery?",
+];
+
+const PreOpDemo = () => {
+  const [clinicType, setClinicType] = useState<ClinicType>("");
+  const [selectedProcedure, setSelectedProcedure] = useState<string>("");
+  const [preOpInstructions, setPreOpInstructions] = useState("");
+  const [baseInfo, setBaseInfo] = useState("");
+  const [surgeryDate, setSurgeryDate] = useState<Date>(() => {
+    const twoWeeksFromNow = new Date();
+    twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+    return twoWeeksFromNow;
+  });
+  const [apiKey, setApiKey] = useState("");
+  const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("preOpMedicalData");
+    if (savedData) {
+      const data = JSON.parse(savedData);
+      setClinicType((data.clinicType as ClinicType) || "");
+      setSelectedProcedure(data.selectedProcedure || "");
+      setPreOpInstructions(data.preOpInstructions || "");
+      setBaseInfo(data.baseInfo || "");
+      if (data.surgeryDate) {
+        setSurgeryDate(new Date(data.surgeryDate));
+      }
+    }
+
+    // Use environment variable as default, or fall back to saved key
+    const envApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const savedKey = localStorage.getItem("geminiApiKey");
+
+    if (envApiKey) {
+      setApiKey(envApiKey);
+    } else if (savedKey) {
+      setApiKey(savedKey);
+    }
+  }, []);
+
+  const handleSave = () => {
+    localStorage.setItem("preOpMedicalData", JSON.stringify({
+      clinicType,
+      selectedProcedure,
+      preOpInstructions,
+      baseInfo,
+      surgeryDate: surgeryDate.toISOString(),
+      timestamp: new Date().toISOString()
+    }));
+    toast.success("Pre-op instructions saved successfully");
+  };
+
+  const handleClinicTypeChange = (value: string) => {
+    const newClinicType = value as ClinicType;
+    setClinicType(newClinicType);
+    setSelectedProcedure("");
+    setPreOpInstructions("");
+    if (newClinicType && PRE_OP_DATA[newClinicType]) {
+      setBaseInfo(PRE_OP_DATA[newClinicType].clinicInfo);
+    } else {
+      setBaseInfo("");
+    }
+  };
+
+  const handleProcedureSelect = (value: string) => {
+    if (!clinicType) return;
+    setSelectedProcedure(value);
+    const procedure = PRE_OP_DATA[clinicType].procedures[value];
+    if (procedure) {
+      setPreOpInstructions(PRE_OP_DATA[clinicType].guidance + procedure.instructions);
+    }
+  };
+
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim()) return;
+    if (!apiKey) {
+      toast.error("Please enter your Gemini API key first");
+      return;
+    }
+
+    const userMessage = { role: "user", content: messageText };
+    setMessages(prev => [...prev, userMessage]);
+    setInputMessage("");
+    setIsLoading(true);
+
+    try {
+      const today = new Date();
+      const daysUntilSurgery = differenceInDays(surgeryDate, today);
+
+      // Get checklist items if procedure is selected
+      let checklistContext = "";
+      if (clinicType && selectedProcedure && PRE_OP_DATA[clinicType]?.procedures[selectedProcedure]) {
+        const procedure = PRE_OP_DATA[clinicType].procedures[selectedProcedure];
+        checklistContext = "\n\nPre-Op Checklist:\n" +
+          procedure.checklist.map(item => `- ${item.task} (${item.daysBeforeSurgery} days before surgery)`).join("\n");
+      }
+
+      const systemPrompt = `This is a test demo website for pre-operative care. You are helping a patient prepare for surgery. Use the pre-operative instructions and checklist to answer questions. If the answer is not in the provided information, let the patient know you'll ask their care team for clarification.
+
+Surgery Date: ${format(surgeryDate, "MMMM d, yyyy")}
+Today's Date: ${format(today, "MMMM d, yyyy")}
+Days Until Surgery: ${daysUntilSurgery} days
+
+Pre-Operative Instructions:
+${preOpInstructions || "No pre-op instructions provided yet."}
+${checklistContext}
+
+Clinic Information:
+${baseInfo || "No clinic information provided yet."}`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: systemPrompt + "\n\nPatient question: " + messageText }
+                ]
+              }
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("API Error:", errorData);
+        throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't process that request.";
+
+      setMessages(prev => [...prev, { role: "assistant", content: aiResponse }]);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please check your API key.";
+      toast.error(errorMessage);
+      console.error("Full error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleChecklistItem = (index: number) => {
+    setCheckedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  const getCurrentProcedure = (): PreOpProcedure | null => {
+    if (!clinicType || !selectedProcedure) return null;
+    return PRE_OP_DATA[clinicType]?.procedures[selectedProcedure] || null;
+  };
+
+  const getDateForReminder = (daysBeforeSurgery: number) => {
+    return addDays(surgeryDate, -daysBeforeSurgery);
+  };
+
+  const isReminderPast = (daysBeforeSurgery: number) => {
+    const reminderDate = getDateForReminder(daysBeforeSurgery);
+    return reminderDate < new Date();
+  };
+
+  const getDaysUntilSurgery = () => {
+    return differenceInDays(surgeryDate, new Date());
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/20 to-background">
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Grove Health Pre-Op Portal
+          </h1>
+          <p className="text-muted-foreground">Prepare for your upcoming surgery</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            This is a demo only. Do not put any PII (Personally Identifiable Information) in this interface.
+          </p>
+        </div>
+
+        <Tabs defaultValue="doctor" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+            <TabsTrigger value="doctor" className="flex items-center gap-2">
+              <Stethoscope className="h-4 w-4" />
+              Doctor
+            </TabsTrigger>
+            <TabsTrigger value="patient" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Patient
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="doctor" className="space-y-6">
+            <Card className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-lg font-semibold mb-2 block">
+                    Clinic Type
+                  </label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Select the type of surgical clinic
+                  </p>
+                  <Select value={clinicType} onValueChange={handleClinicTypeChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select clinic type..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ortho">Orthopedic Surgery</SelectItem>
+                      <SelectItem value="derm">Dermatology Surgery</SelectItem>
+                      <SelectItem value="bariatric">Bariatric Surgery</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-lg font-semibold mb-2 block">
+                    Surgery Date
+                  </label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    When is the surgery scheduled?
+                  </p>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !surgeryDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {surgeryDate ? format(surgeryDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={surgeryDate}
+                        onSelect={(date) => date && setSurgeryDate(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-lg font-semibold mb-2 block">
+                    Pre-Operative Instructions
+                  </label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Select a procedure to load pre-operative instructions
+                  </p>
+                  <Select value={selectedProcedure} onValueChange={handleProcedureSelect} disabled={!clinicType}>
+                    <SelectTrigger className="mb-3">
+                      <SelectValue placeholder={clinicType ? "Load procedure instructions..." : "Select clinic type first..."} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {clinicType && PRE_OP_DATA[clinicType] && Object.entries(PRE_OP_DATA[clinicType].procedures).map(([key, procedure]) => (
+                        <SelectItem key={key} value={key}>
+                          {procedure.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Textarea
+                    value={preOpInstructions}
+                    onChange={(e) => setPreOpInstructions(e.target.value)}
+                    placeholder="Pre-operative instructions will appear here..."
+                    className="min-h-[400px] resize-y"
+                  />
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-lg font-semibold mb-2 block">
+                    Clinic Information
+                  </label>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    General information about your surgical center
+                  </p>
+                  <Textarea
+                    value={baseInfo}
+                    onChange={(e) => setBaseInfo(e.target.value)}
+                    placeholder="Clinic contact information, hours, and services..."
+                    className="min-h-[300px] resize-y"
+                  />
+                </div>
+              </div>
+            </Card>
+
+            <Button onClick={handleSave} size="lg" className="w-full md:w-auto md:ml-auto flex">
+              <Save className="mr-2 h-4 w-4" />
+              Save Pre-Op Instructions
+            </Button>
+          </TabsContent>
+
+          <TabsContent value="patient" className="space-y-6">
+            {/* Phone Messages Section */}
+            <Card className="p-6 bg-gradient-to-b from-muted/30 to-background">
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="text-2xl font-semibold">📱 Reminder Messages</h2>
+                  <div className="text-sm text-muted-foreground">
+                    Surgery: {format(surgeryDate, "MMM d, yyyy")}
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {getDaysUntilSurgery()} days until your surgery
+                </p>
+              </div>
+
+              {getCurrentProcedure() ? (
+                <div className="space-y-3 max-w-2xl">
+                  {getCurrentProcedure()!.reminders
+                    .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                    .map((reminder, index) => {
+                      const isPast = isReminderPast(reminder.daysBeforeSurgery);
+                      const reminderDate = getDateForReminder(reminder.daysBeforeSurgery);
+
+                      return (
+                        <div key={index} className="flex flex-col items-start">
+                          {/* Date stamp */}
+                          <div className="text-xs text-muted-foreground text-center w-full mb-2">
+                            {format(reminderDate, "EEEE, MMMM d")}
+                          </div>
+
+                          {/* iPhone-style message bubble */}
+                          <div className="flex items-end gap-2 w-full">
+                            <div className={cn(
+                              "relative max-w-[85%] rounded-[18px] px-4 py-2.5 shadow-sm",
+                              isPast
+                                ? "bg-muted/80"
+                                : "bg-blue-500 text-white"
+                            )}>
+                              {/* Message tail - iPhone-style tail at bottom left */}
+                              <svg
+                                className={cn(
+                                  "absolute -left-[20px] bottom-0",
+                                  isPast ? "text-muted/80" : "text-blue-500"
+                                )}
+                                width="35"
+                                height="35"
+                                viewBox="0 0 35 35"
+                              >
+                                <path
+                                  d="M 0 35 L 35 35 L 35 0 Q 26 18 0 35"
+                                  fill="currentColor"
+                                />
+                              </svg>
+
+                              <div className="mb-1">
+                                <span className={cn(
+                                  "text-xs font-semibold",
+                                  isPast ? "text-muted-foreground" : "text-blue-100"
+                                )}>
+                                  {reminder.daysBeforeSurgery === 0
+                                    ? "Today - Surgery Day!"
+                                    : `${reminder.daysBeforeSurgery} days before surgery`}
+                                </span>
+                              </div>
+                              <p className={cn(
+                                "text-[15px] leading-snug",
+                                isPast ? "text-foreground" : "text-white"
+                              )}>
+                                {reminder.message}
+                              </p>
+                            </div>
+                            {!isPast && (
+                              <div className="flex-shrink-0 text-xs text-muted-foreground pb-1">
+                                Delivered
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Select a procedure on the Doctor tab to see your reminder messages</p>
+                </div>
+              )}
+            </Card>
+
+            {/* Checklist Section */}
+            <Card className="p-6">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">Pre-Op Checklist</h2>
+                <p className="text-sm text-muted-foreground">
+                  Complete these tasks before your surgery
+                </p>
+              </div>
+
+              {getCurrentProcedure() ? (
+                <div className="space-y-6">
+                  {/* Crucial Tasks Section */}
+                  {getCurrentProcedure()!.checklist.filter(item => item.crucial).length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                        <span className="text-destructive">⚠️</span>
+                        Crucial Tasks
+                      </h3>
+                      <div className="space-y-3">
+                        {getCurrentProcedure()!.checklist
+                          .filter(item => item.crucial)
+                          .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                          .map((item, index) => {
+                            const dueDate = getDateForReminder(item.daysBeforeSurgery);
+                            const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                            const isChecked = checkedItems.has(actualIndex);
+                            const isPastDue = dueDate < new Date();
+
+                            return (
+                              <div
+                                key={actualIndex}
+                                className={cn(
+                                  "flex items-start gap-3 p-4 rounded-lg border-2 transition-colors cursor-pointer hover:bg-accent/50",
+                                  isChecked
+                                    ? "bg-muted/50 border-muted"
+                                    : isPastDue
+                                      ? "border-destructive/50 bg-destructive/5"
+                                      : "border-primary/30 bg-primary/5"
+                                )}
+                                onClick={() => toggleChecklistItem(actualIndex)}
+                              >
+                                <button
+                                  className="mt-0.5 shrink-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleChecklistItem(actualIndex);
+                                  }}
+                                >
+                                  {isChecked ? (
+                                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                                  ) : (
+                                    <Circle className="h-5 w-5 text-muted-foreground" />
+                                  )}
+                                </button>
+
+                                <div className="flex-1">
+                                  <p className={cn(
+                                    "text-sm font-medium",
+                                    isChecked && "line-through text-muted-foreground"
+                                  )}>
+                                    {item.task}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className={cn(
+                                      "text-xs font-semibold",
+                                      isPastDue && !isChecked ? "text-destructive" : "text-muted-foreground"
+                                    )}>
+                                      Due: {format(dueDate, "MMM d, yyyy")}
+                                    </span>
+                                    {isPastDue && !isChecked && (
+                                      <span className="text-xs text-destructive font-bold">(Overdue!)</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Optional Tasks Section */}
+                  {getCurrentProcedure()!.checklist.filter(item => !item.crucial).length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3 text-muted-foreground">
+                        Optional Tasks
+                      </h3>
+                      <div className="space-y-3">
+                        {getCurrentProcedure()!.checklist
+                          .filter(item => !item.crucial)
+                          .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                          .map((item, index) => {
+                            const dueDate = getDateForReminder(item.daysBeforeSurgery);
+                            const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                            const isChecked = checkedItems.has(actualIndex);
+                            const isPastDue = dueDate < new Date();
+
+                            return (
+                              <div
+                                key={actualIndex}
+                                className={cn(
+                                  "flex items-start gap-3 p-4 rounded-lg border transition-colors cursor-pointer hover:bg-accent/50",
+                                  isChecked && "bg-muted/50 border-muted"
+                                )}
+                                onClick={() => toggleChecklistItem(actualIndex)}
+                              >
+                                <button
+                                  className="mt-0.5 shrink-0"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleChecklistItem(actualIndex);
+                                  }}
+                                >
+                                  {isChecked ? (
+                                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                                  ) : (
+                                    <Circle className="h-5 w-5 text-muted-foreground" />
+                                  )}
+                                </button>
+
+                                <div className="flex-1">
+                                  <p className={cn(
+                                    "text-sm",
+                                    isChecked && "line-through text-muted-foreground"
+                                  )}>
+                                    {item.task}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-xs text-muted-foreground">
+                                      Due: {format(dueDate, "MMM d, yyyy")}
+                                    </span>
+                                    {isPastDue && !isChecked && (
+                                      <span className="text-xs text-muted-foreground">(Past due)</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Circle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Select a procedure on the Doctor tab to see your checklist</p>
+                </div>
+              )}
+            </Card>
+
+            {/* Chatbot Section */}
+            <Card className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                  <h2 className="text-xl font-semibold">Ask Questions</h2>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Today: {format(new Date(), "MMM d, yyyy")}
+                </div>
+              </div>
+
+              <div className="mb-4 p-3 bg-muted/50 rounded-lg border border-muted">
+                <p className="text-sm text-muted-foreground">
+                  💡 Ask me anything about your upcoming surgery. I'll answer based on your pre-op instructions.
+                </p>
+              </div>
+
+              <div className="space-y-4 mb-4">
+                <p className="text-sm text-muted-foreground">Quick questions:</p>
+                <div className="flex flex-wrap gap-2">
+                  {QUICK_QUESTIONS.map((question, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => sendMessage(question)}
+                      disabled={isLoading}
+                    >
+                      {question}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border rounded-lg p-4 min-h-[300px] max-h-[500px] overflow-y-auto mb-4 bg-background/50">
+                {messages.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">
+                    Ask a question to get started
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      >
+                        <div
+                          className={`max-w-[80%] rounded-lg p-3 ${
+                            message.role === "user"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted"
+                          }`}
+                        >
+                          {message.role === "user" ? (
+                            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                          ) : (
+                            <div className="text-sm prose prose-sm max-w-none dark:prose-invert prose-p:my-2 prose-ul:my-2 prose-li:my-0">
+                              <ReactMarkdown>{message.content}</ReactMarkdown>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-muted rounded-lg p-3">
+                          <p className="text-sm">Thinking...</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && sendMessage(inputMessage)}
+                  placeholder="Type your question..."
+                  className="flex-1 px-3 py-2 border rounded-md bg-background"
+                  disabled={isLoading}
+                />
+                <Button onClick={() => sendMessage(inputMessage)} disabled={isLoading}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default PreOpDemo;

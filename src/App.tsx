@@ -12,6 +12,7 @@ import InjuryManagement from "./pages/InjuryManagement";
 import MedicalSpend from "./pages/MedicalSpend";
 import Team from "./pages/Team";
 import TreatmentPlanDemo from "./pages/TreatmentPlanDemo";
+import PreOpDemo from "./pages/PreOpDemo";
 import Raffle from "./pages/Raffle";
 import NotFound from "./pages/NotFound";
 
@@ -28,11 +29,12 @@ const App = () => (
           <Route path="/employee-wellness" element={<Wellthy />} />
           <Route path="/home-care" element={<HomeCare />} />
           <Route path="/pt-adherence" element={<PTAdherence />} />
-          <Route path="/post-surgical-care" element={<PostSurgicalCare />} />
+          <Route path="/post-op" element={<PostSurgicalCare />} />
           <Route path="/injury-management" element={<InjuryManagement />} />
           <Route path="/medical-spend" element={<MedicalSpend />} />
           <Route path="/team" element={<Team />} />
           <Route path="/demo" element={<TreatmentPlanDemo />} />
+          <Route path="/demo-preop" element={<PreOpDemo />} />
           <Route path="/raffle" element={<Raffle />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

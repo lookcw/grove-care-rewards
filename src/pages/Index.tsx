@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { HeartPulse, Clock, Eye, Scale, ArrowRight, Stethoscope, Activity, Home, CheckCircle } from "lucide-react";
+import { HeartPulse, Clock, Eye, Scale, ArrowRight, Stethoscope, Activity, Home, CheckCircle, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroDoctorImage from "@/assets/hero-doctor-2.svg";
 
@@ -30,38 +30,30 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center max-w-7xl mx-auto">
             <div className="space-y-8">
-              <div className="inline-block">
-                <span className="inline-flex items-center px-4 py-2 rounded-full bg-accent text-accent-foreground text-sm font-medium">
-                  <HeartPulse className="h-4 w-4 mr-2" />
-                  Helping Care Teams
-                </span>
-              </div>
-
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                Simplifying{" "}
-                <span className="text-primary">Post-Op and Post-Discharge Follow-Up</span>
+                <span className="text-primary">Reduce Cancellations, Fill More OR Slots</span>
               </h1>
 
               <div className="text-lg lg:text-xl text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  Grove Health builds AI tools that make it effortless for providers to track patient recovery, catch complications early, and reduce the manual work that happens after discharge or surgery.
+                  Grove Health automates phone call and text reminders for surgical centers and clinics. We turn long pre-op papers into actionable checklists, helping you reduce last-minute cancellations, fill empty OR slots, and ensure patients arrive prepared.
                 </p>
                 <ul className="space-y-3 text-left">
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Automates structured check-ins via text or voice</span>
+                    <span>Turn long pre-op papers into actionable digital checklists</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Flags responses that need nurse or coordinator review</span>
+                    <span>Send automated reminders when patients need to stop eating or taking medications</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Reduces time spent on routine follow-up calls</span>
+                    <span>Call patients to confirm they've followed their pre-op instructions</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Gives every patient timely, personalized guidance at home</span>
+                    <span>Detect potential cancellations early so you can fill OR slots</span>
                   </li>
                 </ul>
               </div>
@@ -95,7 +87,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground">
-              Our tools make recovery follow-up more efficient and less stressful for both patients and care teams. Today, nurses and coordinators spend hours making routine calls after surgery or discharge — asking about pain, wound care, and meds — just to make sure nothing's going wrong. We automate those check-ins so clinicians can focus on the cases that actually need attention, while every patient gets timely, personalized guidance at home.
+              Our tools make pre-operative preparation more efficient and less chaotic for both surgical centers and patients. Today, coordinators spend hours making routine pre-op calls — verifying NPO times, medication holds, and checklist completion — just to make sure patients will show up ready. Last-minute cancellations waste expensive OR time and create scheduling nightmares. We automate those workflows so staff can focus on complex cases, while ensuring every patient arrives prepared for surgery.
             </p>
           </div>
 
@@ -105,9 +97,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Clock className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Efficiency for Care Teams</h3>
+                <h3 className="text-2xl font-bold mb-4">Reduce Cancellations, Fill More OR Slots</h3>
                 <p className="text-muted-foreground">
-                  We take the repetitive work out of follow-up by automating outreach, logging responses, and flagging what needs review, so staff spend more time on care, not phone calls.
+                  Know days in advance when a patient won't be ready for surgery, not the morning of. Fill empty OR slots with other patients and eliminate wasted surgical time.
                 </p>
               </CardContent>
             </Card>
@@ -117,9 +109,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Eye className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Better Recovery Visibility</h3>
+                <h3 className="text-2xl font-bold mb-4">Fewer Day-Of Cancellations</h3>
                 <p className="text-muted-foreground">
-                  Structured digital check-ins surface early warning signs like pain, swelling, and missed meds, before they escalate into complications or readmissions.
+                  Automated reminders and confirmation calls ensure patients follow NPO instructions and medication holds. Reduce last-minute surprises and maximize OR utilization.
                 </p>
               </CardContent>
             </Card>
@@ -129,9 +121,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-6">
                   <Scale className="w-8 h-8 text-accent-foreground" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Sustainable Care Delivery</h3>
+                <h3 className="text-2xl font-bold mb-4">Increase Revenue & Reduce Chaos</h3>
                 <p className="text-muted-foreground">
-                By improving how patients and providers stay connected after discharge, we make high-quality recovery care scalable for any clinic, hospital, or home health team.
+                More completed surgeries mean more revenue. Less wasted OR time means better margins. Automated pre-op workflows eliminate scheduling complications and manual coordination headaches.
                 </p>
               </CardContent>
             </Card>
@@ -145,58 +137,54 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Our Focus Areas</h2>
             <p className="text-xl text-muted-foreground">
-              We help clinical teams automate and manage the follow-up work that happens after surgery or discharge
+              We help surgical centers automate and streamline the preparation work that happens before surgery
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Link to="/post-surgical-care" className="group">
+            <Link to="/post-op" className="group">
               <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
                 <CardContent className="pt-8">
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                     <Stethoscope className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Recovery Outreach & Check-Ins
+                    Pre-Op Checklist Management
                   </h3>
                   <p className="text-muted-foreground">
-                    Automates post-op and post-discharge follow-ups to replace routine calls with structured text or voice check-ins by tracking pain, wounds, and meds, and alerting staff when something looks off.
+                    Digitizes lengthy paper checklists into patient-friendly workflows. Sends automated reminders for each requirement and tracks completion in real-time, so coordinators know exactly who's ready.
                   </p>
                 </CardContent>
               </Card>
             </Link>
 
-            <Link to="/pt-adherence" className="group">
-              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
-                <CardContent className="pt-8">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                    <Activity className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Patient Message Management
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Streamlines how teams handle incoming messages from recovering patients — summarizing updates, flagging urgent concerns, and routing them to the right clinician.
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card className="border-none shadow-md h-full">
+              <CardContent className="pt-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                  <Phone className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">
+                  Adherence Notifications
+                </h3>
+                <p className="text-muted-foreground">
+                  Automatically messages patients at the right time to stop eating, hold medications, or complete other time-sensitive requirements. Takes the burden off staff to remember every patient's timeline.
+                </p>
+              </CardContent>
+            </Card>
 
-            <Link to="/home-care" className="group">
-              <Card className="border-none shadow-md hover:shadow-xl transition-all h-full">
-                <CardContent className="pt-8">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                    <Home className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors">
-                    Care Coordination Across Settings
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Bridges communication between hospitals, clinics, and home-health teams so patients stay connected instead of falling through the cracks after discharge.
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
+            <Card className="border-none shadow-md h-full">
+              <CardContent className="pt-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                  <Home className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-bold mb-4">
+                  Compliance Verification & Confirmation Calls
+                </h3>
+                <p className="text-muted-foreground">
+                  Automated calls verify that patients followed their pre-op instructions correctly. Get confirmation before surgery day that patients are ready, reducing last-minute cancellations.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -206,12 +194,12 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <h2 className="text-4xl lg:text-5xl font-bold">
-              Save Staff Time, Without Sacrificing Patient Care
+              Fill More OR Slots, Reduce Cancellations
             </h2>
             <p className="text-xl text-muted-foreground">
-              We're partnering with care teams to reduce the time and cost of recovery communication while keeping patients supported.
+              We're partnering with surgical centers to eliminate last-minute cancellations and wasted OR time.
               <br className="hidden sm:block" />
-              <span className="block sm:inline"> If your clinicians spend hours on manual follow-up calls, we'd love to chat. Reach out today!</span>
+              <span className="block sm:inline"> If your coordinators spend hours on manual pre-op calls and deal with scheduling chaos, we'd love to chat. Reach out today!</span>
             </p>
             <Button variant="hero" size="lg" className="group" asChild>
               <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
