@@ -23,6 +23,7 @@ interface ChecklistItem {
   task: string;
   daysBeforeSurgery: number;
   crucial?: boolean; // if true, it's a crucial task; if false/undefined, it's optional
+  constant?: boolean; // if true, it's an ongoing reminder (no due date)
 }
 
 interface PreOpProcedure {
@@ -79,12 +80,12 @@ DAY OF SURGERY:
 - Do not wear makeup, jewelry, or contact lenses
 - Arrive 2 hours before scheduled surgery time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Schedule your pre-operative appointment with your surgeon" },
-          { daysBeforeSurgery: 14, message: "Complete all required pre-op testing (bloodwork, EKG, etc.)" },
-          { daysBeforeSurgery: 7, message: "Stop taking anti-inflammatory medications and herbal supplements" },
-          { daysBeforeSurgery: 3, message: "Confirm your ride home and arrange for post-op assistance" },
-          { daysBeforeSurgery: 1, message: "Begin fasting at midnight - no food or liquids after midnight" },
-          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap and arrive 2 hours early" }
+          { daysBeforeSurgery: 30, message: "Hi! Time to schedule your pre-op appointment with your surgeon. Looking forward to helping you through this journey! 📅" },
+          { daysBeforeSurgery: 14, message: "Quick reminder to complete your pre-op testing (bloodwork, EKG, etc.). You're doing great! ✨" },
+          { daysBeforeSurgery: 7, message: "Hey! Please stop taking anti-inflammatory meds and herbal supplements now. Your surgery is getting close - you've got this! 💪" },
+          { daysBeforeSurgery: 3, message: "Just checking in! Make sure you've confirmed your ride home and have someone to help you out after surgery. We're here for you! 🚗" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's the big day! Remember to start fasting at midnight tonight - no food or liquids. You're almost there! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Today's your surgery day! Shower with antibacterial soap and arrive 2 hours early. You've got this! 🎯" }
         ],
         checklist: [
           { task: "Attend pre-operative appointment with surgeon", daysBeforeSurgery: 30, crucial: true },
@@ -96,7 +97,10 @@ DAY OF SURGERY:
           { task: "Set up recovery area at home", daysBeforeSurgery: 3, crucial: false },
           { task: "Fill any prescribed post-op medications", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with ID, insurance card, and comfortable clothes", daysBeforeSurgery: 1, crucial: true },
-          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, crucial: true }
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, crucial: true },
+          { task: "No alcohol consumption until after surgery", daysBeforeSurgery: 0, constant: true },
+          { task: "Avoid smoking and nicotine products", daysBeforeSurgery: 0, constant: true },
+          { task: "Keep your surgical knee elevated when resting", daysBeforeSurgery: 0, constant: true }
         ]
       },
       rotator_cuff: {
@@ -136,13 +140,13 @@ DAY OF SURGERY:
 - No deodorant on surgical side
 - Arrive 90 minutes before scheduled time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Schedule pre-operative physical and medical clearance" },
-          { daysBeforeSurgery: 14, message: "Complete all required lab work and cardiac testing" },
-          { daysBeforeSurgery: 7, message: "Stop aspirin and anti-inflammatory medications" },
-          { daysBeforeSurgery: 5, message: "Purchase button-front shirts and arrange home setup" },
-          { daysBeforeSurgery: 3, message: "Confirm ride and post-op care assistance" },
-          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
-          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap, wear button-front shirt" }
+          { daysBeforeSurgery: 30, message: "Hello! Time to schedule your pre-op physical and get medical clearance. We're here to support you every step of the way! 💙" },
+          { daysBeforeSurgery: 14, message: "Friendly reminder to complete your lab work and cardiac testing. You're making great progress! 🏥" },
+          { daysBeforeSurgery: 7, message: "Hi there! Please stop taking aspirin and anti-inflammatory meds starting today. Your recovery journey is about to begin! 💊" },
+          { daysBeforeSurgery: 5, message: "Time to grab some button-front shirts and set up your recovery space at home. Making things comfy will help so much! 👕" },
+          { daysBeforeSurgery: 3, message: "Just a quick check - do you have your ride and someone to help you after surgery? Almost there! 🤝" },
+          { daysBeforeSurgery: 1, message: "Big day tomorrow! Remember to start fasting at midnight tonight. Rest up - you're going to do great! 🌟" },
+          { daysBeforeSurgery: 0, message: "Good morning, it's surgery day! Shower with antibacterial soap and wear a button-front shirt. You've prepared so well! 🎯" }
         ],
         checklist: [
           { task: "Schedule pre-op physical and get medical clearance", daysBeforeSurgery: 30, crucial: true },
@@ -197,14 +201,14 @@ SURGERY DAY:
 - Bring walker or crutches
 - Arrive 2 hours before scheduled surgery`,
         reminders: [
-          { daysBeforeSurgery: 60, message: "Begin pre-op physical therapy and strengthening exercises" },
-          { daysBeforeSurgery: 30, message: "Schedule dental clearance and pre-operative testing" },
-          { daysBeforeSurgery: 14, message: "Complete all lab work, EKG, and chest X-ray" },
-          { daysBeforeSurgery: 10, message: "Begin home preparation - install grab bars, remove trip hazards" },
-          { daysBeforeSurgery: 7, message: "Stop anti-inflammatory medications and herbal supplements" },
-          { daysBeforeSurgery: 3, message: "Confirm transportation and post-op care for first 2 weeks" },
-          { daysBeforeSurgery: 1, message: "Begin fasting at midnight - no food or liquids" },
-          { daysBeforeSurgery: 0, message: "Surgery day! Shower with Hibiclens, bring walker, arrive 2 hours early" }
+          { daysBeforeSurgery: 60, message: "Hey! Let's get you strong for surgery! Time to start your pre-op physical therapy and exercises. You've got plenty of time to build up! 💪" },
+          { daysBeforeSurgery: 30, message: "Hi! Please schedule your dental clearance and pre-op testing. Taking care of these steps early makes everything smoother! 😊" },
+          { daysBeforeSurgery: 14, message: "Reminder to complete your lab work, EKG, and chest X-ray. You're halfway there - keep up the great work! 🎯" },
+          { daysBeforeSurgery: 10, message: "Time to make your home recovery-ready! Install those grab bars and clear any trip hazards. Safety first! 🏠" },
+          { daysBeforeSurgery: 7, message: "Please stop anti-inflammatory meds and herbal supplements starting today. Your new knee is just around the corner! 🌟" },
+          { daysBeforeSurgery: 3, message: "Quick check-in: Is your transportation and help lined up for the first 2 weeks? You're doing amazing! 🚗" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's the day! Start fasting at midnight tonight. Get some good rest - you're so ready for this! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! It's surgery day! Shower with Hibiclens, grab your walker, and arrive 2 hours early. You've got this! 🎉" }
         ],
         checklist: [
           { task: "Complete dental exam and clearance", daysBeforeSurgery: 30, crucial: true },
@@ -291,11 +295,11 @@ DO NOT:
 - Smoke or use nicotine 48 hours before
 - Drink alcohol 48 hours before`,
         reminders: [
-          { daysBeforeSurgery: 14, message: "Confirm with prescribing doctor about stopping blood thinners" },
-          { daysBeforeSurgery: 7, message: "Stop aspirin and blood thinners if approved by your doctor" },
-          { daysBeforeSurgery: 3, message: "Arrange transportation and time off work" },
-          { daysBeforeSurgery: 2, message: "Stop smoking, alcohol, and blood-thinning supplements" },
-          { daysBeforeSurgery: 0, message: "Eat a normal meal, wear comfortable clothes, bring reading material" }
+          { daysBeforeSurgery: 14, message: "Hi! Please check with your doctor about stopping blood thinners. Better to confirm now so you're all set! 📋" },
+          { daysBeforeSurgery: 7, message: "If your doctor approved it, please stop aspirin and blood thinners now. You're doing great with your prep! 💊" },
+          { daysBeforeSurgery: 3, message: "Time to arrange your ride and request time off work. The procedure can take a few hours, so bring something to read! 📚" },
+          { daysBeforeSurgery: 2, message: "Reminder to stop smoking, alcohol, and blood-thinning supplements. Almost procedure day! 🌟" },
+          { daysBeforeSurgery: 0, message: "Good morning! Eat a normal meal, wear comfy clothes, and bring something to read. We'll take good care of you today! 😊" }
         ],
         checklist: [
           { task: "Check with prescribing doctor about stopping blood thinners", daysBeforeSurgery: 14, crucial: true },
@@ -339,10 +343,10 @@ IMPORTANT:
 - Tell us about any allergies (especially to local anesthetics)
 - Inform us if you have a pacemaker or metal implants`,
         reminders: [
-          { daysBeforeSurgery: 7, message: "Stop blood thinners if approved by prescribing physician" },
-          { daysBeforeSurgery: 3, message: "Stop anti-inflammatory medications (ibuprofen, naproxen)" },
-          { daysBeforeSurgery: 1, message: "Arrange ride home if receiving sedation, plan for time off work" },
-          { daysBeforeSurgery: 0, message: "Eat light meal, shower, do not apply products to surgical area" }
+          { daysBeforeSurgery: 7, message: "Hi there! If your doctor approved it, please stop blood thinners now. You're on track! 💙" },
+          { daysBeforeSurgery: 3, message: "Time to stop anti-inflammatory meds like ibuprofen. Your procedure is coming up soon! 💊" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's the day! Make sure you have a ride if you're getting sedation, and take it easy. You've got this! 🚗" },
+          { daysBeforeSurgery: 0, message: "Good morning! Eat a light meal, shower, and skip products on the surgical area. See you soon! 😊" }
         ],
         checklist: [
           { task: "Confirm with doctor about stopping blood thinners", daysBeforeSurgery: 7, crucial: true },
@@ -436,15 +440,15 @@ SURGERY DAY:
 - Bring CPAP machine if you use one
 - Wear comfortable, loose clothing`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Begin pre-operative program - nutrition classes and evaluations" },
-          { daysBeforeSurgery: 60, message: "Complete psychological evaluation and medical clearances" },
-          { daysBeforeSurgery: 30, message: "Complete sleep study and upper endoscopy" },
-          { daysBeforeSurgery: 14, message: "Start pre-operative high-protein diet - protein shakes 2-3x daily" },
-          { daysBeforeSurgery: 7, message: "Stop NSAIDs and confirm medication plan with surgeon" },
-          { daysBeforeSurgery: 3, message: "Stock up on protein shakes, clear liquids, and pureed foods" },
-          { daysBeforeSurgery: 2, message: "Begin liquid-only diet - protein shakes, broth, sugar-free drinks" },
-          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
-          { daysBeforeSurgery: 0, message: "Surgery day! Shower with Hibiclens, bring CPAP if needed, arrive 2 hours early" }
+          { daysBeforeSurgery: 90, message: "Welcome to your pre-op program! Time to start nutrition classes and evaluations. This is an exciting journey - we're here for you! 🌟" },
+          { daysBeforeSurgery: 60, message: "Hi! Please complete your psychological evaluation and medical clearances. You're making amazing progress on this journey! 💪" },
+          { daysBeforeSurgery: 30, message: "Time for your sleep study and upper endoscopy. These important steps help ensure your safety. You're doing great! 🏥" },
+          { daysBeforeSurgery: 14, message: "Starting today: high-protein diet with 2-3 protein shakes daily! This helps prepare your body. You've got this! 🥤" },
+          { daysBeforeSurgery: 7, message: "Please stop NSAIDs and double-check your medication plan with your surgeon. One week to go - so exciting! 💊" },
+          { daysBeforeSurgery: 3, message: "Stock up time! Grab protein shakes, clear liquids, and pureed foods for after surgery. Almost there! 🛒" },
+          { daysBeforeSurgery: 2, message: "Switching to liquid-only today - protein shakes, broth, and sugar-free drinks. You're doing amazing! 🥛" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's your big day! Start fasting at midnight tonight. Rest well - you've prepared so well for this! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Shower with Hibiclens, bring your CPAP if needed, and arrive 2 hours early. You've got this! 🎉" }
         ],
         checklist: [
           { task: "Complete nutritionist consultations (minimum 3 visits)", daysBeforeSurgery: 90, crucial: true },
@@ -516,15 +520,15 @@ SURGERY DAY:
 - Bring CPAP if you use one
 - Arrive 90 minutes early`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Begin bariatric surgery program - attend required education classes" },
-          { daysBeforeSurgery: 60, message: "Complete psychological evaluation and all medical clearances" },
-          { daysBeforeSurgery: 30, message: "Stop birth control pills, complete upper endoscopy" },
-          { daysBeforeSurgery: 14, message: "Start 2-week pre-op diet - high protein, low carb, protein shakes" },
-          { daysBeforeSurgery: 10, message: "Stop NSAIDs (ibuprofen, aspirin, naproxen)" },
-          { daysBeforeSurgery: 7, message: "Stock up on protein shakes and prepare home for recovery" },
-          { daysBeforeSurgery: 3, message: "Begin liquid-only phase - protein shakes, broth, sugar-free drinks" },
-          { daysBeforeSurgery: 1, message: "Begin fasting at midnight tonight" },
-          { daysBeforeSurgery: 0, message: "Surgery day! Shower with antibacterial soap, bring CPAP, arrive 90 min early" }
+          { daysBeforeSurgery: 90, message: "Welcome! Time to begin your bariatric program and education classes. This is the start of an amazing transformation! 🌟" },
+          { daysBeforeSurgery: 60, message: "Hi! Let's get your psychological evaluation and medical clearances done. You're taking such great steps for your health! 💙" },
+          { daysBeforeSurgery: 30, message: "Reminder to stop birth control pills and complete your upper endoscopy. You're doing so well! 🏥" },
+          { daysBeforeSurgery: 14, message: "Starting your 2-week pre-op diet today - high protein, low carb, with protein shakes. You can do this! 💪" },
+          { daysBeforeSurgery: 10, message: "Time to stop NSAIDs like ibuprofen and aspirin. Your surgery is getting close - exciting! 💊" },
+          { daysBeforeSurgery: 7, message: "Stock up on protein shakes and get your home ready for recovery. One week to go! 🛒" },
+          { daysBeforeSurgery: 3, message: "Switching to liquids-only - protein shakes, broth, and sugar-free drinks. You're almost there! 🥛" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's the big day! Begin fasting at midnight. Rest up - you've worked so hard for this! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Shower with antibacterial soap, bring your CPAP, and arrive 90 min early. Let's do this! 🎉" }
         ],
         checklist: [
           { task: "Attend all required nutrition education classes", daysBeforeSurgery: 90, crucial: true },
@@ -680,7 +684,12 @@ const PreOpDemo = () => {
           procedure.checklist.map(item => `- ${item.task} (${item.daysBeforeSurgery} days before surgery)`).join("\n");
       }
 
-      const systemPrompt = `This is a test demo website for pre-operative care. You are helping a patient prepare for surgery. Use the pre-operative instructions and checklist to answer questions. If the answer is not in the provided information, let the patient know you'll ask their care team for clarification.
+      const systemPrompt = `This is a test demo website for pre-operative care. You are helping a patient prepare for surgery. Use the pre-operative instructions and checklist to answer questions.
+
+IMPORTANT: When answering questions, include a relevant quote from the pre-operative instructions showing where you found the information. Format it like this:
+> "Quote from the instructions"
+
+If the answer is not in the provided information, let the patient know you'll ask their care team for clarification.
 
 Surgery Date: ${format(surgeryDate, "MMMM d, yyyy")}
 Today's Date: ${format(today, "MMMM d, yyyy")}
@@ -900,21 +909,19 @@ ${baseInfo || "No clinic information provided yet."}`;
 
           <TabsContent value="patient" className="space-y-6">
             {/* Phone Messages Section */}
-            <Card className="p-6 bg-gradient-to-b from-muted/30 to-background">
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-2xl font-semibold">📱 Reminder Messages</h2>
-                  <div className="text-sm text-muted-foreground">
-                    Surgery: {format(surgeryDate, "MMM d, yyyy")}
-                  </div>
-                </div>
+            <Card className="p-6 bg-gradient-to-b from-muted/30 to-background max-w-4xl mx-auto">
+              <div className="mb-4">
+                <h2 className="text-2xl font-semibold mb-2">Reminder Messages</h2>
+                <p className="text-sm text-muted-foreground mb-1">
+                  These are the reminder messages that we send to the patient on your behalf.
+                </p>
                 <p className="text-sm text-muted-foreground">
                   {getDaysUntilSurgery()} days until your surgery
                 </p>
               </div>
 
               {getCurrentProcedure() ? (
-                <div className="space-y-3 max-w-2xl">
+                <div className="space-y-3 h-[500px] overflow-y-auto">
                   {getCurrentProcedure()!.reminders
                     .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
                     .map((reminder, index) => {
@@ -930,18 +937,10 @@ ${baseInfo || "No clinic information provided yet."}`;
 
                           {/* iPhone-style message bubble */}
                           <div className="flex items-end gap-2 w-full">
-                            <div className={cn(
-                              "relative max-w-[85%] rounded-[18px] px-4 py-2.5 shadow-sm",
-                              isPast
-                                ? "bg-muted/80"
-                                : "bg-blue-500 text-white"
-                            )}>
+                            <div className="relative max-w-[85%] rounded-[18px] px-4 py-2.5 shadow-sm bg-gray-200 dark:bg-gray-700">
                               {/* Message tail - iPhone-style tail at bottom left */}
                               <svg
-                                className={cn(
-                                  "absolute -left-[20px] bottom-0",
-                                  isPast ? "text-muted/80" : "text-blue-500"
-                                )}
+                                className="absolute -left-[20px] bottom-0 text-gray-200 dark:text-gray-700"
                                 width="35"
                                 height="35"
                                 viewBox="0 0 35 35"
@@ -953,27 +952,16 @@ ${baseInfo || "No clinic information provided yet."}`;
                               </svg>
 
                               <div className="mb-1">
-                                <span className={cn(
-                                  "text-xs font-semibold",
-                                  isPast ? "text-muted-foreground" : "text-blue-100"
-                                )}>
+                                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
                                   {reminder.daysBeforeSurgery === 0
                                     ? "Today - Surgery Day!"
                                     : `${reminder.daysBeforeSurgery} days before surgery`}
                                 </span>
                               </div>
-                              <p className={cn(
-                                "text-[15px] leading-snug",
-                                isPast ? "text-foreground" : "text-white"
-                              )}>
+                              <p className="text-[15px] leading-snug text-gray-900 dark:text-gray-100">
                                 {reminder.message}
                               </p>
                             </div>
-                            {!isPast && (
-                              <div className="flex-shrink-0 text-xs text-muted-foreground pb-1">
-                                Delivered
-                              </div>
-                            )}
                           </div>
                         </div>
                       );
@@ -988,32 +976,72 @@ ${baseInfo || "No clinic information provided yet."}`;
             </Card>
 
             {/* Checklist Section */}
-            <Card className="p-6">
-              <div className="mb-6">
+            <Card className="p-6 max-w-4xl mx-auto">
+              <div className="mb-4">
                 <h2 className="text-2xl font-semibold mb-2">Pre-Op Checklist</h2>
                 <p className="text-sm text-muted-foreground">
-                  Complete these tasks before your surgery
+                  This is the checklist the patient sees when they log into the app.
                 </p>
               </div>
 
               {getCurrentProcedure() ? (
-                <div className="space-y-6">
+                <div className="space-y-6 h-[500px] overflow-y-auto">
+                  {/* Constant Reminders Section - Now at the top */}
+                  {getCurrentProcedure()!.checklist.filter(item => item.constant).length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold mb-3">
+                        Ongoing Reminders
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Follow these guidelines throughout your pre-op period (ongoing until surgery)
+                      </p>
+                      <div className="p-4 rounded-lg border border-blue-200 bg-blue-50/50 dark:bg-blue-950/20 dark:border-blue-900">
+                        <ul className="space-y-2 list-disc list-inside">
+                          {getCurrentProcedure()!.checklist
+                            .filter(item => item.constant)
+                            .map((item, index) => {
+                              const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+
+                              return (
+                                <li key={actualIndex} className="text-sm font-medium">
+                                  {item.task}
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Crucial Tasks Section */}
                   {getCurrentProcedure()!.checklist.filter(item => item.crucial).length > 0 && (
                     <div>
-                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                        <span className="text-destructive">⚠️</span>
-                        Crucial Tasks
+                      <h3 className="text-lg font-semibold mb-3">
+                        Things You Need to Do
                       </h3>
                       <div className="space-y-3">
                         {getCurrentProcedure()!.checklist
                           .filter(item => item.crucial)
-                          .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                          .sort((a, b) => {
+                            const dateA = getDateForReminder(a.daysBeforeSurgery);
+                            const dateB = getDateForReminder(b.daysBeforeSurgery);
+                            const now = new Date();
+                            const aIsFuture = dateA > now;
+                            const bIsFuture = dateB > now;
+
+                            // Sort future items to bottom
+                            if (aIsFuture && !bIsFuture) return 1;
+                            if (!aIsFuture && bIsFuture) return -1;
+
+                            // Within same category, sort by days before surgery descending
+                            return b.daysBeforeSurgery - a.daysBeforeSurgery;
+                          })
                           .map((item, index) => {
                             const dueDate = getDateForReminder(item.daysBeforeSurgery);
                             const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
                             const isChecked = checkedItems.has(actualIndex);
                             const isPastDue = dueDate < new Date();
+                            const isFuture = dueDate > new Date();
 
                             return (
                               <div
@@ -1022,9 +1050,11 @@ ${baseInfo || "No clinic information provided yet."}`;
                                   "flex items-start gap-3 p-4 rounded-lg border-2 transition-colors cursor-pointer hover:bg-accent/50",
                                   isChecked
                                     ? "bg-muted/50 border-muted"
-                                    : isPastDue
-                                      ? "border-destructive/50 bg-destructive/5"
-                                      : "border-primary/30 bg-primary/5"
+                                    : isFuture
+                                      ? "bg-muted/30 border-muted opacity-60"
+                                      : isPastDue
+                                        ? "border-destructive/50 bg-destructive/5"
+                                        : "border-primary/30 bg-primary/5"
                                 )}
                                 onClick={() => toggleChecklistItem(actualIndex)}
                               >
@@ -1069,27 +1099,45 @@ ${baseInfo || "No clinic information provided yet."}`;
                   )}
 
                   {/* Optional Tasks Section */}
-                  {getCurrentProcedure()!.checklist.filter(item => !item.crucial).length > 0 && (
+                  {getCurrentProcedure()!.checklist.filter(item => !item.crucial && !item.constant).length > 0 && (
                     <div>
                       <h3 className="text-lg font-semibold mb-3 text-muted-foreground">
-                        Optional Tasks
+                        Things That Would Be Good to Do
                       </h3>
                       <div className="space-y-3">
                         {getCurrentProcedure()!.checklist
-                          .filter(item => !item.crucial)
-                          .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                          .filter(item => !item.crucial && !item.constant)
+                          .sort((a, b) => {
+                            const dateA = getDateForReminder(a.daysBeforeSurgery);
+                            const dateB = getDateForReminder(b.daysBeforeSurgery);
+                            const now = new Date();
+                            const aIsFuture = dateA > now;
+                            const bIsFuture = dateB > now;
+
+                            // Sort future items to bottom
+                            if (aIsFuture && !bIsFuture) return 1;
+                            if (!aIsFuture && bIsFuture) return -1;
+
+                            // Within same category, sort by days before surgery descending
+                            return b.daysBeforeSurgery - a.daysBeforeSurgery;
+                          })
                           .map((item, index) => {
                             const dueDate = getDateForReminder(item.daysBeforeSurgery);
                             const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
                             const isChecked = checkedItems.has(actualIndex);
                             const isPastDue = dueDate < new Date();
+                            const isFuture = dueDate > new Date();
 
                             return (
                               <div
                                 key={actualIndex}
                                 className={cn(
                                   "flex items-start gap-3 p-4 rounded-lg border transition-colors cursor-pointer hover:bg-accent/50",
-                                  isChecked && "bg-muted/50 border-muted"
+                                  isChecked
+                                    ? "bg-muted/50 border-muted"
+                                    : isFuture
+                                      ? "bg-muted/30 border-muted opacity-60"
+                                      : ""
                                 )}
                                 onClick={() => toggleChecklistItem(actualIndex)}
                               >
@@ -1139,20 +1187,19 @@ ${baseInfo || "No clinic information provided yet."}`;
             </Card>
 
             {/* Chatbot Section */}
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5 text-primary" />
-                  <h2 className="text-xl font-semibold">Ask Questions</h2>
+            <Card className="p-6 max-w-4xl mx-auto">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-semibold">Ask Questions</h2>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Today: {format(new Date(), "MMM d, yyyy")}
+                  </div>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Today: {format(new Date(), "MMM d, yyyy")}
-                </div>
-              </div>
-
-              <div className="mb-4 p-3 bg-muted/50 rounded-lg border border-muted">
                 <p className="text-sm text-muted-foreground">
-                  💡 Ask me anything about your upcoming surgery. I'll answer based on your pre-op instructions.
+                  This is the space where patients can ask any questions about their surgery.
                 </p>
               </div>
 
