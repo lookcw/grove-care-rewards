@@ -80,7 +80,7 @@ DAY OF SURGERY:
 - Do not wear makeup, jewelry, or contact lenses
 - Arrive 2 hours before scheduled surgery time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Hi! Time to schedule your pre-op appointment with your surgeon. Looking forward to helping you through this journey! 📅" },
+          { daysBeforeSurgery: 30, message: "Hi! Time to schedule your pre-op appointment with your surgeon. You can schedule at yourcliniclink.com. Looking forward to helping you through this journey! 📅" },
           { daysBeforeSurgery: 14, message: "Quick reminder to complete your pre-op testing (bloodwork, EKG, etc.). You're doing great! ✨" },
           { daysBeforeSurgery: 7, message: "Hey! Please stop taking anti-inflammatory meds and herbal supplements now. Your surgery is getting close - you've got this! 💪" },
           { daysBeforeSurgery: 3, message: "Just checking in! Make sure you've confirmed your ride home and have someone to help you out after surgery. We're here for you! 🚗" },
@@ -140,7 +140,7 @@ DAY OF SURGERY:
 - No deodorant on surgical side
 - Arrive 90 minutes before scheduled time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Hello! Time to schedule your pre-op physical and get medical clearance. We're here to support you every step of the way! 💙" },
+          { daysBeforeSurgery: 30, message: "Hello! Time to schedule your pre-op physical and get medical clearance. You can schedule at yourcliniclink.com. We're here to support you every step of the way! 💙" },
           { daysBeforeSurgery: 14, message: "Friendly reminder to complete your lab work and cardiac testing. You're making great progress! 🏥" },
           { daysBeforeSurgery: 7, message: "Hi there! Please stop taking aspirin and anti-inflammatory meds starting today. Your recovery journey is about to begin! 💊" },
           { daysBeforeSurgery: 5, message: "Time to grab some button-front shirts and set up your recovery space at home. Making things comfy will help so much! 👕" },
@@ -202,7 +202,7 @@ SURGERY DAY:
 - Arrive 2 hours before scheduled surgery`,
         reminders: [
           { daysBeforeSurgery: 60, message: "Hey! Let's get you strong for surgery! Time to start your pre-op physical therapy and exercises. You've got plenty of time to build up! 💪" },
-          { daysBeforeSurgery: 30, message: "Hi! Please schedule your dental clearance and pre-op testing. Taking care of these steps early makes everything smoother! 😊" },
+          { daysBeforeSurgery: 30, message: "Hi! Please schedule your dental clearance and pre-op testing at yourcliniclink.com. Taking care of these steps early makes everything smoother! 😊" },
           { daysBeforeSurgery: 14, message: "Reminder to complete your lab work, EKG, and chest X-ray. You're halfway there - keep up the great work! 🎯" },
           { daysBeforeSurgery: 10, message: "Time to make your home recovery-ready! Install those grab bars and clear any trip hazards. Safety first! 🏠" },
           { daysBeforeSurgery: 7, message: "Please stop anti-inflammatory meds and herbal supplements starting today. Your new knee is just around the corner! 🌟" },
@@ -295,7 +295,7 @@ DO NOT:
 - Smoke or use nicotine 48 hours before
 - Drink alcohol 48 hours before`,
         reminders: [
-          { daysBeforeSurgery: 14, message: "Hi! Please check with your doctor about stopping blood thinners. Better to confirm now so you're all set! 📋" },
+          { daysBeforeSurgery: 14, message: "Hi! Please schedule your Mohs procedure at yourcliniclink.com and check with your doctor about stopping blood thinners. Better to confirm now so you're all set! 📋" },
           { daysBeforeSurgery: 7, message: "If your doctor approved it, please stop aspirin and blood thinners now. You're doing great with your prep! 💊" },
           { daysBeforeSurgery: 3, message: "Time to arrange your ride and request time off work. The procedure can take a few hours, so bring something to read! 📚" },
           { daysBeforeSurgery: 2, message: "Reminder to stop smoking, alcohol, and blood-thinning supplements. Almost procedure day! 🌟" },
@@ -343,7 +343,7 @@ IMPORTANT:
 - Tell us about any allergies (especially to local anesthetics)
 - Inform us if you have a pacemaker or metal implants`,
         reminders: [
-          { daysBeforeSurgery: 7, message: "Hi there! If your doctor approved it, please stop blood thinners now. You're on track! 💙" },
+          { daysBeforeSurgery: 7, message: "Hi there! Please schedule your procedure at yourcliniclink.com if you haven't already. If your doctor approved it, please stop blood thinners now. You're on track! 💙" },
           { daysBeforeSurgery: 3, message: "Time to stop anti-inflammatory meds like ibuprofen. Your procedure is coming up soon! 💊" },
           { daysBeforeSurgery: 1, message: "Tomorrow's the day! Make sure you have a ride if you're getting sedation, and take it easy. You've got this! 🚗" },
           { daysBeforeSurgery: 0, message: "Good morning! Eat a light meal, shower, and skip products on the surgical area. See you soon! 😊" }
@@ -440,9 +440,9 @@ SURGERY DAY:
 - Bring CPAP machine if you use one
 - Wear comfortable, loose clothing`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Welcome to your pre-op program! Time to start nutrition classes and evaluations. This is an exciting journey - we're here for you! 🌟" },
+          { daysBeforeSurgery: 90, message: "Welcome to your pre-op program! Time to start nutrition classes and evaluations. You can schedule at yourcliniclink.com. This is an exciting journey - we're here for you! 🌟" },
           { daysBeforeSurgery: 60, message: "Hi! Please complete your psychological evaluation and medical clearances. You're making amazing progress on this journey! 💪" },
-          { daysBeforeSurgery: 30, message: "Time for your sleep study and upper endoscopy. These important steps help ensure your safety. You're doing great! 🏥" },
+          { daysBeforeSurgery: 30, message: "Time to schedule your sleep study and upper endoscopy at yourcliniclink.com. These important steps help ensure your safety. You're doing great! 🏥" },
           { daysBeforeSurgery: 14, message: "Starting today: high-protein diet with 2-3 protein shakes daily! This helps prepare your body. You've got this! 🥤" },
           { daysBeforeSurgery: 7, message: "Please stop NSAIDs and double-check your medication plan with your surgeon. One week to go - so exciting! 💊" },
           { daysBeforeSurgery: 3, message: "Stock up time! Grab protein shakes, clear liquids, and pureed foods for after surgery. Almost there! 🛒" },
@@ -520,9 +520,9 @@ SURGERY DAY:
 - Bring CPAP if you use one
 - Arrive 90 minutes early`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Welcome! Time to begin your bariatric program and education classes. This is the start of an amazing transformation! 🌟" },
+          { daysBeforeSurgery: 90, message: "Welcome! Time to begin your bariatric program and education classes. You can schedule at yourcliniclink.com. This is the start of an amazing transformation! 🌟" },
           { daysBeforeSurgery: 60, message: "Hi! Let's get your psychological evaluation and medical clearances done. You're taking such great steps for your health! 💙" },
-          { daysBeforeSurgery: 30, message: "Reminder to stop birth control pills and complete your upper endoscopy. You're doing so well! 🏥" },
+          { daysBeforeSurgery: 30, message: "Time to schedule your upper endoscopy at yourcliniclink.com. Also, reminder to stop birth control pills. You're doing so well! 🏥" },
           { daysBeforeSurgery: 14, message: "Starting your 2-week pre-op diet today - high protein, low carb, with protein shakes. You can do this! 💪" },
           { daysBeforeSurgery: 10, message: "Time to stop NSAIDs like ibuprofen and aspirin. Your surgery is getting close - exciting! 💊" },
           { daysBeforeSurgery: 7, message: "Stock up on protein shakes and get your home ready for recovery. One week to go! 🛒" },
