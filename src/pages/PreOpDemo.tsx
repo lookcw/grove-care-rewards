@@ -602,6 +602,7 @@ const PreOpDemo = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+  const [showPatientView, setShowPatientView] = useState(false);
 
   useEffect(() => {
     const savedData = localStorage.getItem("preOpMedicalData");
@@ -778,31 +779,13 @@ ${baseInfo || "No clinic information provided yet."}`;
           <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             Grove Health Pre-Op Portal
           </h1>
-          <p className="text-muted-foreground">Prepare for your upcoming surgery</p>
           <p className="text-sm text-muted-foreground mt-2">
             This is a demo only. Do not put any PII (Personally Identifiable Information) in this interface.
           </p>
         </div>
 
-        <Tabs defaultValue="doctor" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-            <TabsTrigger value="doctor" className="flex items-center gap-2">
-              <Stethoscope className="h-4 w-4" />
-              Doctor
-            </TabsTrigger>
-            <TabsTrigger value="patient" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Patient
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="doctor" className="space-y-6">
-            <div className="text-center mb-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
-              <p className="text-sm text-muted-foreground">
-                Select a specialty and a sample pre-op plan, then click on the Patient tab to see what the patient sees.
-              </p>
-            </div>
-
+        {!showPatientView ? (
+          <div className="space-y-6">
             <Card className="p-6">
               <div className="space-y-4">
                 <div>
@@ -823,97 +806,131 @@ ${baseInfo || "No clinic information provided yet."}`;
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+            </Card>
 
-                <div>
-                  <label className="text-lg font-semibold mb-2 block">
-                    Surgery Date
-                  </label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    When is the surgery scheduled?
-                  </p>
-                  <Popover>
-                    <PopoverTrigger asChild>
+            {clinicType && (
+              <>
+                <Card className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-lg font-semibold mb-2 block">
+                        Sample Pre-Op Template
+                      </label>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Select a procedure to load pre-operative instructions
+                      </p>
+                      <Select value={selectedProcedure} onValueChange={handleProcedureSelect}>
+                        <SelectTrigger className="mb-3">
+                          <SelectValue placeholder="Select a procedure..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {PRE_OP_DATA[clinicType] && Object.entries(PRE_OP_DATA[clinicType].procedures).map(([key, procedure]) => (
+                            <SelectItem key={key} value={key}>
+                              {procedure.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <label className="text-lg font-semibold mb-2 block">
+                        Surgery Date
+                      </label>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        When is the surgery scheduled?
+                      </p>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !surgeryDate && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {surgeryDate ? format(surgeryDate, "PPP") : <span>Pick a date</span>}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={surgeryDate}
+                            onSelect={(date) => date && setSurgeryDate(date)}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+                </Card>
+
+                {selectedProcedure && (
+                  <>
+                    <Card className="p-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-lg font-semibold mb-2 block">
+                            Pre-Operative Instructions
+                          </label>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            These instructions will be used by the AI chatbot to answer patient questions
+                          </p>
+                          <Textarea
+                            value={preOpInstructions}
+                            onChange={(e) => setPreOpInstructions(e.target.value)}
+                            placeholder="Pre-operative instructions will appear here..."
+                            className="min-h-[400px] resize-y"
+                          />
+                        </div>
+                      </div>
+                    </Card>
+
+                    <Card className="p-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-lg font-semibold mb-2 block">
+                            Clinic Information
+                          </label>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            General information about your surgical center
+                          </p>
+                          <Textarea
+                            value={baseInfo}
+                            onChange={(e) => setBaseInfo(e.target.value)}
+                            placeholder="Clinic contact information, hours, and services..."
+                            className="min-h-[300px] resize-y"
+                          />
+                        </div>
+                      </div>
+                    </Card>
+
+                    <div className="flex justify-center">
                       <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !surgeryDate && "text-muted-foreground"
-                        )}
+                        onClick={() => setShowPatientView(true)}
+                        size="lg"
                       >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {surgeryDate ? format(surgeryDate, "PPP") : <span>Pick a date</span>}
+                        <User className="mr-2 h-4 w-4" />
+                        View Patient Experience
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={surgeryDate}
-                        onSelect={(date) => date && setSurgeryDate(date)}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-lg font-semibold mb-2 block">
-                    Pre-Operative Instructions
-                  </label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Select a procedure to load pre-operative instructions
-                  </p>
-                  <Select value={selectedProcedure} onValueChange={handleProcedureSelect} disabled={!clinicType}>
-                    <SelectTrigger className="mb-3">
-                      <SelectValue placeholder={clinicType ? "Load procedure instructions..." : "Select clinic type first..."} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {clinicType && PRE_OP_DATA[clinicType] && Object.entries(PRE_OP_DATA[clinicType].procedures).map(([key, procedure]) => (
-                        <SelectItem key={key} value={key}>
-                          {procedure.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Textarea
-                    value={preOpInstructions}
-                    onChange={(e) => setPreOpInstructions(e.target.value)}
-                    placeholder="Pre-operative instructions will appear here..."
-                    className="min-h-[400px] resize-y"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-lg font-semibold mb-2 block">
-                    Clinic Information
-                  </label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    General information about your surgical center
-                  </p>
-                  <Textarea
-                    value={baseInfo}
-                    onChange={(e) => setBaseInfo(e.target.value)}
-                    placeholder="Clinic contact information, hours, and services..."
-                    className="min-h-[300px] resize-y"
-                  />
-                </div>
-              </div>
-            </Card>
-
-            <Button onClick={handleSave} size="lg" className="w-full md:w-auto md:ml-auto flex">
-              <Save className="mr-2 h-4 w-4" />
-              Save Pre-Op Instructions
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <Button
+              onClick={() => setShowPatientView(false)}
+              variant="outline"
+              size="sm"
+              className="mb-4"
+            >
+              ← Back to Setup
             </Button>
-          </TabsContent>
-
-          <TabsContent value="patient" className="space-y-6">
             {/* Phone Messages Section */}
             <Card className="p-6 bg-gradient-to-b from-muted/30 to-background max-w-4xl mx-auto">
               <div className="mb-4">
@@ -1356,8 +1373,8 @@ ${baseInfo || "No clinic information provided yet."}`;
                 </Button>
               </div>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
     </div>
   );
