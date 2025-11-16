@@ -87,7 +87,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground">
-              Our tools make pre-operative preparation more efficient and less chaotic for both surgical centers and patients. Today, coordinators spend hours making routine pre-op calls — verifying NPO times, medication holds, and checklist completion — just to make sure patients will show up ready. Last-minute cancellations waste expensive OR time and create scheduling nightmares. We automate those workflows so staff can focus on complex cases, while ensuring every patient arrives prepared for surgery.
+              Our tools make pre-operative preparation more efficient and less chaotic for both surgical centers and patients. Today, coordinators spend hours making routine pre-op calls — verifying NPO, medication holds, and checklist completion — just to make sure patients will show up ready. Last-minute cancellations waste expensive OR time and create scheduling nightmares. We automate those workflows so staff can focus on complex cases, while ensuring every patient arrives prepared for surgery.
             </p>
           </div>
 

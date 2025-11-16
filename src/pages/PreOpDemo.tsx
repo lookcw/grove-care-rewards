@@ -85,7 +85,7 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 7, message: "Hey! Please stop taking anti-inflammatory meds and herbal supplements now. Your surgery is getting close - you've got this! 💪" },
           { daysBeforeSurgery: 3, message: "Just checking in! Make sure you've confirmed your ride home and have someone to help you out after surgery. We're here for you! 🚗" },
           { daysBeforeSurgery: 1, message: "Tomorrow's the big day! Remember to start fasting at midnight tonight - no food or liquids. You're almost there! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! Today's your surgery day! Shower with antibacterial soap and arrive 2 hours early. You've got this! 🎯" }
+          { daysBeforeSurgery: 0, message: "Good morning! Today's your surgery day! Shower with antibacterial soap and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎯" }
         ],
         checklist: [
           { task: "Attend pre-operative appointment with surgeon", daysBeforeSurgery: 30, crucial: true },
@@ -146,7 +146,7 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 5, message: "Time to grab some button-front shirts and set up your recovery space at home. Making things comfy will help so much! 👕" },
           { daysBeforeSurgery: 3, message: "Just a quick check - do you have your ride and someone to help you after surgery? Almost there! 🤝" },
           { daysBeforeSurgery: 1, message: "Big day tomorrow! Remember to start fasting at midnight tonight. Rest up - you're going to do great! 🌟" },
-          { daysBeforeSurgery: 0, message: "Good morning, it's surgery day! Shower with antibacterial soap and wear a button-front shirt. You've prepared so well! 🎯" }
+          { daysBeforeSurgery: 0, message: "Good morning, it's surgery day! Shower with antibacterial soap and wear a button-front shirt. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've prepared so well! 🎯" }
         ],
         checklist: [
           { task: "Schedule pre-op physical and get medical clearance", daysBeforeSurgery: 30, crucial: true },
@@ -208,7 +208,7 @@ SURGERY DAY:
           { daysBeforeSurgery: 7, message: "Please stop anti-inflammatory meds and herbal supplements starting today. Your new knee is just around the corner! 🌟" },
           { daysBeforeSurgery: 3, message: "Quick check-in: Is your transportation and help lined up for the first 2 weeks? You're doing amazing! 🚗" },
           { daysBeforeSurgery: 1, message: "Tomorrow's the day! Start fasting at midnight tonight. Get some good rest - you're so ready for this! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! It's surgery day! Shower with Hibiclens, grab your walker, and arrive 2 hours early. You've got this! 🎉" }
+          { daysBeforeSurgery: 0, message: "Good morning! It's surgery day! Shower with Hibiclens, grab your walker, and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎉" }
         ],
         checklist: [
           { task: "Complete dental exam and clearance", daysBeforeSurgery: 30, crucial: true },
@@ -299,7 +299,7 @@ DO NOT:
           { daysBeforeSurgery: 7, message: "If your doctor approved it, please stop aspirin and blood thinners now. You're doing great with your prep! 💊" },
           { daysBeforeSurgery: 3, message: "Time to arrange your ride and request time off work. The procedure can take a few hours, so bring something to read! 📚" },
           { daysBeforeSurgery: 2, message: "Reminder to stop smoking, alcohol, and blood-thinning supplements. Almost procedure day! 🌟" },
-          { daysBeforeSurgery: 0, message: "Good morning! Eat a normal meal, wear comfy clothes, and bring something to read. We'll take good care of you today! 😊" }
+          { daysBeforeSurgery: 0, message: "Good morning! Eat a normal meal, wear comfy clothes, and bring something to read. IMPORTANT: If you did not follow any of the instructions, text 'ATE' immediately. We'll take good care of you today! 😊" }
         ],
         checklist: [
           { task: "Check with prescribing doctor about stopping blood thinners", daysBeforeSurgery: 14, crucial: true },
@@ -346,7 +346,7 @@ IMPORTANT:
           { daysBeforeSurgery: 7, message: "Hi there! Please schedule your procedure at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a> if you haven't already. If your doctor approved it, please stop blood thinners now. You're on track! 💙" },
           { daysBeforeSurgery: 3, message: "Time to stop anti-inflammatory meds like ibuprofen. Your procedure is coming up soon! 💊" },
           { daysBeforeSurgery: 1, message: "Tomorrow's the day! Make sure you have a ride if you're getting sedation, and take it easy. You've got this! 🚗" },
-          { daysBeforeSurgery: 0, message: "Good morning! Eat a light meal, shower, and skip products on the surgical area. See you soon! 😊" }
+          { daysBeforeSurgery: 0, message: "Good morning! Eat a light meal, shower, and skip products on the surgical area. IMPORTANT: If you did not follow any of the instructions, text 'ATE' immediately. See you soon! 😊" }
         ],
         checklist: [
           { task: "Confirm with doctor about stopping blood thinners", daysBeforeSurgery: 7, crucial: true },
@@ -448,7 +448,7 @@ SURGERY DAY:
           { daysBeforeSurgery: 3, message: "Stock up time! Grab protein shakes, clear liquids, and pureed foods for after surgery. Almost there! 🛒" },
           { daysBeforeSurgery: 2, message: "Switching to liquid-only today - protein shakes, broth, and sugar-free drinks. You're doing amazing! 🥛" },
           { daysBeforeSurgery: 1, message: "Tomorrow's your big day! Start fasting at midnight tonight. Rest well - you've prepared so well for this! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Shower with Hibiclens, bring your CPAP if needed, and arrive 2 hours early. You've got this! 🎉" }
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Shower with Hibiclens, bring your CPAP if needed, and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎉" }
         ],
         checklist: [
           { task: "Complete nutritionist consultations (minimum 3 visits)", daysBeforeSurgery: 90, crucial: true },
@@ -528,7 +528,7 @@ SURGERY DAY:
           { daysBeforeSurgery: 7, message: "Stock up on protein shakes and get your home ready for recovery. One week to go! 🛒" },
           { daysBeforeSurgery: 3, message: "Switching to liquids-only - protein shakes, broth, and sugar-free drinks. You're almost there! 🥛" },
           { daysBeforeSurgery: 1, message: "Tomorrow's the big day! Begin fasting at midnight. Rest up - you've worked so hard for this! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Shower with antibacterial soap, bring your CPAP, and arrive 90 min early. Let's do this! 🎉" }
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Shower with antibacterial soap, bring your CPAP, and arrive 90 min early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. Let's do this! 🎉" }
         ],
         checklist: [
           { task: "Attend all required nutrition education classes", daysBeforeSurgery: 90, crucial: true },
@@ -921,52 +921,106 @@ ${baseInfo || "No clinic information provided yet."}`;
               </div>
 
               {getCurrentProcedure() ? (
-                <div className="space-y-3 h-[500px] overflow-y-auto">
-                  {getCurrentProcedure()!.reminders
-                    .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
-                    .map((reminder, index) => {
-                      const isPast = isReminderPast(reminder.daysBeforeSurgery);
-                      const reminderDate = getDateForReminder(reminder.daysBeforeSurgery);
+                <div className="flex justify-center">
+                  {/* iPhone Frame */}
+                  <div className="relative bg-black rounded-[60px] p-3 shadow-2xl" style={{ width: '375px' }}>
+                    {/* iPhone Notch/Dynamic Island */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[35px] bg-black rounded-b-3xl z-10" />
 
-                      return (
-                        <div key={index} className="flex flex-col items-start">
-                          {/* Date stamp */}
-                          <div className="text-xs text-muted-foreground text-center w-full mb-2">
-                            {format(reminderDate, "EEEE, MMMM d")}
-                          </div>
-
-                          {/* iPhone-style message bubble */}
-                          <div className="flex items-end gap-2 w-full">
-                            <div className="relative max-w-[85%] rounded-[18px] px-4 py-2.5 shadow-sm bg-gray-200 dark:bg-gray-700">
-                              {/* Message tail - iPhone-style tail at bottom left */}
-                              <svg
-                                className="absolute -left-[20px] bottom-0 text-gray-200 dark:text-gray-700"
-                                width="35"
-                                height="35"
-                                viewBox="0 0 35 35"
-                              >
-                                <path
-                                  d="M 0 35 L 35 35 L 35 0 Q 26 18 0 35"
-                                  fill="currentColor"
-                                />
-                              </svg>
-
-                              <div className="mb-1">
-                                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                                  {reminder.daysBeforeSurgery === 0
-                                    ? "Today - Surgery Day!"
-                                    : `${reminder.daysBeforeSurgery} days before surgery`}
-                                </span>
-                              </div>
-                              <p
-                                className="text-[15px] leading-snug text-gray-900 dark:text-gray-100"
-                                dangerouslySetInnerHTML={{ __html: reminder.message }}
-                              />
-                            </div>
-                          </div>
+                    {/* Screen */}
+                    <div className="bg-white dark:bg-gray-900 rounded-[48px] overflow-hidden">
+                      {/* Status Bar */}
+                      <div className="bg-white dark:bg-gray-900 px-8 pt-4 pb-2 flex justify-between items-center text-xs font-semibold">
+                        <span className="text-black dark:text-white">9:41</span>
+                        <div className="flex items-center gap-1">
+                          {/* Signal */}
+                          <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="1" y="14" width="4" height="8" rx="1" />
+                            <rect x="7" y="10" width="4" height="12" rx="1" />
+                            <rect x="13" y="6" width="4" height="16" rx="1" />
+                            <rect x="19" y="2" width="4" height="20" rx="1" />
+                          </svg>
+                          {/* WiFi */}
+                          <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6.62-2.73l1.42 1.42C8.23 15.3 10.04 14.5 12 14.5s3.77.8 5.2 2.19l1.42-1.42C16.79 13.47 14.5 12.5 12 12.5s-4.79.97-6.62 2.77zm-4.24-4.24l1.42 1.41C5.08 10.11 8.38 8.5 12 8.5s6.92 1.61 9.44 3.94l1.42-1.41C19.68 7.89 16 6 12 6S4.32 7.89 1.14 11.03z"/>
+                          </svg>
+                          {/* Battery */}
+                          <svg className="w-6 h-4 text-black dark:text-white" viewBox="0 0 28 14" fill="currentColor">
+                            <rect x="0" y="0" width="25" height="14" rx="3" stroke="currentColor" strokeWidth="1" fill="none" />
+                            <rect x="2" y="2" width="20" height="10" rx="1" />
+                            <rect x="26" y="4" width="2" height="6" rx="1" />
+                          </svg>
                         </div>
-                      );
-                    })}
+                      </div>
+
+                      {/* Messages Header */}
+                      <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                        <div className="text-center">
+                          <p className="text-sm font-semibold text-black dark:text-white">Grove Health</p>
+                          <p className="text-xs text-gray-500">Text Message</p>
+                        </div>
+                      </div>
+
+                      {/* Messages Container */}
+                      <div className="bg-white dark:bg-gray-900 h-[500px] overflow-y-auto p-4 space-y-3">
+                        {getCurrentProcedure()!.reminders
+                          .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                          .map((reminder, index) => {
+                            const reminderDate = getDateForReminder(reminder.daysBeforeSurgery);
+
+                            return (
+                              <div key={index} className="flex flex-col items-start">
+                                {/* Date stamp */}
+                                <div className="text-xs text-gray-500 text-center w-full mb-2">
+                                  {format(reminderDate, "EEEE, MMMM d")}
+                                </div>
+
+                                {/* iPhone-style message bubble */}
+                                <div className="flex items-end gap-2 w-full">
+                                  <div
+                                    className="relative max-w-[85%] rounded-[25px] px-4 py-2.5 bg-[#e5e5ea] dark:bg-gray-600"
+                                    style={{
+                                      wordWrap: 'break-word',
+                                    }}
+                                  >
+                                    {/* Message tail - using pseudo-element technique */}
+                                    <div
+                                      className="absolute bottom-0 left-[-7px] w-[20px] h-[25px] bg-[#e5e5ea] dark:bg-gray-600"
+                                      style={{
+                                        borderBottomRightRadius: '16px 14px',
+                                      }}
+                                    />
+                                    <div
+                                      className="absolute bottom-0 left-[-26px] w-[26px] h-[25px] bg-white dark:bg-gray-900"
+                                      style={{
+                                        borderBottomRightRadius: '10px',
+                                      }}
+                                    />
+
+                                    <div className="mb-1">
+                                      <span className="text-[10px] font-semibold text-gray-600 dark:text-gray-300">
+                                        {reminder.daysBeforeSurgery === 0
+                                          ? "Surgery Day"
+                                          : `${reminder.daysBeforeSurgery} days before`}
+                                      </span>
+                                    </div>
+                                    <p
+                                      className="text-[13px] leading-snug text-gray-900 dark:text-gray-100"
+                                      dangerouslySetInnerHTML={{ __html: reminder.message }}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+
+                      {/* Home Indicator */}
+                      <div className="bg-white dark:bg-gray-900 pb-2 pt-1">
+                        <div className="mx-auto w-32 h-1 bg-black dark:bg-white rounded-full opacity-30" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
