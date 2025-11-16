@@ -797,6 +797,12 @@ ${baseInfo || "No clinic information provided yet."}`;
           </TabsList>
 
           <TabsContent value="doctor" className="space-y-6">
+            <div className="text-center mb-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
+              <p className="text-sm text-muted-foreground">
+                Select a specialty and a sample pre-op plan, then click on the Patient tab to see what the patient sees.
+              </p>
+            </div>
+
             <Card className="p-6">
               <div className="space-y-4">
                 <div>
@@ -1203,6 +1209,9 @@ ${baseInfo || "No clinic information provided yet."}`;
                                   const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
                                   const isChecked = checkedItems.has(actualIndex);
                                   const isFuture = dueDate > new Date();
+                                  const nextWeek = new Date();
+                                  nextWeek.setDate(nextWeek.getDate() + 7);
+                                  const isDueWithinWeek = dueDate <= nextWeek;
 
                                   return (
                                     <div
@@ -1211,7 +1220,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                                         "flex items-start gap-2 p-2.5 rounded-xl transition-colors cursor-pointer",
                                         isChecked
                                           ? "bg-gray-100 dark:bg-gray-800"
-                                          : isFuture
+                                          : isFuture && !isDueWithinWeek
                                             ? "bg-gray-100 dark:bg-gray-800 opacity-50"
                                             : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
                                       )}
