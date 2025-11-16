@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Save, Stethoscope, User, MessageSquare, Send, CalendarIcon, Clock, CheckCircle2, Circle } from "lucide-react";
+import { Save, Stethoscope, User, MessageSquare, Send, CalendarIcon, Clock, CheckCircle2, Circle, HeartPulse } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { format, addDays, differenceInDays } from "date-fns";
@@ -80,7 +80,7 @@ DAY OF SURGERY:
 - Do not wear makeup, jewelry, or contact lenses
 - Arrive 2 hours before scheduled surgery time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Hi! Time to schedule your pre-op appointment with your surgeon. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. Looking forward to helping you through this journey! 📅" },
+          { daysBeforeSurgery: 21, message: "Hi! Time to schedule your pre-op appointment with your surgeon. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. Looking forward to helping you through this journey! 📅" },
           { daysBeforeSurgery: 14, message: "Quick reminder to complete your pre-op testing (bloodwork, EKG, etc.). Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're doing great! ✨" },
           { daysBeforeSurgery: 7, message: "Hey! Please stop taking anti-inflammatory meds and herbal supplements now. Your surgery is getting close - you've got this! 💪" },
           { daysBeforeSurgery: 3, message: "Just checking in! Make sure you've confirmed your ride home and have someone to help you out after surgery. We're here for you! 🚗" },
@@ -88,19 +88,15 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 0, message: "Good morning! Today's your surgery day! Shower with antibacterial soap and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎯" }
         ],
         checklist: [
-          { task: "Attend pre-operative appointment with surgeon", daysBeforeSurgery: 30, crucial: true },
+          { task: "Attend pre-operative appointment with surgeon", daysBeforeSurgery: 21, crucial: true },
           { task: "Complete bloodwork and EKG testing", daysBeforeSurgery: 14, crucial: true },
-          { task: "Stop anti-inflammatory medications (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, crucial: true },
-          { task: "Stop all herbal supplements", daysBeforeSurgery: 7, crucial: true },
-          { task: "Practice using crutches", daysBeforeSurgery: 7, crucial: false },
           { task: "Arrange transportation home from surgery", daysBeforeSurgery: 3, crucial: true },
-          { task: "Set up recovery area at home", daysBeforeSurgery: 3, crucial: false },
           { task: "Fill any prescribed post-op medications", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with ID, insurance card, and comfortable clothes", daysBeforeSurgery: 1, crucial: true },
-          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, crucial: true },
-          { task: "No alcohol consumption until after surgery", daysBeforeSurgery: 0, constant: true },
-          { task: "Avoid smoking and nicotine products", daysBeforeSurgery: 0, constant: true },
-          { task: "Keep your surgical knee elevated when resting", daysBeforeSurgery: 0, constant: true }
+          { task: "No alcohol or smoking until after surgery", daysBeforeSurgery: 0, constant: true },
+          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 7, constant: true },
+          { task: "Stop all herbal supplements", daysBeforeSurgery: 7, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true }
         ]
       },
       rotator_cuff: {
@@ -140,7 +136,7 @@ DAY OF SURGERY:
 - No deodorant on surgical side
 - Arrive 90 minutes before scheduled time`,
         reminders: [
-          { daysBeforeSurgery: 30, message: "Hello! Time to schedule your pre-op physical and get medical clearance. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. We're here to support you every step of the way! 💙" },
+          { daysBeforeSurgery: 21, message: "Hello! Time to schedule your pre-op physical and get medical clearance. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. We're here to support you every step of the way! 💙" },
           { daysBeforeSurgery: 14, message: "Friendly reminder to complete your lab work and cardiac testing. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're making great progress! 🏥" },
           { daysBeforeSurgery: 7, message: "Hi there! Please stop taking aspirin and anti-inflammatory meds starting today. Your recovery journey is about to begin! 💊" },
           { daysBeforeSurgery: 5, message: "Time to grab some button-front shirts and set up your recovery space at home. Making things comfy will help so much! 👕" },
@@ -149,16 +145,14 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 0, message: "Good morning, it's surgery day! Shower with antibacterial soap and wear a button-front shirt. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've prepared so well! 🎯" }
         ],
         checklist: [
-          { task: "Schedule pre-op physical and get medical clearance", daysBeforeSurgery: 30, crucial: true },
+          { task: "Schedule pre-op physical and get medical clearance", daysBeforeSurgery: 21, crucial: true },
           { task: "Complete lab work (CBC, metabolic panel, coagulation studies)", daysBeforeSurgery: 14, crucial: true },
           { task: "Get cardiac clearance if over 50 years old", daysBeforeSurgery: 14, crucial: true },
-          { task: "Stop aspirin and anti-inflammatory medications", daysBeforeSurgery: 7, crucial: true },
-          { task: "Purchase button-front shirts (3-4 shirts)", daysBeforeSurgery: 7, crucial: false },
-          { task: "Practice sleeping in recliner or semi-reclined", daysBeforeSurgery: 7, crucial: false },
-          { task: "Stock refrigerator with easy-to-prepare meals", daysBeforeSurgery: 3, crucial: false },
           { task: "Arrange for help with daily activities for 2-3 weeks", daysBeforeSurgery: 3, crucial: true },
           { task: "Fill post-operative prescriptions", daysBeforeSurgery: 2, crucial: true },
-          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+          { task: "Stop aspirin and anti-inflammatory medications", daysBeforeSurgery: 7, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
+          { task: "Purchase button-front shirts", daysBeforeSurgery: 7, crucial: false }
         ]
       },
       total_knee: {
@@ -201,8 +195,7 @@ SURGERY DAY:
 - Bring walker or crutches
 - Arrive 2 hours before scheduled surgery`,
         reminders: [
-          { daysBeforeSurgery: 60, message: "Hey! Let's get you strong for surgery! Time to start your pre-op physical therapy and exercises. You've got plenty of time to build up! 💪" },
-          { daysBeforeSurgery: 30, message: "Hi! Please schedule your dental clearance and pre-op testing at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. Taking care of these steps early makes everything smoother! 😊" },
+          { daysBeforeSurgery: 21, message: "Hi! Please complete your dental clearance and pre-op testing at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. Taking care of these steps early makes everything smoother! 😊" },
           { daysBeforeSurgery: 14, message: "Reminder to complete your lab work, EKG, and chest X-ray. Schedule testing at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're halfway there - keep up the great work! 🎯" },
           { daysBeforeSurgery: 10, message: "Time to make your home recovery-ready! Install those grab bars and clear any trip hazards. Safety first! 🏠" },
           { daysBeforeSurgery: 7, message: "Please stop anti-inflammatory meds and herbal supplements starting today. Your new knee is just around the corner! 🌟" },
@@ -211,18 +204,15 @@ SURGERY DAY:
           { daysBeforeSurgery: 0, message: "Good morning! It's surgery day! Shower with Hibiclens, grab your walker, and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎉" }
         ],
         checklist: [
-          { task: "Complete dental exam and clearance", daysBeforeSurgery: 30, crucial: true },
-          { task: "Install grab bars in bathroom", daysBeforeSurgery: 14, crucial: false },
-          { task: "Get raised toilet seat", daysBeforeSurgery: 14, crucial: false },
+          { task: "Complete dental exam and clearance", daysBeforeSurgery: 21, crucial: true },
           { task: "Complete bloodwork, EKG, and chest X-ray", daysBeforeSurgery: 14, crucial: true },
-          { task: "Remove trip hazards from home (rugs, cords)", daysBeforeSurgery: 10, crucial: false },
-          { task: "Stock up on ice packs and easy-to-prepare meals", daysBeforeSurgery: 7, crucial: false },
-          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 7, crucial: true },
-          { task: "Stop herbal supplements", daysBeforeSurgery: 7, crucial: true },
           { task: "Obtain walker or crutches", daysBeforeSurgery: 5, crucial: true },
           { task: "Arrange for 24/7 assistance for first 3 days", daysBeforeSurgery: 3, crucial: true },
           { task: "Fill post-operative prescriptions", daysBeforeSurgery: 2, crucial: true },
-          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 7, constant: true },
+          { task: "Stop herbal supplements", daysBeforeSurgery: 7, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
+          { task: "Install grab bars in bathroom", daysBeforeSurgery: 14, crucial: false }
         ]
       }
     },
@@ -303,12 +293,12 @@ DO NOT:
         ],
         checklist: [
           { task: "Check with prescribing doctor about stopping blood thinners", daysBeforeSurgery: 14, crucial: true },
-          { task: "Stop aspirin if approved", daysBeforeSurgery: 7, crucial: true },
-          { task: "Stop blood-thinning supplements (ginkgo, ginseng, garlic)", daysBeforeSurgery: 7, crucial: true },
           { task: "Arrange transportation home", daysBeforeSurgery: 3, crucial: true },
+          { task: "Stop aspirin if approved", daysBeforeSurgery: 7, constant: true },
+          { task: "Stop blood-thinning supplements (ginkgo, ginseng, garlic)", daysBeforeSurgery: 7, constant: true },
+          { task: "Stop smoking and nicotine", daysBeforeSurgery: 2, constant: true },
+          { task: "Stop drinking alcohol", daysBeforeSurgery: 2, constant: true },
           { task: "Request time off work (1-3 days)", daysBeforeSurgery: 3, crucial: false },
-          { task: "Stop smoking and nicotine", daysBeforeSurgery: 2, crucial: true },
-          { task: "Stop drinking alcohol", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with reading material, snacks, phone charger", daysBeforeSurgery: 1, crucial: false }
         ]
       },
@@ -350,8 +340,8 @@ IMPORTANT:
         ],
         checklist: [
           { task: "Confirm with doctor about stopping blood thinners", daysBeforeSurgery: 7, crucial: true },
-          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 3, crucial: true },
           { task: "Arrange transportation if receiving sedation", daysBeforeSurgery: 2, crucial: true },
+          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 3, constant: true },
           { task: "Request time off work", daysBeforeSurgery: 2, crucial: false },
           { task: "Purchase wound care supplies (gauze, tape, antibiotic ointment)", daysBeforeSurgery: 2, crucial: false },
           { task: "Plan light meals and rest for procedure day", daysBeforeSurgery: 1, crucial: false }
@@ -440,9 +430,7 @@ SURGERY DAY:
 - Bring CPAP machine if you use one
 - Wear comfortable, loose clothing`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Welcome to your pre-op program! Time to start nutrition classes and evaluations. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. This is an exciting journey - we're here for you! 🌟" },
-          { daysBeforeSurgery: 60, message: "Hi! Please complete your psychological evaluation and medical clearances. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're making amazing progress on this journey! 💪" },
-          { daysBeforeSurgery: 30, message: "Time to schedule your sleep study and upper endoscopy at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. These important steps help ensure your safety. You're doing great! 🏥" },
+          { daysBeforeSurgery: 21, message: "Hi! Please make sure you've completed your psychological evaluation and medical clearances. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're making amazing progress on this journey! 💪" },
           { daysBeforeSurgery: 14, message: "Starting today: high-protein diet with 2-3 protein shakes daily! This helps prepare your body. You've got this! 🥤" },
           { daysBeforeSurgery: 7, message: "Please stop NSAIDs and double-check your medication plan with your surgeon. One week to go - so exciting! 💊" },
           { daysBeforeSurgery: 3, message: "Stock up time! Grab protein shakes, clear liquids, and pureed foods for after surgery. Almost there! 🛒" },
@@ -451,19 +439,15 @@ SURGERY DAY:
           { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Shower with Hibiclens, bring your CPAP if needed, and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎉" }
         ],
         checklist: [
-          { task: "Complete nutritionist consultations (minimum 3 visits)", daysBeforeSurgery: 90, crucial: true },
-          { task: "Complete psychological evaluation", daysBeforeSurgery: 60, crucial: true },
-          { task: "Get medical clearance from primary care doctor", daysBeforeSurgery: 60, crucial: true },
-          { task: "Complete sleep study", daysBeforeSurgery: 30, crucial: true },
-          { task: "Complete upper endoscopy", daysBeforeSurgery: 30, crucial: true },
-          { task: "Stop smoking (must be smoke-free)", daysBeforeSurgery: 56, crucial: true },
-          { task: "Start high-protein, low-carb pre-op diet", daysBeforeSurgery: 14, crucial: true },
-          { task: "Stop NSAIDs (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, crucial: true },
-          { task: "Purchase protein shakes (2-3 weeks supply)", daysBeforeSurgery: 7, crucial: false },
-          { task: "Stock clear liquids and sugar-free beverages", daysBeforeSurgery: 3, crucial: false },
+          { task: "Complete psychological evaluation", daysBeforeSurgery: 21, crucial: true },
+          { task: "Get medical clearance from primary care doctor", daysBeforeSurgery: 21, crucial: true },
           { task: "Arrange for help at home for first week", daysBeforeSurgery: 3, crucial: true },
-          { task: "Begin liquid-only diet", daysBeforeSurgery: 2, crucial: true },
-          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+          { task: "Start high-protein, low-carb pre-op diet", daysBeforeSurgery: 14, constant: true },
+          { task: "Stop NSAIDs (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, constant: true },
+          { task: "Begin liquid-only diet", daysBeforeSurgery: 2, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
+          { task: "No smoking until after surgery", daysBeforeSurgery: 56, constant: true },
+          { task: "Purchase protein shakes (2-3 weeks supply)", daysBeforeSurgery: 7, crucial: false }
         ]
       },
       gastric_sleeve: {
@@ -520,9 +504,7 @@ SURGERY DAY:
 - Bring CPAP if you use one
 - Arrive 90 minutes early`,
         reminders: [
-          { daysBeforeSurgery: 90, message: "Welcome! Time to begin your bariatric program and education classes. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. This is the start of an amazing transformation! 🌟" },
-          { daysBeforeSurgery: 60, message: "Hi! Let's get your psychological evaluation and medical clearances done. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're taking such great steps for your health! 💙" },
-          { daysBeforeSurgery: 30, message: "Time to schedule your upper endoscopy at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. Also, reminder to stop birth control pills. You're doing so well! 🏥" },
+          { daysBeforeSurgery: 21, message: "Hi! Please make sure your medical clearances are complete. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're taking such great steps for your health! 💙" },
           { daysBeforeSurgery: 14, message: "Starting your 2-week pre-op diet today - high protein, low carb, with protein shakes. You can do this! 💪" },
           { daysBeforeSurgery: 10, message: "Time to stop NSAIDs like ibuprofen and aspirin. Your surgery is getting close - exciting! 💊" },
           { daysBeforeSurgery: 7, message: "Stock up on protein shakes and get your home ready for recovery. One week to go! 🛒" },
@@ -531,20 +513,15 @@ SURGERY DAY:
           { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Shower with antibacterial soap, bring your CPAP, and arrive 90 min early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. Let's do this! 🎉" }
         ],
         checklist: [
-          { task: "Attend all required nutrition education classes", daysBeforeSurgery: 90, crucial: true },
-          { task: "Complete psychological evaluation and get clearance", daysBeforeSurgery: 60, crucial: true },
-          { task: "Get medical clearance from primary care physician", daysBeforeSurgery: 60, crucial: true },
-          { task: "Complete sleep study if required", daysBeforeSurgery: 45, crucial: true },
-          { task: "Complete upper GI endoscopy", daysBeforeSurgery: 30, crucial: true },
-          { task: "Stop birth control pills", daysBeforeSurgery: 30, crucial: true },
-          { task: "Stop smoking completely", daysBeforeSurgery: 56, crucial: true },
-          { task: "Begin 2-week pre-op diet (high protein, low carb)", daysBeforeSurgery: 14, crucial: true },
-          { task: "Stop NSAIDs", daysBeforeSurgery: 10, crucial: true },
-          { task: "Purchase 3-week supply of protein shakes", daysBeforeSurgery: 7, crucial: false },
+          { task: "Get medical clearance from primary care physician", daysBeforeSurgery: 21, crucial: true },
           { task: "Arrange help at home for first week", daysBeforeSurgery: 7, crucial: true },
-          { task: "Begin liquid-only diet", daysBeforeSurgery: 3, crucial: true },
-          { task: "Stop alcohol consumption", daysBeforeSurgery: 2, crucial: true },
-          { task: "Begin fasting at midnight", daysBeforeSurgery: 1, crucial: true }
+          { task: "Begin 2-week pre-op diet (high protein, low carb)", daysBeforeSurgery: 14, constant: true },
+          { task: "Stop NSAIDs", daysBeforeSurgery: 10, constant: true },
+          { task: "Begin liquid-only diet", daysBeforeSurgery: 3, constant: true },
+          { task: "Stop alcohol consumption", daysBeforeSurgery: 2, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
+          { task: "No smoking until after surgery", daysBeforeSurgery: 56, constant: true },
+          { task: "Purchase 3-week supply of protein shakes", daysBeforeSurgery: 7, crucial: false }
         ]
       }
     },
@@ -876,7 +853,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                             Pre-Operative Instructions
                           </label>
                           <p className="text-sm text-muted-foreground mb-3">
-                            These instructions will be used by the AI chatbot to answer patient questions
+                            These instructions will be used by the AI chatbot to answer patient questions.
                           </p>
                           <Textarea
                             value={preOpInstructions}
@@ -979,8 +956,12 @@ ${baseInfo || "No clinic information provided yet."}`;
                       {/* Messages Header */}
                       <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                         <div className="text-center">
+                          <div className="flex justify-center mb-2">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                              <HeartPulse className="w-5 h-5 text-primary" />
+                            </div>
+                          </div>
                           <p className="text-sm font-semibold text-black dark:text-white">Grove Health</p>
-                          <p className="text-xs text-gray-500">Text Message</p>
                         </div>
                       </div>
 
@@ -1105,8 +1086,8 @@ ${baseInfo || "No clinic information provided yet."}`;
 
                       {/* Checklist Container */}
                       <div className="bg-gray-50 dark:bg-gray-900 h-[500px] overflow-y-auto p-3 space-y-4">
-                        {/* Constant Reminders Section */}
-                        {getCurrentProcedure()!.checklist.filter(item => item.constant).length > 0 && (
+                        {/* Active Ongoing Reminders Section */}
+                        {getCurrentProcedure()!.checklist.filter(item => item.constant && getDateForReminder(item.daysBeforeSurgery) <= new Date()).length > 0 && (
                           <div>
                             <h3 className="text-xs font-semibold mb-2 text-gray-900 dark:text-white">
                               Ongoing Reminders
@@ -1114,7 +1095,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                             <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900">
                               <ul className="space-y-1.5">
                                 {getCurrentProcedure()!.checklist
-                                  .filter(item => item.constant)
+                                  .filter(item => item.constant && getDateForReminder(item.daysBeforeSurgery) <= new Date())
                                   .map((item) => {
                                     const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
                                     return (
@@ -1264,6 +1245,35 @@ ${baseInfo || "No clinic information provided yet."}`;
                                     </div>
                                   );
                                 })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Future Reminders Section */}
+                        {getCurrentProcedure()!.checklist.filter(item => item.constant && getDateForReminder(item.daysBeforeSurgery) > new Date()).length > 0 && (
+                          <div>
+                            <h3 className="text-xs font-semibold mb-2 text-gray-400">
+                              Future Reminders
+                            </h3>
+                            <div className="p-3 rounded-xl bg-gray-100 dark:bg-gray-800 opacity-60">
+                              <ul className="space-y-2">
+                                {getCurrentProcedure()!.checklist
+                                  .filter(item => item.constant && getDateForReminder(item.daysBeforeSurgery) > new Date())
+                                  .sort((a, b) => b.daysBeforeSurgery - a.daysBeforeSurgery)
+                                  .map((item) => {
+                                    const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                                    const startDate = getDateForReminder(item.daysBeforeSurgery);
+                                    return (
+                                      <li key={actualIndex} className="text-[10px] text-gray-500 dark:text-gray-400">
+                                        <span className="font-medium text-gray-600 dark:text-gray-300">{item.task}</span>
+                                        <br />
+                                        <span className="text-[9px]">
+                                          Starts {format(startDate, "MMM d")} ({item.daysBeforeSurgery} days before surgery)
+                                        </span>
+                                      </li>
+                                    );
+                                  })}
+                              </ul>
                             </div>
                           </div>
                         )}
