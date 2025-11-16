@@ -1040,198 +1040,215 @@ ${baseInfo || "No clinic information provided yet."}`;
               </div>
 
               {getCurrentProcedure() ? (
-                <div className="space-y-6 h-[500px] overflow-y-auto">
-                  {/* Constant Reminders Section - Now at the top */}
-                  {getCurrentProcedure()!.checklist.filter(item => item.constant).length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">
-                        Ongoing Reminders
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Follow these guidelines throughout your pre-op period (ongoing until surgery)
-                      </p>
-                      <div className="p-4 rounded-lg border border-blue-200 bg-blue-50/50 dark:bg-blue-950/20 dark:border-blue-900">
-                        <ul className="space-y-2 list-disc list-inside">
-                          {getCurrentProcedure()!.checklist
-                            .filter(item => item.constant)
-                            .map((item, index) => {
-                              const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                <div className="flex justify-center">
+                  {/* iPhone Frame */}
+                  <div className="relative bg-black rounded-[60px] p-3 shadow-2xl" style={{ width: '375px' }}>
+                    {/* iPhone Notch/Dynamic Island */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[35px] bg-black rounded-b-3xl z-10" />
 
-                              return (
-                                <li key={actualIndex} className="text-sm font-medium">
-                                  {item.task}
-                                </li>
-                              );
-                            })}
-                        </ul>
+                    {/* Screen */}
+                    <div className="bg-white dark:bg-gray-900 rounded-[48px] overflow-hidden">
+                      {/* Status Bar */}
+                      <div className="bg-white dark:bg-gray-900 px-8 pt-4 pb-2 flex justify-between items-center text-xs font-semibold">
+                        <span className="text-black dark:text-white">9:41</span>
+                        <div className="flex items-center gap-1">
+                          {/* Signal */}
+                          <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="1" y="14" width="4" height="8" rx="1" />
+                            <rect x="7" y="10" width="4" height="12" rx="1" />
+                            <rect x="13" y="6" width="4" height="16" rx="1" />
+                            <rect x="19" y="2" width="4" height="20" rx="1" />
+                          </svg>
+                          {/* WiFi */}
+                          <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6.62-2.73l1.42 1.42C8.23 15.3 10.04 14.5 12 14.5s3.77.8 5.2 2.19l1.42-1.42C16.79 13.47 14.5 12.5 12 12.5s-4.79.97-6.62 2.77zm-4.24-4.24l1.42 1.41C5.08 10.11 8.38 8.5 12 8.5s6.92 1.61 9.44 3.94l1.42-1.41C19.68 7.89 16 6 12 6S4.32 7.89 1.14 11.03z"/>
+                          </svg>
+                          {/* Battery */}
+                          <svg className="w-6 h-4 text-black dark:text-white" viewBox="0 0 28 14" fill="currentColor">
+                            <rect x="0" y="0" width="25" height="14" rx="3" stroke="currentColor" strokeWidth="1" fill="none" />
+                            <rect x="2" y="2" width="20" height="10" rx="1" />
+                            <rect x="26" y="4" width="2" height="6" rx="1" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* App Header */}
+                      <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                        <div className="text-center">
+                          <p className="text-sm font-semibold text-black dark:text-white">Pre-Op Checklist</p>
+                          <p className="text-xs text-gray-500">Grove Health</p>
+                        </div>
+                      </div>
+
+                      {/* Checklist Container */}
+                      <div className="bg-gray-50 dark:bg-gray-900 h-[500px] overflow-y-auto p-3 space-y-4">
+                        {/* Constant Reminders Section */}
+                        {getCurrentProcedure()!.checklist.filter(item => item.constant).length > 0 && (
+                          <div>
+                            <h3 className="text-xs font-semibold mb-2 text-gray-900 dark:text-white">
+                              Ongoing Reminders
+                            </h3>
+                            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900">
+                              <ul className="space-y-1.5">
+                                {getCurrentProcedure()!.checklist
+                                  .filter(item => item.constant)
+                                  .map((item) => {
+                                    const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                                    return (
+                                      <li key={actualIndex} className="text-[11px] font-medium text-gray-800 dark:text-gray-200 flex items-start gap-1.5">
+                                        <span className="text-blue-500 mt-0.5">•</span>
+                                        {item.task}
+                                      </li>
+                                    );
+                                  })}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Crucial Tasks Section */}
+                        {getCurrentProcedure()!.checklist.filter(item => item.crucial).length > 0 && (
+                          <div>
+                            <h3 className="text-xs font-semibold mb-2 text-gray-900 dark:text-white">
+                              Things You Need to Do
+                            </h3>
+                            <div className="space-y-2">
+                              {getCurrentProcedure()!.checklist
+                                .filter(item => item.crucial)
+                                .sort((a, b) => {
+                                  const dateA = getDateForReminder(a.daysBeforeSurgery);
+                                  const dateB = getDateForReminder(b.daysBeforeSurgery);
+                                  const now = new Date();
+                                  const aIsFuture = dateA > now;
+                                  const bIsFuture = dateB > now;
+                                  if (aIsFuture && !bIsFuture) return 1;
+                                  if (!aIsFuture && bIsFuture) return -1;
+                                  return b.daysBeforeSurgery - a.daysBeforeSurgery;
+                                })
+                                .map((item) => {
+                                  const dueDate = getDateForReminder(item.daysBeforeSurgery);
+                                  const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                                  const isChecked = checkedItems.has(actualIndex);
+                                  const isPastDue = dueDate < new Date();
+                                  const isFuture = dueDate > new Date();
+                                  const nextWeek = new Date();
+                                  nextWeek.setDate(nextWeek.getDate() + 7);
+                                  const isDueWithinWeek = dueDate <= nextWeek;
+
+                                  return (
+                                    <div
+                                      key={actualIndex}
+                                      className={cn(
+                                        "flex items-start gap-2 p-2.5 rounded-xl transition-colors cursor-pointer",
+                                        isChecked
+                                          ? "bg-gray-100 dark:bg-gray-800"
+                                          : isFuture && !isDueWithinWeek
+                                            ? "bg-gray-100 dark:bg-gray-800 opacity-50"
+                                            : isPastDue
+                                              ? "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900"
+                                              : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                                      )}
+                                      onClick={() => toggleChecklistItem(actualIndex)}
+                                    >
+                                      <button className="mt-0.5 shrink-0">
+                                        {isChecked ? (
+                                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                          <Circle className="h-4 w-4 text-gray-400" />
+                                        )}
+                                      </button>
+                                      <div className="flex-1 min-w-0">
+                                        <p className={cn(
+                                          "text-[11px] font-medium leading-tight",
+                                          isChecked ? "line-through text-gray-400" : "text-gray-900 dark:text-white"
+                                        )}>
+                                          {item.task}
+                                        </p>
+                                        <span className={cn(
+                                          "text-[9px] font-semibold",
+                                          isPastDue && !isChecked ? "text-red-500" : "text-gray-500"
+                                        )}>
+                                          {format(dueDate, "MMM d")}
+                                          {isPastDue && !isChecked && " • Overdue"}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Optional Tasks Section */}
+                        {getCurrentProcedure()!.checklist.filter(item => !item.crucial && !item.constant).length > 0 && (
+                          <div>
+                            <h3 className="text-xs font-semibold mb-2 text-gray-500">
+                              Things That Would Be Good to Do
+                            </h3>
+                            <div className="space-y-2">
+                              {getCurrentProcedure()!.checklist
+                                .filter(item => !item.crucial && !item.constant)
+                                .sort((a, b) => {
+                                  const dateA = getDateForReminder(a.daysBeforeSurgery);
+                                  const dateB = getDateForReminder(b.daysBeforeSurgery);
+                                  const now = new Date();
+                                  const aIsFuture = dateA > now;
+                                  const bIsFuture = dateB > now;
+                                  if (aIsFuture && !bIsFuture) return 1;
+                                  if (!aIsFuture && bIsFuture) return -1;
+                                  return b.daysBeforeSurgery - a.daysBeforeSurgery;
+                                })
+                                .map((item) => {
+                                  const dueDate = getDateForReminder(item.daysBeforeSurgery);
+                                  const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
+                                  const isChecked = checkedItems.has(actualIndex);
+                                  const isFuture = dueDate > new Date();
+
+                                  return (
+                                    <div
+                                      key={actualIndex}
+                                      className={cn(
+                                        "flex items-start gap-2 p-2.5 rounded-xl transition-colors cursor-pointer",
+                                        isChecked
+                                          ? "bg-gray-100 dark:bg-gray-800"
+                                          : isFuture
+                                            ? "bg-gray-100 dark:bg-gray-800 opacity-50"
+                                            : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                                      )}
+                                      onClick={() => toggleChecklistItem(actualIndex)}
+                                    >
+                                      <button className="mt-0.5 shrink-0">
+                                        {isChecked ? (
+                                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                        ) : (
+                                          <Circle className="h-4 w-4 text-gray-400" />
+                                        )}
+                                      </button>
+                                      <div className="flex-1 min-w-0">
+                                        <p className={cn(
+                                          "text-[11px] leading-tight",
+                                          isChecked ? "line-through text-gray-400" : "text-gray-700 dark:text-gray-300"
+                                        )}>
+                                          {item.task}
+                                        </p>
+                                        <span className="text-[9px] text-gray-500">
+                                          {format(dueDate, "MMM d")}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Home Indicator */}
+                      <div className="bg-gray-50 dark:bg-gray-900 pb-2 pt-1">
+                        <div className="mx-auto w-32 h-1 bg-black dark:bg-white rounded-full opacity-30" />
                       </div>
                     </div>
-                  )}
-
-                  {/* Crucial Tasks Section */}
-                  {getCurrentProcedure()!.checklist.filter(item => item.crucial).length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3">
-                        Things You Need to Do
-                      </h3>
-                      <div className="space-y-3">
-                        {getCurrentProcedure()!.checklist
-                          .filter(item => item.crucial)
-                          .sort((a, b) => {
-                            const dateA = getDateForReminder(a.daysBeforeSurgery);
-                            const dateB = getDateForReminder(b.daysBeforeSurgery);
-                            const now = new Date();
-                            const aIsFuture = dateA > now;
-                            const bIsFuture = dateB > now;
-
-                            // Sort future items to bottom
-                            if (aIsFuture && !bIsFuture) return 1;
-                            if (!aIsFuture && bIsFuture) return -1;
-
-                            // Within same category, sort by days before surgery descending
-                            return b.daysBeforeSurgery - a.daysBeforeSurgery;
-                          })
-                          .map((item, index) => {
-                            const dueDate = getDateForReminder(item.daysBeforeSurgery);
-                            const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
-                            const isChecked = checkedItems.has(actualIndex);
-                            const isPastDue = dueDate < new Date();
-                            const isFuture = dueDate > new Date();
-
-                            return (
-                              <div
-                                key={actualIndex}
-                                className={cn(
-                                  "flex items-start gap-3 p-4 rounded-lg border-2 transition-colors cursor-pointer hover:bg-accent/50",
-                                  isChecked
-                                    ? "bg-muted/50 border-muted"
-                                    : isFuture
-                                      ? "bg-muted/30 border-muted opacity-60"
-                                      : isPastDue
-                                        ? "border-destructive/50 bg-destructive/5"
-                                        : "border-primary/30 bg-primary/5"
-                                )}
-                                onClick={() => toggleChecklistItem(actualIndex)}
-                              >
-                                <button
-                                  className="mt-0.5 shrink-0"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleChecklistItem(actualIndex);
-                                  }}
-                                >
-                                  {isChecked ? (
-                                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                                  ) : (
-                                    <Circle className="h-5 w-5 text-muted-foreground" />
-                                  )}
-                                </button>
-
-                                <div className="flex-1">
-                                  <p className={cn(
-                                    "text-sm font-medium",
-                                    isChecked && "line-through text-muted-foreground"
-                                  )}>
-                                    {item.task}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className={cn(
-                                      "text-xs font-semibold",
-                                      isPastDue && !isChecked ? "text-destructive" : "text-muted-foreground"
-                                    )}>
-                                      Due: {format(dueDate, "MMM d, yyyy")}
-                                    </span>
-                                    {isPastDue && !isChecked && (
-                                      <span className="text-xs text-destructive font-bold">(Overdue!)</span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Optional Tasks Section */}
-                  {getCurrentProcedure()!.checklist.filter(item => !item.crucial && !item.constant).length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold mb-3 text-muted-foreground">
-                        Things That Would Be Good to Do
-                      </h3>
-                      <div className="space-y-3">
-                        {getCurrentProcedure()!.checklist
-                          .filter(item => !item.crucial && !item.constant)
-                          .sort((a, b) => {
-                            const dateA = getDateForReminder(a.daysBeforeSurgery);
-                            const dateB = getDateForReminder(b.daysBeforeSurgery);
-                            const now = new Date();
-                            const aIsFuture = dateA > now;
-                            const bIsFuture = dateB > now;
-
-                            // Sort future items to bottom
-                            if (aIsFuture && !bIsFuture) return 1;
-                            if (!aIsFuture && bIsFuture) return -1;
-
-                            // Within same category, sort by days before surgery descending
-                            return b.daysBeforeSurgery - a.daysBeforeSurgery;
-                          })
-                          .map((item, index) => {
-                            const dueDate = getDateForReminder(item.daysBeforeSurgery);
-                            const actualIndex = getCurrentProcedure()!.checklist.indexOf(item);
-                            const isChecked = checkedItems.has(actualIndex);
-                            const isPastDue = dueDate < new Date();
-                            const isFuture = dueDate > new Date();
-
-                            return (
-                              <div
-                                key={actualIndex}
-                                className={cn(
-                                  "flex items-start gap-3 p-4 rounded-lg border transition-colors cursor-pointer hover:bg-accent/50",
-                                  isChecked
-                                    ? "bg-muted/50 border-muted"
-                                    : isFuture
-                                      ? "bg-muted/30 border-muted opacity-60"
-                                      : ""
-                                )}
-                                onClick={() => toggleChecklistItem(actualIndex)}
-                              >
-                                <button
-                                  className="mt-0.5 shrink-0"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleChecklistItem(actualIndex);
-                                  }}
-                                >
-                                  {isChecked ? (
-                                    <CheckCircle2 className="h-5 w-5 text-primary" />
-                                  ) : (
-                                    <Circle className="h-5 w-5 text-muted-foreground" />
-                                  )}
-                                </button>
-
-                                <div className="flex-1">
-                                  <p className={cn(
-                                    "text-sm",
-                                    isChecked && "line-through text-muted-foreground"
-                                  )}>
-                                    {item.task}
-                                  </p>
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <span className="text-xs text-muted-foreground">
-                                      Due: {format(dueDate, "MMM d, yyyy")}
-                                    </span>
-                                    {isPastDue && !isChecked && (
-                                      <span className="text-xs text-muted-foreground">(Past due)</span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  )}
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
