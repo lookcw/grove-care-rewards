@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { HeartPulse, ArrowRight, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 import adedoyinImage from "@/assets/adedoyin.jpeg";
 import chrisImage from "@/assets/chris.jpeg";
 
@@ -18,6 +19,16 @@ const Team = () => {
           </a>
 
           <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/demo-preop">
+                Demo
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/team">
+                Team
+              </Link>
+            </Button>
             <Button size="sm" asChild>
               <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
                 Contact Us

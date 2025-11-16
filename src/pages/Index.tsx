@@ -16,6 +16,16 @@ const Index = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/demo-preop">
+                Demo
+              </Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/team">
+                Team
+              </Link>
+            </Button>
             <Button size="sm" asChild>
               <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
                 Contact Us
