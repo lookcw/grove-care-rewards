@@ -150,7 +150,7 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Healthcare Founding Engineer</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the second engineer at Fortuna Health, which just raised a $19M Series A. Before that, he was the fifth engineer at Blueberry Pediatrics, scaling revenue 5x. At AWS, he maintained STS, the front door of AWS that served billions of requests a day.
+                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the second engineer at Fortuna Health, which raised a $19M Series A. Before that, he was the fifth engineer at Blueberry Pediatrics, scaling revenue 5x. At AWS, he maintained STS, the front door of AWS that served billions of requests a day.
                   </p>
                 </div>
                 <div className="mt-auto">
