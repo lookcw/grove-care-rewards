@@ -87,8 +87,10 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Former EMT</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    Adedoyin is currently Head of Operations at Eli Technologies. Previously, she was a PM at Schmidt Futures and has worked at Bain and Google. She serves on the Board of Trustees at MIT. As a former EMT, she experienced firsthand the challenges in our healthcare system and is now leading Grove Health's mission to improve patient adherence and reduce costs.
-                  </p>
+Adedoyin is an experienced product and operations leader who has built technology for social impact across startups, nonprofits, and philanthropy. Her experience includes being the Head of Operations at Eli Technologies, working as a product manager at Schmidt Futures, the science and tech philanthropy founded by former Google CEO Eric Schmidt, and roles at Google, Bain & Company, and 1upHealth.</p> 
+
+<p className="text-muted-foreground leading-relaxed"> She studied computer science, economics, and data science at MIT and joined MIT’s Board of Trustees upon graduating. She later earned a master’s degree as a Schwarzman Scholar at Tsinghua University, where she researched how technology can improve healthcare delivery.</p>
+<p className="text-muted-foreground leading-relaxed"> As a former EMT, she has seen firsthand the challenges facing patients and providers.</p>
                 </div>
                 <div className="mt-auto">
                   <Button variant="outline" size="sm" asChild>
@@ -150,8 +152,9 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Healthcare Founding Engineer</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the second engineer at Fortuna Health, which raised a $19M Series A. Before that, he was the fifth engineer at Blueberry Pediatrics, scaling revenue 5x. At AWS, he maintained STS, the front door of AWS that served billions of requests a day.
+                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the second engineer at Fortuna Health, which recently raised $19M in its Series A, building everything from patient engagement to government integrations. Before that, he was the fifth engineer at Blueberry Pediatrics, scaling revenue 5x. At AWS, he maintained STS, the front door of AWS that served billions of requests a day.
                   </p>
+                  <p className="text-muted-foreground leading-relaxed">He previously founded Synapto to diagnose Alzheimer's earlier and cheaper using EEG. As the CTO he built the technology stack, managed the data pipeline and raised $40,000 through several competitions.</p>
                 </div>
                 <div className="mt-auto">
                   <Button variant="outline" size="sm" asChild>
