@@ -60,7 +60,7 @@ const Team = () => {
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-              Our team has worked inside hospitals, surgical centers, and health systems — we've seen how much time clinicians spend on manual follow-up. Grove Health exists to give that time back.
+              Our team comes from the frontlines of healthcare. We build solutions that make the patient journey better, for clinics and patients alike.
             </p>
           </div>
         </div>
@@ -71,7 +71,7 @@ const Team = () => {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {/* Adedoyin */}
-            <Card className="border-none shadow-xl hover:shadow-2xl transition-all overflow-hidden">
+            <Card className="border-none shadow-xl hover:shadow-2xl transition-all overflow-hidden flex flex-col">
               <div className="aspect-square overflow-hidden">
                 <img
                   src={adedoyinImage}
@@ -79,8 +79,8 @@ const Team = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="pt-8 pb-8">
-                <div className="space-y-4">
+              <CardContent className="pt-8 pb-8 flex flex-col flex-grow">
+                <div className="space-y-4 flex-grow">
                   <div>
                     <h3 className="text-2xl font-bold mb-1">Adedoyin</h3>
                     <p className="text-primary font-semibold mb-1">CEO & Co-Founder</p>
@@ -89,6 +89,8 @@ const Team = () => {
                   <p className="text-muted-foreground leading-relaxed">
                     Adedoyin is currently Head of Operations at Eli Technologies. Previously, she was a PM at Schmidt Futures and has worked at Bain and Google. She serves on the Board of Trustees at MIT. As a former EMT, she experienced firsthand the challenges in our healthcare system and is now leading Grove Health's mission to improve patient adherence and reduce costs.
                   </p>
+                </div>
+                <div className="mt-auto">
                   <Button variant="outline" size="sm" asChild>
                     <a
                       href="https://www.linkedin.com/in/adedoyin-o/"
@@ -132,7 +134,7 @@ const Team = () => {
             </Card>
 
             {/* Chris */}
-            <Card className="border-none shadow-xl hover:shadow-2xl transition-all overflow-hidden">
+            <Card className="border-none shadow-xl hover:shadow-2xl transition-all overflow-hidden flex flex-col">
               <div className="aspect-square overflow-hidden">
                 <img
                   src={chrisImage}
@@ -140,16 +142,18 @@ const Team = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="pt-8 pb-8">
-                <div className="space-y-4">
+              <CardContent className="pt-8 pb-8 flex flex-col flex-grow">
+                <div className="space-y-4 flex-grow">
                   <div>
                     <h3 className="text-2xl font-bold mb-1">Chris</h3>
                     <p className="text-primary font-semibold mb-1">CTO & Co-Founder</p>
-                    <p className="text-sm text-muted-foreground">Technology Leader</p>
+                    <p className="text-sm text-muted-foreground">Healthcare Founding Engineer</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the 6th employee at Fortuna Health, which just raised a $19M Series A. Before that, he was the 5th engineer at Blueberry Pediatrics, building partner infrastructure that helped 5x revenue. At AWS, he scaled the front door for billions of requests, and he started his career at Flatiron Health improving developer speed.
+                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the second engineer at Fortuna Health, which just raised a $19M Series A. Before that, he was the fifth engineer at Blueberry Pediatrics, scaling revenue 5x. At AWS, he maintained STS, the front door of AWS that served billions of requests a day.
                   </p>
+                </div>
+                <div className="mt-auto">
                   <Button variant="outline" size="sm" asChild>
                     <a
                       href="https://www.linkedin.com/in/christopher-look/"
@@ -190,29 +194,6 @@ const Team = () => {
         </div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-20 bg-gradient-accent">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-background rounded-2xl shadow-xl p-8 lg:p-12">
-              <div className="space-y-6 text-center">
-                <h2 className="text-3xl lg:text-4xl font-bold">Our Story</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  We started Grove Health because we've experienced — as patients, providers, and caregivers —
-                  how difficult it is to navigate our healthcare system. We believe that better technology
-                  and aligned incentives can make healthcare more accessible, affordable, and effective for everyone.
-                </p>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Whether it's helping surgical clinics reduce readmissions, enabling PT clinics to improve
-                  adherence, or making it easier for families to manage home care, we're building solutions
-                  that create value for all stakeholders in the healthcare ecosystem.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-gradient-hero">
         <div className="container mx-auto px-6">
@@ -241,18 +222,6 @@ const Team = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t">
-        <div className="container mx-auto px-6">
-          <div className="text-center text-muted-foreground">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <HeartPulse className="h-6 w-6 text-primary" />
-              <p className="font-semibold text-foreground">Grove Health</p>
-            </div>
-            <p className="text-sm">Transforming healthcare economics</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
