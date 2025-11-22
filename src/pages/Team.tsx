@@ -4,6 +4,12 @@ import { HeartPulse, ArrowRight, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
 import adedoyinImage from "@/assets/adedoyin.jpeg";
 import chrisImage from "@/assets/chris.jpeg";
+import fortunaLogo from "@/assets/fortuna-logo.png";
+import eliLogo from "@/assets/eli-logo.jpg";
+import schmidtFuturesLogo from "@/assets/schmidt-futures-logo.jpg";
+import bainLogo from "@/assets/bain-logo.png";
+import googleLogo from "@/assets/google-logo.svg";
+import mitLogo from "@/assets/mit-logo.svg";
 
 const Team = () => {
   return (
@@ -81,9 +87,7 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Former EMT</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    As an EMT, Adedoyin experienced firsthand the challenges in our healthcare
-                    system. Now she's leading Grove Health's mission to improve patient adherence and reduce
-                    costs through innovative solutions.
+                    Adedoyin is currently Head of Operations at Eli Technologies. Previously, she was a PM at Schmidt Futures and has worked at Bain and Google. She serves on the Board of Trustees at MIT. As a former EMT, she experienced firsthand the challenges in our healthcare system and is now leading Grove Health's mission to improve patient adherence and reduce costs.
                   </p>
                   <Button variant="outline" size="sm" asChild>
                     <a
@@ -96,6 +100,33 @@ const Team = () => {
                       Connect on LinkedIn
                     </a>
                   </Button>
+                  <div className="flex items-center gap-4 pt-4 border-t mt-4">
+                    <img
+                      src={eliLogo}
+                      alt="Eli Technologies"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src={schmidtFuturesLogo}
+                      alt="Schmidt Futures"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src={bainLogo}
+                      alt="Bain"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src={googleLogo}
+                      alt="Google"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src={mitLogo}
+                      alt="MIT"
+                      className="h-8 w-auto object-contain"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -117,9 +148,7 @@ const Team = () => {
                     <p className="text-sm text-muted-foreground">Technology Leader</p>
                   </div>
                   <p className="text-muted-foreground leading-relaxed">
-                    Chris brings deep technical expertise to Grove Health, building scalable solutions
-                    that help healthcare providers and patients achieve better outcomes through
-                    technology and data-driven insights.
+                    Chris has spent his career focused on scaling healthcare accessibility. Most recently, he was the 6th employee at Fortuna Health, which just raised a $19M Series A. Before that, he was the 5th engineer at Blueberry Pediatrics, building partner infrastructure that helped 5x revenue. At AWS, he scaled the front door for billions of requests, and he started his career at Flatiron Health improving developer speed.
                   </p>
                   <Button variant="outline" size="sm" asChild>
                     <a
@@ -132,6 +161,28 @@ const Team = () => {
                       Connect on LinkedIn
                     </a>
                   </Button>
+                  <div className="flex items-center gap-4 pt-4 border-t mt-4">
+                    <img
+                      src={fortunaLogo}
+                      alt="Fortuna"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src="https://bookface-images.s3.amazonaws.com/small_logos/7f53180b1f0a5dbf45a41287bda60b7bd4a4c1b5.png"
+                      alt="Blueberry Pediatrics"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg"
+                      alt="AWS"
+                      className="h-8 w-auto object-contain"
+                    />
+                    <img
+                      src="https://images.seeklogo.com/logo-png/37/2/flatiron-health-logo-png_seeklogo-370157.png"
+                      alt="Flatiron Health"
+                      className="h-8 w-auto object-contain"
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>

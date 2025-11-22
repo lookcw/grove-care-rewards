@@ -12,7 +12,9 @@
       "Bash(gcloud services list:*)",
       "WebSearch",
       "WebFetch(domain:samuelkraft.com)",
-      "WebFetch(domain:codepen.io)"
+      "WebFetch(domain:codepen.io)",
+      "Bash(~/.zshrc)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
