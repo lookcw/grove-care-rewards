@@ -1,10 +1,33 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { HeartPulse, Clock, Eye, Scale, ArrowRight, Stethoscope, Activity, Home, CheckCircle, Phone } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { HeartPulse, Clock, Eye, Scale, ArrowRight, Stethoscope, Activity, CheckCircle, Phone, Calculator } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroDoctorImage from "@/assets/hero-doctor-2.svg";
 
 const Index = () => {
+  const [numDoctors, setNumDoctors] = useState<string>("10");
+  const [surgeriesPerDoctor, setSurgeriesPerDoctor] = useState<string>("250");
+  const [revenuePerSurgery, setRevenuePerSurgery] = useState<string>("3000");
+  const [cancellationRate, setCancellationRate] = useState<string>("8");
+
+  const calculateSavings = () => {
+    const doctors = parseFloat(numDoctors) || 0;
+    const surgeries = parseFloat(surgeriesPerDoctor) || 0;
+    const revenue = parseFloat(revenuePerSurgery) || 0;
+    const cancelRate = parseFloat(cancellationRate) || 0;
+
+    const totalSurgeries = doctors * surgeries;
+    const cancelledSurgeries = totalSurgeries * (cancelRate / 100);
+    const preventableCancellations = cancelledSurgeries * 0.6; // 60% are preventable
+    const potentialSavings = preventableCancellations * revenue;
+
+    return potentialSavings;
+  };
+
+  const savings = calculateSavings();
   return (
     <div className="min-h-screen">
       {/* Header */}
@@ -36,7 +59,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-background via-accent/5 to-background pt-20 pb-20 px-4">
+      <section className="relative overflow-hidden bg-gradient-to-b from-background via-accent/5 to-background pt-20 pb-20 px-4 min-h-[calc(100vh-64px)]">
         <div className="container mx-auto">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center max-w-7xl mx-auto">
             <div className="space-y-8">
@@ -46,7 +69,7 @@ const Index = () => {
 
               <div className="text-lg lg:text-xl text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  Grove Health automates phone call and text reminders for surgical centers and clinics. We turn long pre-op papers into actionable checklists, helping you reduce last-minute cancellations, fill empty OR slots, and ensure patients arrive prepared.
+                  Grove Health helps surgical centers and clinics reduce last-minute cancellations, fill empty OR slots, and ensure patients arrive prepared.
                 </p>
                 <ul className="space-y-3 text-left">
                   <li className="flex items-start gap-3">
@@ -55,15 +78,15 @@ const Index = () => {
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Send automated reminders when patients need to stop eating or taking medications</span>
+                    <span>Send automated reminders for fasting and medication instructions</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Call patients to confirm they've followed their pre-op instructions</span>
+                    <span>Schedule PCP appointments to speed up medical clearance</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <span>Detect potential cancellations early so you can fill OR slots</span>
+                    <span>Use telehealth to get patients cleared when PCP availability is limited</span>
                   </li>
                 </ul>
               </div>
@@ -141,6 +164,90 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Revenue Calculator Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-background via-accent/5 to-background">
+        <div className="container mx-auto">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Calculator className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+                Calculate Revenue Savings
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                See how much your clinic could save by reducing preventable surgery cancellations
+              </p>
+            </div>
+
+            {numDoctors && parseFloat(numDoctors) > 0 && (
+              <div className="text-center">
+                <p className="text-lg text-muted-foreground mb-2">Potential Annual Savings</p>
+                <p className="text-5xl font-bold text-primary">
+                  ${savings.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                </p>
+                <p className="text-sm text-muted-foreground mt-4">
+                  Research shows that <strong>60% of surgery cancellations are preventable</strong> with proper pre-operative preparation and patient communication.
+                </p>
+              </div>
+            )}
+
+            <Card className="border-none shadow-lg">
+              <CardContent className="pt-8 space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="numDoctors">Number of Surgeons</Label>
+                    <Input
+                      id="numDoctors"
+                      type="number"
+                      placeholder="Enter number of surgeons"
+                      value={numDoctors}
+                      onChange={(e) => setNumDoctors(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="surgeriesPerDoctor">Surgeries per Surgeon per Year</Label>
+                    <Input
+                      id="surgeriesPerDoctor"
+                      type="number"
+                      value={surgeriesPerDoctor}
+                      onChange={(e) => setSurgeriesPerDoctor(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="revenuePerSurgery">Revenue per Surgery ($)</Label>
+                    <Input
+                      id="revenuePerSurgery"
+                      type="number"
+                      value={revenuePerSurgery}
+                      onChange={(e) => setRevenuePerSurgery(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cancellationRate">Pre-Op Cancellation Rate (%)</Label>
+                    <Input
+                      id="cancellationRate"
+                      type="number"
+                      value={cancellationRate}
+                      onChange={(e) => setCancellationRate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="text-center pt-4">
+              <Button variant="hero" size="lg" className="group" asChild>
+                <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
+                  Get in Touch
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Solutions Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto">
@@ -185,38 +292,16 @@ const Index = () => {
             <Card className="border-none shadow-md h-full">
               <CardContent className="pt-8">
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                  <Home className="w-8 h-8 text-primary" />
+                  <Phone className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4">
-                  Compliance Verification & Confirmation Calls
+                  One Touch PCP Scheduling
                 </h3>
                 <p className="text-muted-foreground">
-                  Automated calls verify that patients followed their pre-op instructions correctly. Get confirmation before surgery day that patients are ready, reducing last-minute cancellations.
+                  We schedule PCP appointments on behalf of patients to make medical clearance easy and ensure they're ready for surgery.
                 </p>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-background via-accent/5 to-background">
-        <div className="container mx-auto">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-4xl lg:text-5xl font-bold">
-              Fill More OR Slots, Reduce Cancellations
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              We're partnering with surgical centers to eliminate last-minute cancellations and wasted OR time.
-              <br className="hidden sm:block" />
-              <span className="block sm:inline"> If your coordinators spend hours on manual pre-op calls and deal with scheduling chaos, we'd love to chat. Reach out today!</span>
-            </p>
-            <Button variant="hero" size="lg" className="group" asChild>
-              <a href="https://form.typeform.com/to/awtQDiTB" target="_blank" rel="noopener noreferrer">
-                Get in Touch
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </a>
-            </Button>
           </div>
         </div>
       </section>
