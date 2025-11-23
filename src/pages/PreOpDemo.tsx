@@ -294,7 +294,7 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Give your child a bath and arrive 2 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. You've got this! 🎯" }
         ],
         checklist: [
-          { task: "Complete pre-op bloodwork if required", daysBeforeSurgery: 14, crucial: true },
+          { task: "Complete pre-op bloodwork", daysBeforeSurgery: 14, crucial: true },
           { task: "Fill post-operative pain medication prescription", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with comfort item, insurance card, and loose clothes", daysBeforeSurgery: 1, crucial: true },
           { task: "Stop ibuprofen, aspirin, and herbal supplements", daysBeforeSurgery: 7, constant: true },
@@ -541,7 +541,7 @@ Clinic Information:
 ${baseInfo || "No clinic information provided yet."}`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-live:generateContent`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,
         {
           method: "POST",
           headers: {
@@ -891,6 +891,118 @@ ${baseInfo || "No clinic information provided yet."}`;
                   <p>Select a procedure on the Doctor tab to see your reminder messages</p>
                 </div>
               )}
+            </Card>
+
+            {/* PCP Scheduling Section */}
+            <Card className="p-6 bg-gradient-to-b from-muted/30 to-background max-w-4xl mx-auto">
+              <div className="mb-4">
+                <h2 className="text-2xl font-semibold mb-2">Appointment Scheduling</h2>
+                <p className="text-sm text-muted-foreground">
+                  We help patients schedule their PCP appointments via text message.
+                </p>
+              </div>
+
+              <div className="flex justify-center">
+                {/* iPhone Frame */}
+                <div className="relative bg-black rounded-[60px] p-3 shadow-2xl" style={{ width: '375px' }}>
+                  {/* iPhone Notch/Dynamic Island */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[35px] bg-black rounded-b-3xl z-10" />
+
+                  {/* Screen */}
+                  <div className="bg-white dark:bg-gray-900 rounded-[48px] overflow-hidden">
+                    {/* Status Bar */}
+                    <div className="bg-white dark:bg-gray-900 px-8 pt-4 pb-2 flex justify-between items-center text-xs font-semibold">
+                      <span className="text-black dark:text-white">9:41</span>
+                      <div className="flex items-center gap-1">
+                        <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                          <rect x="1" y="14" width="4" height="8" rx="1" />
+                          <rect x="7" y="10" width="4" height="12" rx="1" />
+                          <rect x="13" y="6" width="4" height="16" rx="1" />
+                          <rect x="19" y="2" width="4" height="20" rx="1" />
+                        </svg>
+                        <svg className="w-4 h-4 text-black dark:text-white" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6.62-2.73l1.42 1.42C8.23 15.3 10.04 14.5 12 14.5s3.77.8 5.2 2.19l1.42-1.42C16.79 13.47 14.5 12.5 12 12.5s-4.79.97-6.62 2.77zm-4.24-4.24l1.42 1.41C5.08 10.11 8.38 8.5 12 8.5s6.92 1.61 9.44 3.94l1.42-1.41C19.68 7.89 16 6 12 6S4.32 7.89 1.14 11.03z"/>
+                        </svg>
+                        <svg className="w-6 h-4 text-black dark:text-white" viewBox="0 0 28 14" fill="currentColor">
+                          <rect x="0" y="0" width="25" height="14" rx="3" stroke="currentColor" strokeWidth="1" fill="none" />
+                          <rect x="2" y="2" width="20" height="10" rx="1" />
+                          <rect x="26" y="4" width="2" height="6" rx="1" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Messages Header */}
+                    <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <div className="text-center">
+                        <div className="flex justify-center mb-2">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <HeartPulse className="w-5 h-5 text-primary" />
+                          </div>
+                        </div>
+                        <p className="text-sm font-semibold text-black dark:text-white">Grove Health</p>
+                      </div>
+                    </div>
+
+                    {/* Messages Container */}
+                    <div className="bg-white dark:bg-gray-900 h-[500px] overflow-y-auto p-4 space-y-3">
+                      {/* Initial scheduling message */}
+                      <div className="flex flex-col items-start">
+                        <div className="text-xs text-gray-500 text-center w-full mb-2">
+                          Today
+                        </div>
+                        <div className="flex items-end gap-2 w-full">
+                          <div className="relative max-w-[85%] rounded-[25px] px-4 py-2.5 bg-[#e5e5ea] dark:bg-gray-600">
+                            <div className="absolute bottom-0 left-[-7px] w-[20px] h-[25px] bg-[#e5e5ea] dark:bg-gray-600" style={{ borderBottomRightRadius: '16px 14px' }} />
+                            <div className="absolute bottom-0 left-[-26px] w-[26px] h-[25px] bg-white dark:bg-gray-900" style={{ borderBottomRightRadius: '10px' }} />
+                            <p className="text-[13px] leading-snug text-gray-900 dark:text-gray-100">
+                              Hi! Time to schedule your child's pre-op appointment with your PCP. Here are available times:
+                              <br /><br />
+                              <strong>1.</strong> Mon, Dec 2 at 9:00 AM<br />
+                              <strong>2.</strong> Tue, Dec 3 at 2:30 PM<br />
+                              <strong>3.</strong> Wed, Dec 4 at 10:00 AM
+                              <br /><br />
+                              Reply with 1, 2, or 3 to book, or send your own preferred time and we'll schedule it for you! 📅
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* User reply */}
+                      <div className="flex flex-col items-end">
+                        <div className="flex items-end gap-2 w-full justify-end">
+                          <div className="relative max-w-[85%] rounded-[25px] px-4 py-2.5 bg-[#007AFF] text-white">
+                            <div className="absolute bottom-0 right-[-7px] w-[20px] h-[25px] bg-[#007AFF]" style={{ borderBottomLeftRadius: '16px 14px' }} />
+                            <div className="absolute bottom-0 right-[-26px] w-[26px] h-[25px] bg-white dark:bg-gray-900" style={{ borderBottomLeftRadius: '10px' }} />
+                            <p className="text-[13px] leading-snug">
+                              2
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Confirmation message */}
+                      <div className="flex flex-col items-start">
+                        <div className="flex items-end gap-2 w-full">
+                          <div className="relative max-w-[85%] rounded-[25px] px-4 py-2.5 bg-[#e5e5ea] dark:bg-gray-600">
+                            <div className="absolute bottom-0 left-[-7px] w-[20px] h-[25px] bg-[#e5e5ea] dark:bg-gray-600" style={{ borderBottomRightRadius: '16px 14px' }} />
+                            <div className="absolute bottom-0 left-[-26px] w-[26px] h-[25px] bg-white dark:bg-gray-900" style={{ borderBottomRightRadius: '10px' }} />
+                            <p className="text-[13px] leading-snug text-gray-900 dark:text-gray-100">
+                              Perfect! You're all set for <strong>Tuesday, December 3 at 2:30 PM</strong> with Dr. Smith at Pediatric Care Associates.
+                              <br /><br />
+                              All you need to do is show up! We'll send you a reminder the day before. 🎉
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Home Indicator */}
+                    <div className="bg-white dark:bg-gray-900 pb-2 pt-1">
+                      <div className="mx-auto w-32 h-1 bg-black dark:bg-white rounded-full opacity-30" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </Card>
 
             {/* Checklist Section */}
