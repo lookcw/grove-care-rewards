@@ -338,6 +338,7 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Give your child a bath and arrive 1.5 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. This will be over before you know it! 🎯" }
         ],
         checklist: [
+          { task: "Confirm your child is healthy (no fever, cough, or ear infection)", daysBeforeSurgery: 7, crucial: true },
           { task: "Fill any prescribed ear drops for after surgery", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with comfort item and car seat ready", daysBeforeSurgery: 1, crucial: true },
           { task: "Stop ibuprofen and aspirin", daysBeforeSurgery: 5, constant: true },
@@ -381,7 +382,7 @@ DAY OF SURGERY:
           { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Give your child a bath and arrive 2 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. You've prepared so well! 🎯" }
         ],
         checklist: [
-          { task: "Complete any required pre-op testing", daysBeforeSurgery: 14, crucial: true },
+          { task: "Complete bloodwork & EKG", daysBeforeSurgery: 14, crucial: true },
           { task: "Fill post-operative pain medication prescription", daysBeforeSurgery: 2, crucial: true },
           { task: "Pack bag with comfort item, insurance card, and loose clothes", daysBeforeSurgery: 1, crucial: true },
           { task: "Stop ibuprofen, aspirin, and herbal supplements", daysBeforeSurgery: 7, constant: true },
@@ -654,7 +655,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                         Sample Pre-Op Template
                       </label>
                       <p className="text-sm text-muted-foreground mb-3">
-                        Select a procedure to load pre-operative instructions
+                        Select a procedure to load pre-operative instructions (Can make customizable per clinic, surgeon, & patient)
                       </p>
                       <Select value={selectedProcedure} onValueChange={handleProcedureSelect}>
                         <SelectTrigger className="mb-3">
@@ -669,37 +670,6 @@ ${baseInfo || "No clinic information provided yet."}`;
                         </SelectContent>
                       </Select>
                     </div>
-
-                    <div>
-                      <label className="text-lg font-semibold mb-2 block">
-                        Surgery Date
-                      </label>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        When is the surgery scheduled?
-                      </p>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !surgeryDate && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {surgeryDate ? format(surgeryDate, "PPP") : <span>Pick a date</span>}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            selected={surgeryDate}
-                            onSelect={(date) => date && setSurgeryDate(date)}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
                   </div>
                 </Card>
 
@@ -709,10 +679,45 @@ ${baseInfo || "No clinic information provided yet."}`;
                       <div className="space-y-4">
                         <div>
                           <label className="text-lg font-semibold mb-2 block">
+                            Surgery Date
+                          </label>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            When is the surgery scheduled?
+                          </p>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full justify-start text-left font-normal",
+                                  !surgeryDate && "text-muted-foreground"
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {surgeryDate ? format(surgeryDate, "PPP") : <span>Pick a date</span>}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                              <Calendar
+                                mode="single"
+                                selected={surgeryDate}
+                                onSelect={(date) => date && setSurgeryDate(date)}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                    </Card>
+
+                    <Card className="p-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-lg font-semibold mb-2 block">
                             Pre-Operative Instructions
                           </label>
                           <p className="text-sm text-muted-foreground mb-3">
-                            These instructions will be used by the AI chatbot to answer patient questions.
+                            These instructions will be used by the AI chatbot to answer patient questions, create text reminders, and checklist items.
                           </p>
                           <Textarea
                             value={preOpInstructions}
