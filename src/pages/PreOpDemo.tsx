@@ -12,7 +12,7 @@ import ReactMarkdown from "react-markdown";
 import { format, addDays, differenceInDays } from "date-fns";
 import { cn } from "@/lib/utils";
 
-type ClinicType = "ortho" | "derm" | "bariatric" | "";
+type ClinicType = "ortho" | "ent" | "";
 
 interface Reminder {
   daysBeforeSurgery: number;
@@ -242,319 +242,179 @@ PRE-OPERATIVE REQUIREMENTS:
 - Transportation arranged
 - Post-operative care assistance confirmed`
   },
-  derm: {
-    name: "Dermatology Surgery",
-    guidance: `GENERAL SURGICAL PREPARATION:
-- Inform us of all medications, especially blood thinners
-- Arrange transportation if you will be sedated
-- Eat a light meal before your procedure
-- Wear comfortable, loose-fitting clothing
+  ent: {
+    name: "Pediatric ENT Surgery",
+    guidance: `GENERAL PRE-OPERATIVE GUIDANCE FOR YOUR CHILD:
+- Follow all pre-operative instructions carefully
+- Plan to stay with your child during recovery
+- Keep your child calm and reassured about the procedure
+- Make sure to attend your child's pre-operative appointment
+
+IMPORTANT MEDICATION INSTRUCTIONS:
+- Inform your surgeon of ALL medications your child is taking
+- Some medications may need to be stopped before surgery
+- Do not stop any medications without consulting your surgeon first
 
 `,
     procedures: {
-      mohs_surgery: {
-        label: "Mohs Surgery",
-        instructions: `Pre-Operative Instructions - Mohs Surgery
+      tonsillectomy: {
+        label: "Tonsillectomy",
+        instructions: `Pre-Operative Instructions - Tonsillectomy (Pediatric)
 
-MEDICATIONS:
-- Continue all regular medications unless told otherwise
-- Stop aspirin and blood thinners 7 days before if approved by prescribing doctor
-- Avoid alcohol 48 hours before surgery
-- Do not take herbal supplements that thin blood (ginseng, ginkgo, garlic)
+MEDICATIONS TO STOP:
+- Stop giving ibuprofen, aspirin, or naproxen 7 days before surgery
+- Stop herbal supplements 7 days before surgery
+- Continue all other medications unless instructed otherwise
 
-PREPARATION:
-- Eat a normal breakfast or lunch before procedure
-- Wear comfortable clothing (procedure may take several hours)
-- Bring something to read or keep you occupied
-- Plan for a full day at the clinic
+BEFORE SURGERY:
+- Your child should be healthy - no fever, cough, or runny nose
+- Notify us immediately if your child becomes sick before surgery
+- Complete any required pre-op bloodwork
 
-WHAT TO EXPECT:
-- Procedure is done in stages with waiting between stages
-- Each stage takes about 1-2 hours
-- Average Mohs surgery takes 2-4 hours total
-- You may go home same day with bandage
-
-ARRANGE:
-- Transportation home (especially if anxious or sedated)
-- Time off work for procedure and recovery (typically 1-3 days)
-- Follow-up appointment for suture removal
-
-DO NOT:
-- Wear makeup or skincare products on treatment area
-- Wear contact lenses (glasses are fine)
-- Smoke or use nicotine 48 hours before
-- Drink alcohol 48 hours before`,
-        reminders: [
-          { daysBeforeSurgery: 14, message: "Hi! Please schedule your Mohs procedure at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a> and check with your doctor about stopping blood thinners. Better to confirm now so you're all set! 📋" },
-          { daysBeforeSurgery: 7, message: "If your doctor approved it, please stop aspirin and blood thinners now. You're doing great with your prep! 💊" },
-          { daysBeforeSurgery: 3, message: "Time to arrange your ride and request time off work. The procedure can take a few hours, so bring something to read! 📚" },
-          { daysBeforeSurgery: 2, message: "Reminder to stop smoking, alcohol, and blood-thinning supplements. Almost procedure day! 🌟" },
-          { daysBeforeSurgery: 0, message: "Good morning! Eat a normal meal, wear comfy clothes, and bring something to read. IMPORTANT: If you did not follow any of the instructions, text 'ATE' immediately. We'll take good care of you today! 😊" }
-        ],
-        checklist: [
-          { task: "Check with prescribing doctor about stopping blood thinners", daysBeforeSurgery: 14, crucial: true },
-          { task: "Arrange transportation home", daysBeforeSurgery: 3, crucial: true },
-          { task: "Stop aspirin if approved", daysBeforeSurgery: 7, constant: true },
-          { task: "Stop blood-thinning supplements (ginkgo, ginseng, garlic)", daysBeforeSurgery: 7, constant: true },
-          { task: "Stop smoking and nicotine", daysBeforeSurgery: 2, constant: true },
-          { task: "Stop drinking alcohol", daysBeforeSurgery: 2, constant: true },
-          { task: "Request time off work (1-3 days)", daysBeforeSurgery: 3, crucial: false },
-          { task: "Pack bag with reading material, snacks, phone charger", daysBeforeSurgery: 1, crucial: false }
-        ]
-      },
-      skin_cancer_excision: {
-        label: "Skin Cancer Excision",
-        instructions: `Pre-Operative Instructions - Skin Cancer Excision
-
-MEDICATIONS:
-- Continue all regular medications
-- Stop blood thinners 5-7 days before only if approved by your doctor
-- Inform us if you take medications for diabetes
-- Avoid anti-inflammatory drugs 3 days before
-
-BEFORE YOUR PROCEDURE:
-- Shower normally the morning of procedure
-- Do not apply makeup, lotion, or skincare to treatment area
-- Wear comfortable, loose clothing
-- Eat a light meal before arriving
+FASTING INSTRUCTIONS:
+- No food after midnight the night before surgery
+- No liquids after midnight the night before surgery
+- No gum or candy on the day of surgery
 
 WHAT TO BRING:
-- Insurance card and photo ID
+- Your child's insurance card and photo ID for parent
 - List of current medications
-- Someone to drive you home (if receiving sedation)
+- Comfort item (stuffed animal, blanket)
+- Loose, comfortable clothing for your child
 
-PLAN AHEAD:
-- Take day off work
-- Avoid strenuous activity for 24-48 hours after
-- Keep wound care supplies at home (gauze, tape, antibiotic ointment)
-
-IMPORTANT:
-- Notify us if you develop a cold, infection, or fever before surgery
-- Tell us about any allergies (especially to local anesthetics)
-- Inform us if you have a pacemaker or metal implants`,
+DAY OF SURGERY:
+- Give your child a bath or shower the morning of surgery
+- Arrive 2 hours before scheduled surgery time
+- One parent may accompany child to pre-op area`,
         reminders: [
-          { daysBeforeSurgery: 7, message: "Hi there! Please schedule your procedure at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a> if you haven't already. If your doctor approved it, please stop blood thinners now. You're on track! 💙" },
-          { daysBeforeSurgery: 3, message: "Time to stop anti-inflammatory meds like ibuprofen. Your procedure is coming up soon! 💊" },
-          { daysBeforeSurgery: 1, message: "Tomorrow's the day! Make sure you have a ride if you're getting sedation, and take it easy. You've got this! 🚗" },
-          { daysBeforeSurgery: 0, message: "Good morning! Eat a light meal, shower, and skip products on the surgical area. IMPORTANT: If you did not follow any of the instructions, text 'ATE' immediately. See you soon! 😊" }
+          { daysBeforeSurgery: 14, message: "Hi! Time to complete any pre-op bloodwork for your child. You can schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. We're here to support you and your little one! 💙" },
+          { daysBeforeSurgery: 7, message: "Please stop giving your child ibuprofen, aspirin, and herbal supplements starting today. Surgery is getting close! 💊" },
+          { daysBeforeSurgery: 3, message: "Stock up on soft foods and popsicles for after surgery - your child will need them for recovery! 🍦" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's surgery day! Remember, no food or drinks after midnight tonight. Bring your child's favorite comfort item! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Give your child a bath and arrive 2 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. You've got this! 🎯" }
         ],
         checklist: [
-          { task: "Confirm with doctor about stopping blood thinners", daysBeforeSurgery: 7, crucial: true },
-          { task: "Arrange transportation if receiving sedation", daysBeforeSurgery: 2, crucial: true },
-          { task: "Stop anti-inflammatory medications", daysBeforeSurgery: 3, constant: true },
-          { task: "Request time off work", daysBeforeSurgery: 2, crucial: false },
-          { task: "Purchase wound care supplies (gauze, tape, antibiotic ointment)", daysBeforeSurgery: 2, crucial: false },
-          { task: "Plan light meals and rest for procedure day", daysBeforeSurgery: 1, crucial: false }
-        ]
-      }
-    },
-    clinicInfo: `Dermatology Surgery Center Information
-
-ABOUT OUR PRACTICE:
-Board-certified dermatologic surgeons specializing in skin cancer removal and reconstruction.
-
-SERVICES:
-- Mohs micrographic surgery
-- Skin cancer excision
-- Reconstructive procedures
-- Same-day pathology results
-
-OFFICE HOURS:
-Monday - Friday: 7:00 AM - 4:00 PM
-Mohs surgery: Monday - Thursday
-
-CONTACT:
-Phone: (555) 123-4567
-Pre-Op Nurse: (555) 123-4568
-
-WHAT TO EXPECT:
-- Most procedures done under local anesthesia
-- Same-day discharge
-- Pathology results typically same day (Mohs) or within 7-10 days`
-  },
-  bariatric: {
-    name: "Bariatric Surgery",
-    guidance: `PRE-OPERATIVE BARIATRIC SURGERY REQUIREMENTS:
-- Complete all required medical clearances
-- Attend nutrition education classes
-- Meet with psychologist for evaluation
-- Demonstrate commitment to lifestyle changes
-- Follow pre-operative diet as instructed
-
-`,
-    procedures: {
-      gastric_bypass: {
-        label: "Gastric Bypass Surgery",
-        instructions: `Pre-Operative Instructions - Gastric Bypass
-
-PRE-OP REQUIREMENTS (Complete 2-3 months before):
-- Nutritionist consultations (minimum 3 visits)
-- Psychological evaluation and clearance
-- Medical clearance from primary care physician
-- Sleep study if indicated
-- Cardiac clearance if risk factors present
-- Upper endoscopy
-
-PRE-OP DIET (2 weeks before surgery):
-- High-protein, low-carb diet
-- Protein shakes 2-3 times per day
-- Lean proteins and non-starchy vegetables
-- No sugar, fried foods, or high-fat foods
-- Goal: Reduce liver size for safer surgery
-
-LIQUID DIET (2 days before surgery):
-- Clear liquids only
-- Protein shakes allowed
-- Broth, sugar-free beverages
-- No solid food
-
-MEDICATIONS:
-- Stop NSAIDs 7 days before
-- Stop blood thinners as directed
-- Continue blood pressure and diabetes medications
-- Stop smoking 8 weeks before surgery
-
-HOME PREPARATION:
-- Stock protein shakes and clear liquids
-- Prepare pureed food for after surgery
-- Arrange help at home for first week
-- Set up comfortable recovery area
-
-FASTING:
-- No food after midnight before surgery
-- No liquids after midnight before surgery
-
-SURGERY DAY:
-- Shower with Hibiclens antibacterial soap
-- Arrive 2 hours early
-- Bring CPAP machine if you use one
-- Wear comfortable, loose clothing`,
-        reminders: [
-          { daysBeforeSurgery: 21, message: "Hi! Please make sure you've completed your psychological evaluation and medical clearances. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're making amazing progress on this journey! 💪" },
-          { daysBeforeSurgery: 14, message: "Starting today: high-protein diet with 2-3 protein shakes daily! This helps prepare your body. You've got this! 🥤" },
-          { daysBeforeSurgery: 7, message: "Please stop NSAIDs and double-check your medication plan with your surgeon. One week to go - so exciting! 💊" },
-          { daysBeforeSurgery: 3, message: "Stock up time! Grab protein shakes, clear liquids, and pureed foods for after surgery. Almost there! 🛒" },
-          { daysBeforeSurgery: 2, message: "Switching to liquid-only today - protein shakes, broth, and sugar-free drinks. You're doing amazing! 🥛" },
-          { daysBeforeSurgery: 1, message: "Tomorrow's your big day! Start fasting at midnight tonight. Rest well - you've prepared so well for this! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! Surgery day is here! Shower with Hibiclens, bring your CPAP if needed, and arrive 2 hours early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. You've got this! 🎉" }
-        ],
-        checklist: [
-          { task: "Complete psychological evaluation", daysBeforeSurgery: 21, crucial: true },
-          { task: "Get medical clearance from primary care doctor", daysBeforeSurgery: 21, crucial: true },
-          { task: "Arrange for help at home for first week", daysBeforeSurgery: 3, crucial: true },
-          { task: "Start high-protein, low-carb pre-op diet", daysBeforeSurgery: 14, constant: true },
-          { task: "Stop NSAIDs (ibuprofen, aspirin, naproxen)", daysBeforeSurgery: 7, constant: true },
-          { task: "Begin liquid-only diet", daysBeforeSurgery: 2, constant: true },
+          { task: "Complete pre-op bloodwork if required", daysBeforeSurgery: 14, crucial: true },
+          { task: "Fill post-operative pain medication prescription", daysBeforeSurgery: 2, crucial: true },
+          { task: "Pack bag with comfort item, insurance card, and loose clothes", daysBeforeSurgery: 1, crucial: true },
+          { task: "Stop ibuprofen, aspirin, and herbal supplements", daysBeforeSurgery: 7, constant: true },
           { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
-          { task: "No smoking until after surgery", daysBeforeSurgery: 56, constant: true },
-          { task: "Purchase protein shakes (2-3 weeks supply)", daysBeforeSurgery: 7, crucial: false }
+          { task: "Stock up on soft foods, popsicles, and ice cream", daysBeforeSurgery: 3, crucial: false }
         ]
       },
-      gastric_sleeve: {
-        label: "Gastric Sleeve Surgery",
-        instructions: `Pre-Operative Instructions - Gastric Sleeve
+      ear_tubes: {
+        label: "Ear Tube Placement",
+        instructions: `Pre-Operative Instructions - Ear Tube Placement (Pediatric)
 
-PRE-OP PROGRAM (2-3 months before):
-- Nutrition education sessions
-- Psychological evaluation
-- Medical evaluations and clearances
-- Demonstrate 6-month supervised weight loss attempt
-- Upper GI endoscopy
+MEDICATIONS TO STOP:
+- Stop giving ibuprofen or aspirin 5 days before surgery
+- Continue all other medications unless instructed otherwise
+- Tell us about any ear drops your child is currently using
 
-MEDICAL CLEARANCES REQUIRED:
-- Primary care physician clearance
-- Cardiology clearance (if risk factors)
-- Sleep study (if symptoms of sleep apnea)
-- Pulmonary clearance (if lung disease)
+BEFORE SURGERY:
+- Your child should be healthy - no fever, cough, or active ear infection
+- Notify us immediately if your child becomes sick
+- This is typically a very quick procedure (10-15 minutes)
 
-PRE-OP DIET (14 days before):
-- Low-carb, high-protein diet (80-100g protein daily)
-- Protein shakes as meal replacements
-- Vegetables and lean proteins
-- No sugar, pasta, bread, rice
-- Goal: Shrink liver for safer surgery
+FASTING INSTRUCTIONS:
+- No food after midnight the night before surgery
+- No liquids after midnight the night before surgery
+- No gum or candy on the day of surgery
 
-LIQUID PHASE (3 days before):
-- Protein shakes only
-- Clear broth
-- Sugar-free beverages
-- No solid food
+WHAT TO BRING:
+- Your child's insurance card and photo ID for parent
+- List of current medications
+- Comfort item (stuffed animal, blanket)
+- Car seat for ride home
 
-MEDICATIONS:
-- Stop NSAIDs 10 days before
-- Stop blood thinners as directed
-- Stop birth control pills 1 month before
-- Continue thyroid and blood pressure meds
-
-LIFESTYLE:
-- No smoking for 8 weeks before surgery
-- No alcohol 48 hours before
-- Regular exercise (walking 30 min/day)
-
-PREPARE YOUR HOME:
-- Buy protein shakes (3 weeks supply)
-- Buy clear liquid supplies
-- Small plates and utensils
-- Arrange childcare/pet care
-- Help for first 5-7 days
-
-SURGERY DAY:
-- Shower with antibacterial soap
-- No food or liquids after midnight
-- Bring CPAP if you use one
-- Arrive 90 minutes early`,
+DAY OF SURGERY:
+- Give your child a bath the morning of surgery
+- Arrive 1.5 hours before scheduled surgery time
+- Your child will go home the same day`,
         reminders: [
-          { daysBeforeSurgery: 21, message: "Hi! Please make sure your medical clearances are complete. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. You're taking such great steps for your health! 💙" },
-          { daysBeforeSurgery: 14, message: "Starting your 2-week pre-op diet today - high protein, low carb, with protein shakes. You can do this! 💪" },
-          { daysBeforeSurgery: 10, message: "Time to stop NSAIDs like ibuprofen and aspirin. Your surgery is getting close - exciting! 💊" },
-          { daysBeforeSurgery: 7, message: "Stock up on protein shakes and get your home ready for recovery. One week to go! 🛒" },
-          { daysBeforeSurgery: 3, message: "Switching to liquids-only - protein shakes, broth, and sugar-free drinks. You're almost there! 🥛" },
-          { daysBeforeSurgery: 1, message: "Tomorrow's the big day! Begin fasting at midnight. Rest up - you've worked so hard for this! 🌙" },
-          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Shower with antibacterial soap, bring your CPAP, and arrive 90 min early. IMPORTANT: If you ate anything or did not follow any of the instructions, text 'ATE' immediately. Let's do this! 🎉" }
+          { daysBeforeSurgery: 7, message: "Hi! Your child's ear tube surgery is in one week. Please stop ibuprofen and aspirin starting in 2 days. Let us know if your child gets sick! 💙" },
+          { daysBeforeSurgery: 5, message: "Please stop giving your child ibuprofen or aspirin starting today. Almost there! 💊" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's the day! No food or drinks after midnight. Bring your child's favorite comfort item - this will be quick! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Give your child a bath and arrive 1.5 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. This will be over before you know it! 🎯" }
         ],
         checklist: [
-          { task: "Get medical clearance from primary care physician", daysBeforeSurgery: 21, crucial: true },
-          { task: "Arrange help at home for first week", daysBeforeSurgery: 7, crucial: true },
-          { task: "Begin 2-week pre-op diet (high protein, low carb)", daysBeforeSurgery: 14, constant: true },
-          { task: "Stop NSAIDs", daysBeforeSurgery: 10, constant: true },
-          { task: "Begin liquid-only diet", daysBeforeSurgery: 3, constant: true },
-          { task: "Stop alcohol consumption", daysBeforeSurgery: 2, constant: true },
+          { task: "Fill any prescribed ear drops for after surgery", daysBeforeSurgery: 2, crucial: true },
+          { task: "Pack bag with comfort item and car seat ready", daysBeforeSurgery: 1, crucial: true },
+          { task: "Stop ibuprofen and aspirin", daysBeforeSurgery: 5, constant: true },
+          { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true }
+        ]
+      },
+      adenoidectomy: {
+        label: "Adenoidectomy",
+        instructions: `Pre-Operative Instructions - Adenoidectomy (Pediatric)
+
+MEDICATIONS TO STOP:
+- Stop giving ibuprofen, aspirin, or naproxen 7 days before surgery
+- Stop herbal supplements 7 days before surgery
+- Continue all other medications unless instructed otherwise
+
+BEFORE SURGERY:
+- Your child should be healthy - no fever, cough, or runny nose
+- Notify us immediately if your child becomes sick before surgery
+- Complete any required pre-op testing
+
+FASTING INSTRUCTIONS:
+- No food after midnight the night before surgery
+- No liquids after midnight the night before surgery
+- No gum or candy on the day of surgery
+
+WHAT TO BRING:
+- Your child's insurance card and photo ID for parent
+- List of current medications
+- Comfort item (stuffed animal, blanket)
+- Loose, comfortable clothing
+
+DAY OF SURGERY:
+- Give your child a bath or shower the morning of surgery
+- Arrive 2 hours before scheduled surgery time
+- One parent may accompany child to pre-op area`,
+        reminders: [
+          { daysBeforeSurgery: 14, message: "Hi! Time to complete any pre-op testing for your child. Schedule at <a href='https://yourclinic.com' target='_blank' rel='noopener noreferrer' style='color: #3b82f6; text-decoration: underline;'>yourclinic.com</a>. We're excited to help your little one breathe easier! 💙" },
+          { daysBeforeSurgery: 7, message: "Please stop giving your child ibuprofen, aspirin, and herbal supplements starting today. One week to go! 💊" },
+          { daysBeforeSurgery: 3, message: "Stock up on soft foods for after surgery - your child may have a sore throat for a few days. 🍦" },
+          { daysBeforeSurgery: 1, message: "Tomorrow's surgery day! No food or drinks after midnight. Bring your child's favorite comfort item! 🌙" },
+          { daysBeforeSurgery: 0, message: "Good morning! Surgery day! Give your child a bath and arrive 2 hours early. IMPORTANT: If your child ate or drank anything, text 'ATE' immediately. You've prepared so well! 🎯" }
+        ],
+        checklist: [
+          { task: "Complete any required pre-op testing", daysBeforeSurgery: 14, crucial: true },
+          { task: "Fill post-operative pain medication prescription", daysBeforeSurgery: 2, crucial: true },
+          { task: "Pack bag with comfort item, insurance card, and loose clothes", daysBeforeSurgery: 1, crucial: true },
+          { task: "Stop ibuprofen, aspirin, and herbal supplements", daysBeforeSurgery: 7, constant: true },
           { task: "Begin fasting at midnight (no food or liquids)", daysBeforeSurgery: 1, constant: true },
-          { task: "No smoking until after surgery", daysBeforeSurgery: 56, constant: true },
-          { task: "Purchase 3-week supply of protein shakes", daysBeforeSurgery: 7, crucial: false }
+          { task: "Stock up on soft foods and cool drinks", daysBeforeSurgery: 3, crucial: false }
         ]
       }
     },
-    clinicInfo: `Bariatric Surgery Center Information
+    clinicInfo: `Pediatric ENT Surgery Center Information
 
-ABOUT OUR PROGRAM:
-Comprehensive bariatric surgery program with multidisciplinary team support for optimal outcomes.
+ABOUT OUR FACILITY:
+We specialize in pediatric ear, nose, and throat procedures in a child-friendly environment. Our team is experienced in caring for children of all ages.
 
-TEAM:
-- Board-certified bariatric surgeons
-- Registered dietitians
-- Clinical psychologists
-- Exercise physiologists
-- Nurse coordinators
+SERVICES:
+- Tonsillectomy and adenoidectomy
+- Ear tube placement
+- Pediatric sinus procedures
+- Hearing evaluations
 
-PRE-OP PROGRAM:
-- 2-3 month pre-operative preparation
-- Required education classes
-- Nutritional counseling
-- Psychological support
-- Medical optimization
+FACILITY HOURS:
+Monday - Friday: 7:00 AM - 5:00 PM
+Surgery days: Monday - Thursday
 
-CONTACT:
-Main Office: (555) 345-6789
-Program Coordinator: (555) 345-6790
-Nutritionist: (555) 345-6791
-24/7 Support Line: (555) 345-6792
+CONTACT INFORMATION:
+Main Office: (555) 456-7890
+Surgery Scheduling: (555) 456-7891
+Pre-Op Nurse Line: (555) 456-7892
 
-REQUIREMENTS:
-- Completion of all pre-op requirements
-- Insurance authorization obtained
-- Medical clearances on file
-- Demonstrated commitment to lifestyle changes`
+WHAT TO EXPECT:
+- Child-friendly waiting areas with toys and activities
+- Parent can stay with child until anesthesia
+- Recovery room designed for families
+- Most procedures are same-day discharge`
   }
 };
 
@@ -681,7 +541,7 @@ Clinic Information:
 ${baseInfo || "No clinic information provided yet."}`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-live:generateContent`,
         {
           method: "POST",
           headers: {
@@ -778,8 +638,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="ortho">Orthopedic Surgery</SelectItem>
-                      <SelectItem value="derm">Dermatology Surgery</SelectItem>
-                      <SelectItem value="bariatric">Bariatric Surgery</SelectItem>
+                      <SelectItem value="ent">Pediatric ENT Surgery</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
