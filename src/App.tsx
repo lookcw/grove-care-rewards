@@ -14,6 +14,7 @@ import Team from "./pages/Team";
 import TreatmentPlanDemo from "./pages/TreatmentPlanDemo";
 import PreOpDemo from "./pages/PreOpDemo";
 import Raffle from "./pages/Raffle";
+import PriorAuthDemo from "./pages/PriorAuthDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/demo" element={<TreatmentPlanDemo />} />
           <Route path="/demo-preop" element={<PreOpDemo />} />
           <Route path="/raffle" element={<Raffle />} />
+          <Route path="/prior-auth-demo" element={<PriorAuthDemo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
