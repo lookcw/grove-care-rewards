@@ -72,6 +72,68 @@ const cptCodeOptions = [
   '63050 - Laminoplasty, cervical'
 ];
 
+const surgeryDefaults: Record<string, {
+  instrumentation: string[];
+  requirements: string[];
+  cptCodes: string[];
+}> = {
+  'ACDF (Anterior Cervical Discectomy and Fusion)': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Post-op Brace'],
+    cptCodes: ['22551 - Arthrodesis, anterior interbody, cervical below C2', '22845 - Anterior instrumentation, 2-3 vertebral segments']
+  },
+  'PCDF (Posterior Cervical Discectomy and Fusion)': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Cell Saver'],
+    cptCodes: ['22554 - Arthrodesis, anterior interbody, cervical', '22612 - Arthrodesis, posterior, lumbar']
+  },
+  'PCD (Posterior Cervical Decompression)': {
+    instrumentation: [],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring'],
+    cptCodes: ['63050 - Laminoplasty, cervical']
+  },
+  'ALIF (Anterior Lumbar Interbody Fusion)': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Cell Saver', 'Bone Graft'],
+    cptCodes: ['22558 - Arthrodesis, anterior interbody technique, lumbar', '22853 - Insertion of interbody biomechanical device']
+  },
+  'PLIF (Posterior Lumbar Interbody Fusion)': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Cell Saver', 'Bone Graft'],
+    cptCodes: ['22630 - Arthrodesis, posterior interbody technique, lumbar', '22853 - Insertion of interbody biomechanical device']
+  },
+  'TLIF (Transforaminal Lumbar Interbody Fusion)': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Cell Saver', 'Bone Graft'],
+    cptCodes: ['22630 - Arthrodesis, posterior interbody technique, lumbar', '22853 - Insertion of interbody biomechanical device']
+  },
+  'Laminectomy': {
+    instrumentation: [],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring'],
+    cptCodes: ['63047 - Laminectomy with foraminotomy, lumbar']
+  },
+  'Microdiscectomy': {
+    instrumentation: [],
+    requirements: ['C-arm (Fluoroscopy)', 'Microscope'],
+    cptCodes: ['63030 - Laminotomy (hemilaminectomy), lumbar']
+  },
+  'Spinal Fusion': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)', 'Neuromonitoring', 'Cell Saver', 'Bone Graft'],
+    cptCodes: ['22612 - Arthrodesis, posterior, lumbar', '22853 - Insertion of interbody biomechanical device']
+  },
+  'Kyphoplasty': {
+    instrumentation: ['Medtronic'],
+    requirements: ['C-arm (Fluoroscopy)'],
+    cptCodes: ['22853 - Insertion of interbody biomechanical device']
+  },
+  'Vertebroplasty': {
+    instrumentation: [],
+    requirements: ['C-arm (Fluoroscopy)'],
+    cptCodes: ['22853 - Insertion of interbody biomechanical device']
+  }
+};
+
 export function NewPatientModal({ isOpen, onClose, patientName, onSubmit }: NewPatientModalProps) {
   const [formData, setFormData] = useState<NewPatientFormData>({
     instrumentation: [],
@@ -80,6 +142,27 @@ export function NewPatientModal({ isOpen, onClose, patientName, onSubmit }: NewP
     surgeryCenter: '',
     cptCodes: []
   });
+
+  const handleSurgeryTypeChange = (selected: string[]) => {
+    // Get defaults from all selected surgery types
+    const defaults = selected.reduce((acc, surgeryType) => {
+      const surgeryDefault = surgeryDefaults[surgeryType];
+      if (surgeryDefault) {
+        acc.instrumentation = [...new Set([...acc.instrumentation, ...surgeryDefault.instrumentation])];
+        acc.requirements = [...new Set([...acc.requirements, ...surgeryDefault.requirements])];
+        acc.cptCodes = [...new Set([...acc.cptCodes, ...surgeryDefault.cptCodes])];
+      }
+      return acc;
+    }, { instrumentation: [] as string[], requirements: [] as string[], cptCodes: [] as string[] });
+
+    setFormData({
+      ...formData,
+      surgeryTypes: selected,
+      instrumentation: defaults.instrumentation,
+      requirements: defaults.requirements,
+      cptCodes: defaults.cptCodes
+    });
+  };
 
   if (!isOpen) return null;
 
@@ -117,6 +200,15 @@ export function NewPatientModal({ isOpen, onClose, patientName, onSubmit }: NewP
 
         {/* Content */}
         <div className="p-6 space-y-6 overflow-y-auto flex-1">
+          {/* Surgery Types - First field, auto-fills others */}
+          <MultiSelect
+            label="Surgery Type"
+            options={surgeryTypeOptions}
+            selected={formData.surgeryTypes}
+            onChange={handleSurgeryTypeChange}
+            placeholder="Select surgery types"
+          />
+
           {/* Instrumentation */}
           <MultiSelect
             label="Instrumentation"
@@ -124,15 +216,6 @@ export function NewPatientModal({ isOpen, onClose, patientName, onSubmit }: NewP
             selected={formData.instrumentation}
             onChange={(selected) => setFormData({ ...formData, instrumentation: selected })}
             placeholder="Select instrumentation vendors"
-          />
-
-          {/* Surgery Types */}
-          <MultiSelect
-            label="Surgery Type"
-            options={surgeryTypeOptions}
-            selected={formData.surgeryTypes}
-            onChange={(selected) => setFormData({ ...formData, surgeryTypes: selected })}
-            placeholder="Select surgery types"
           />
 
           {/* Requirements */}

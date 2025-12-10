@@ -274,8 +274,7 @@ export function PriorAuthTable() {
 
       {/* Existing Patients Section */}
       <div className="mb-4">
-        <h2 className="text-gray-900 mb-2">In Progress Authorizations</h2>
-        <p className="text-gray-600 text-sm">Patients with pending documentation</p>
+        <h2 className="text-gray-900 mb-2">Patients to send for Prior Auth</h2>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
