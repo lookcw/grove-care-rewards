@@ -3,6 +3,8 @@ import { Phone, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import { RequestModal } from './RequestModal';
 import { NewPatientsTable } from './NewPatientsTable';
 
+type TabType = 'scheduler' | 'priorAuth';
+
 interface Patient {
   id: string;
   name: string;
@@ -45,6 +47,7 @@ const itemLabels = {
 };
 
 export function PriorAuthTable() {
+  const [activeTab, setActiveTab] = useState<TabType>('scheduler');
   const [patients, setPatients] = useState<Patient[]>([
     {
       id: '1',
@@ -263,19 +266,48 @@ export function PriorAuthTable() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto">
+      {/* Tab Navigation */}
       <div className="mb-6">
-        <h1 className="text-gray-900 mb-2">Prior Authorization Tracker</h1>
+        <div className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+          <button
+            onClick={() => setActiveTab('scheduler')}
+            className={`px-6 py-2 rounded-md transition-colors ${
+              activeTab === 'scheduler'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Surgery Scheduler
+          </button>
+          <button
+            onClick={() => setActiveTab('priorAuth')}
+            className={`px-6 py-2 rounded-md transition-colors ${
+              activeTab === 'priorAuth'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Prior Auth Dashboard
+          </button>
+        </div>
       </div>
 
-      {/* New Patients Section */}
-      <div className="mb-8">
-        <NewPatientsTable />
-      </div>
+      {/* Surgery Scheduler Tab */}
+      {activeTab === 'scheduler' && (
+        <div>
+          <div className="mb-4">
+            <h1 className="text-gray-900 mb-2">Surgery Scheduler Dashboard</h1>
+          </div>
+          <NewPatientsTable />
+        </div>
+      )}
 
-      {/* Existing Patients Section */}
-      <div className="mb-4">
-        <h2 className="text-gray-900 mb-2">Patients to send for Prior Auth</h2>
-      </div>
+      {/* Prior Auth Dashboard Tab */}
+      {activeTab === 'priorAuth' && (
+        <div>
+          <div className="mb-4">
+            <h1 className="text-gray-900 mb-2">Prior Auth Dashboard</h1>
+          </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -395,6 +427,8 @@ export function PriorAuthTable() {
           </div>
         </div>
       </div>
+        </div>
+      )}
 
       {/* Request Modal */}
       <RequestModal
