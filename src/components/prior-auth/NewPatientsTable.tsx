@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileText, Send, CheckCircle2 } from 'lucide-react';
+import { FileText, Phone, CheckCircle2 } from 'lucide-react';
 import { NewPatientModal, NewPatientFormData } from './NewPatientModal';
 
 interface NewPatient {
@@ -114,7 +114,7 @@ export function NewPatientsTable() {
                               : 'bg-blue-600 text-white hover:bg-blue-700'
                           }`}
                         >
-                          <Send className="w-4 h-4" />
+                          <Phone className="w-4 h-4" />
                           {patient.sentToCenter ? 'Sent to Surgery Center' : 'Schedule with Surgery Center'}
                         </button>
                       ) : !patient.formCompleted ? (
@@ -135,7 +135,7 @@ export function NewPatientsTable() {
                               : 'bg-green-600 text-white hover:bg-green-700'
                           }`}
                         >
-                          <Send className="w-4 h-4" />
+                          <Phone className="w-4 h-4" />
                           {patient.sentToCenter ? 'Sent to Surgery Center' : 'Send to Surgery Center'}
                         </button>
                       )}

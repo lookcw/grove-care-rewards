@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send, AlertCircle, CheckCircle2, X } from 'lucide-react';
+import { Phone, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import { RequestModal } from './RequestModal';
 import { NewPatientsTable } from './NewPatientsTable';
 
@@ -345,7 +345,7 @@ export function PriorAuthTable() {
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                           >
-                            <Send className="w-4 h-4" />
+                            <Phone className="w-4 h-4" />
                             {isRequested(patient.id, 'mriScan') ? 'MRI Requested' : 'Request MRI'}
                           </button>
                         )}
@@ -359,7 +359,7 @@ export function PriorAuthTable() {
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                           >
-                            <Send className="w-4 h-4" />
+                            <Phone className="w-4 h-4" />
                             {isRequested(patient.id, 'ptEvidence') ? 'PT Requested' : 'Request PT'}
                           </button>
                         )}
