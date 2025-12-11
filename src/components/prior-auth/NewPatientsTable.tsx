@@ -6,9 +6,8 @@ interface NewPatient {
   id: string;
   name: string;
   surgeryDate: string;
-  missing: 'Surgery Schedule Form Missing' | 'Surgery Not Scheduled' | null;
-  medicalClearance: 'Missing' | 'Received' | null;
-  lastAction: 'Upload scheduling form to ECW' | 'Called MRI facility' | 'None';
+  missing: 'Surgery Schedule Form Missing' | 'Surgery Not Scheduled' | 'Missing Clearance' | null;
+  lastAction: 'Synced Forms to ECW' | 'Called Radiology facility' | 'None';
   formCompleted?: boolean;
   sentToCenter?: boolean;
   calledForClearance?: boolean;
@@ -18,31 +17,28 @@ interface NewPatient {
 export function NewPatientsTable() {
   const [newPatients, setNewPatients] = useState<NewPatient[]>([
     {
-      id: 'new-1',
-      name: 'Jennifer Williams',
-      surgeryDate: '2025-02-05',
-      missing: 'Surgery Schedule Form Missing',
-      medicalClearance: 'Missing',
-      lastAction: 'Upload scheduling form to ECW',
-      actionType: 'fillForm'
-    },
-    {
       id: 'new-2',
       name: 'Christopher Davis',
       surgeryDate: '2025-02-08',
       missing: 'Surgery Not Scheduled',
-      medicalClearance: 'Missing',
-      lastAction: 'Called MRI facility',
-      actionType: 'callForClearance'
+      lastAction: 'Called Radiology facility',
+      actionType: 'sendToCenter'
     },
     {
       id: 'new-3',
       name: 'Amanda Brown',
       surgeryDate: '2025-02-12',
       missing: null,
-      medicalClearance: 'Received',
       lastAction: 'None',
       actionType: undefined
+    },
+    {
+      id: 'new-4',
+      name: 'Robert Wilson',
+      surgeryDate: '2025-02-15',
+      missing: 'Missing Clearance',
+      lastAction: 'Synced Forms to ECW',
+      actionType: 'callForClearance'
     }
   ]);
 
@@ -101,7 +97,6 @@ export function NewPatientsTable() {
               <th className="text-left px-6 py-4 text-gray-700">Patient</th>
               <th className="text-left px-6 py-4 text-gray-700">Surgery Date</th>
               <th className="text-left px-6 py-4 text-gray-700">Missing</th>
-              <th className="text-left px-6 py-4 text-gray-700">Medical Clearance</th>
               <th className="text-center px-6 py-4 text-gray-700">Action</th>
               <th className="text-left px-6 py-4 text-gray-700">Last Action Taken</th>
             </tr>
@@ -128,15 +123,6 @@ export function NewPatientsTable() {
                   )}
                 </td>
                 <td className="px-6 py-4">
-                  {patient.medicalClearance === 'Missing' ? (
-                    <span className="text-red-600">Missing</span>
-                  ) : patient.medicalClearance === 'Received' ? (
-                    <span className="text-green-600">Received</span>
-                  ) : (
-                    <span className="text-gray-400">-</span>
-                  )}
-                </td>
-                <td className="px-6 py-4">
                   <div className="flex justify-center gap-2">
                     {!patient.actionType ? (
                       <span className="text-gray-400">No action needed</span>
@@ -150,8 +136,8 @@ export function NewPatientsTable() {
                             : 'bg-blue-600 text-white hover:bg-blue-700'
                         }`}
                       >
-                        <Printer className="w-4 h-4" />
-                        {patient.calledForClearance ? 'Scheduled' : 'Schedule Surgery'}
+                        <Phone className="w-4 h-4" />
+                        {patient.calledForClearance ? 'Called' : 'Call for Cardiology Clearance'}
                       </button>
                     ) : patient.actionType === 'sendToCenter' ? (
                       <button
@@ -163,8 +149,8 @@ export function NewPatientsTable() {
                             : 'bg-blue-600 text-white hover:bg-blue-700'
                         }`}
                       >
-                        <Phone className="w-4 h-4" />
-                        {patient.sentToCenter ? 'Sent to Surgery Center' : 'Schedule with Surgery Center'}
+                        <Printer className="w-4 h-4" />
+                        {patient.sentToCenter ? 'Faxed form to Jefferson Hospital' : 'Schedule Surgery'}
                       </button>
                     ) : !patient.formCompleted ? (
                       <button
@@ -181,11 +167,11 @@ export function NewPatientsTable() {
                         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                           patient.sentToCenter
                             ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                            : 'bg-green-600 text-white hover:bg-green-700'
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
                         }`}
                       >
-                        <Phone className="w-4 h-4" />
-                        {patient.sentToCenter ? 'Sent to Surgery Center' : 'Send to Surgery Center'}
+                        <Printer className="w-4 h-4" />
+                        {patient.sentToCenter ? 'Faxed form to Jefferson Hospital' : 'Schedule Surgery'}
                       </button>
                     )}
                   </div>

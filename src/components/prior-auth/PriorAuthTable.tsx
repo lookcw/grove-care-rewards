@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Phone, AlertCircle, CheckCircle2, X } from 'lucide-react';
+import { Phone, AlertCircle, CheckCircle2, X, FileText } from 'lucide-react';
 import { RequestModal } from './RequestModal';
 import { NewPatientsTable } from './NewPatientsTable';
+import { NewPatientModal, NewPatientFormData } from './NewPatientModal';
 
 type TabType = 'scheduler' | 'priorAuth';
 
@@ -31,6 +32,7 @@ interface Patient {
     name: string;
     phone: string;
   };
+  needsSchedulingForm?: boolean;
 }
 
 const itemLabels = {
@@ -41,14 +43,34 @@ const itemLabels = {
   surgeryScheduled: 'Surgery date scheduled',
   insuranceCard: 'Insurance card',
   demographics: 'Demographics',
-  mriScan: 'MRI scan',
+  mriScan: 'Radiology report',
   ptEvidence: 'Evidence of PT',
   icdCodes: 'ICD 10 codes'
 };
 
 export function PriorAuthTable() {
-  const [activeTab, setActiveTab] = useState<TabType>('scheduler');
+  const [activeTab, setActiveTab] = useState<TabType>('priorAuth');
   const [patients, setPatients] = useState<Patient[]>([
+    {
+      id: '0',
+      name: 'Jennifer Williams',
+      mrn: 'MRN-001240',
+      surgeryDate: '2025-02-05',
+      items: {
+        schedulingOrtho: false,
+        schedulingFacility: false,
+        consent: true,
+        preAdmission: true,
+        surgeryScheduled: true,
+        insuranceCard: true,
+        demographics: true,
+        mriScan: true,
+        ptEvidence: true,
+        icdCodes: true
+      },
+      problems: ['Surgery Schedule Form Missing'],
+      needsSchedulingForm: true
+    },
     {
       id: '1',
       name: 'Sarah Johnson',
@@ -176,7 +198,7 @@ export function PriorAuthTable() {
       },
       problems: [],
       mriFacility: {
-        name: 'Regional MRI Center',
+        name: 'Regional Radiology Center',
         phone: '(555) 456-7890'
       },
       ptFacility: {
@@ -187,6 +209,14 @@ export function PriorAuthTable() {
   ]);
 
   const [requestedItems, setRequestedItems] = useState<{ [patientId: string]: Set<string> }>({});
+  const [schedulingFormCompleted, setSchedulingFormCompleted] = useState<{ [patientId: string]: boolean }>({});
+  const [schedulingModalState, setSchedulingModalState] = useState<{
+    isOpen: boolean;
+    patientId: string | null;
+  }>({
+    isOpen: false,
+    patientId: null
+  });
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     patientId: string | null;
@@ -218,7 +248,7 @@ export function PriorAuthTable() {
   const handleRequestFromPatient = () => {
     if (modalState.patientId && modalState.requestType) {
       const patient = patients.find(p => p.id === modalState.patientId);
-      const itemName = modalState.requestType === 'mriScan' ? 'MRI facility' : 'PT facility';
+      const itemName = modalState.requestType === 'mriScan' ? 'Radiology facility' : 'PT facility';
 
       setRequestedItems(prev => ({
         ...prev,
@@ -234,7 +264,7 @@ export function PriorAuthTable() {
     if (modalState.patientId && modalState.requestType) {
       const patient = patients.find(p => p.id === modalState.patientId);
       const facility = modalState.requestType === 'mriScan' ? patient?.mriFacility : patient?.ptFacility;
-      const itemName = modalState.requestType === 'mriScan' ? 'MRI' : 'PT evidence';
+      const itemName = modalState.requestType === 'mriScan' ? 'Radiology report' : 'PT evidence';
 
       setRequestedItems(prev => ({
         ...prev,
@@ -248,6 +278,27 @@ export function PriorAuthTable() {
 
   const closeModal = () => {
     setModalState({ isOpen: false, patientId: null, requestType: null });
+  };
+
+  const handleOpenSchedulingForm = (patientId: string) => {
+    setSchedulingModalState({ isOpen: true, patientId });
+  };
+
+  const handleCloseSchedulingModal = () => {
+    setSchedulingModalState({ isOpen: false, patientId: null });
+  };
+
+  const handleSchedulingFormSubmit = (data: NewPatientFormData) => {
+    const patient = patients.find(p => p.id === schedulingModalState.patientId);
+    console.log('Scheduling form submitted for:', patient?.name, data);
+
+    setSchedulingFormCompleted(prev => ({
+      ...prev,
+      [schedulingModalState.patientId!]: true
+    }));
+
+    alert(`Scheduling form completed for ${patient?.name}\n\nInstrumentation: ${data.instrumentation.join(', ')}\nSurgery Types: ${data.surgeryTypes.join(', ')}\nCenter: ${data.surgeryCenter}`);
+    handleCloseSchedulingModal();
   };
 
   const isRequested = (patientId: string, itemType: string) => {
@@ -266,9 +317,19 @@ export function PriorAuthTable() {
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto">
-      {/* Tab Navigation */}
-      <div className="mb-6">
+      {/* Tab Navigation with Logo */}
+      <div className="flex justify-between items-center mb-6">
         <div className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+          <button
+            onClick={() => setActiveTab('priorAuth')}
+            className={`px-6 py-2 rounded-md transition-colors ${
+              activeTab === 'priorAuth'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Documentation Dashboard
+          </button>
           <button
             onClick={() => setActiveTab('scheduler')}
             className={`px-6 py-2 rounded-md transition-colors ${
@@ -279,17 +340,12 @@ export function PriorAuthTable() {
           >
             Surgery Scheduler
           </button>
-          <button
-            onClick={() => setActiveTab('priorAuth')}
-            className={`px-6 py-2 rounded-md transition-colors ${
-              activeTab === 'priorAuth'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Prior Auth Dashboard
-          </button>
         </div>
+        <img
+          src="https://www.capitalhealth.org/sites/default/files/inline-images/Rothman.jpg"
+          alt="Rothman Logo"
+          className="h-12 object-contain"
+        />
       </div>
 
       {/* Surgery Scheduler Tab */}
@@ -306,7 +362,7 @@ export function PriorAuthTable() {
       {activeTab === 'priorAuth' && (
         <div>
           <div className="mb-4">
-            <h1 className="text-gray-900 mb-2">Prior Auth Dashboard</h1>
+            <h1 className="text-gray-900 mb-2">Documentation Dashboard</h1>
           </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -367,6 +423,20 @@ export function PriorAuthTable() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
+                        {patient.needsSchedulingForm && (
+                          <button
+                            onClick={() => handleOpenSchedulingForm(patient.id)}
+                            disabled={schedulingFormCompleted[patient.id]}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
+                              schedulingFormCompleted[patient.id]
+                                ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
+                            }`}
+                          >
+                            <FileText className="w-4 h-4" />
+                            {schedulingFormCompleted[patient.id] ? 'Form Completed' : 'Fill Out Scheduling Form'}
+                          </button>
+                        )}
                         {isMriMissing && (
                           <button
                             onClick={() => handleRequest(patient.id, 'mriScan', patient.name)}
@@ -378,7 +448,7 @@ export function PriorAuthTable() {
                             }`}
                           >
                             <Phone className="w-4 h-4" />
-                            {isRequested(patient.id, 'mriScan') ? 'MRI Requested' : 'Request MRI'}
+                            {isRequested(patient.id, 'mriScan') ? 'Radiology Requested' : 'Request Radiology'}
                           </button>
                         )}
                         {isPtMissing && (
@@ -395,7 +465,7 @@ export function PriorAuthTable() {
                             {isRequested(patient.id, 'ptEvidence') ? 'PT Requested' : 'Request PT'}
                           </button>
                         )}
-                        {!isMriMissing && !isPtMissing && (
+                        {!isMriMissing && !isPtMissing && !patient.needsSchedulingForm && (
                           <span className="text-gray-400 text-sm">No actions needed</span>
                         )}
                       </div>
@@ -439,6 +509,14 @@ export function PriorAuthTable() {
         facilityInfo={currentFacilityInfo}
         onRequestFromPatient={handleRequestFromPatient}
         onCallFacility={handleCallFacility}
+      />
+
+      {/* Scheduling Form Modal */}
+      <NewPatientModal
+        isOpen={schedulingModalState.isOpen}
+        onClose={handleCloseSchedulingModal}
+        patientName={patients.find(p => p.id === schedulingModalState.patientId)?.name || ''}
+        onSubmit={handleSchedulingFormSubmit}
       />
     </div>
   );
