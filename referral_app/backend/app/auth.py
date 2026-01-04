@@ -2,6 +2,7 @@
 Authentication configuration using FastAPI Users.
 """
 
+import os
 import uuid
 from typing import Optional
 
@@ -19,7 +20,21 @@ from models.user import User
 from database import get_db
 
 # Secret key for JWT - In production, use environment variable
-SECRET = "YOUR_SECRET_KEY_CHANGE_THIS_IN_PRODUCTION"
+def get_jwt_secret():
+    """Get JWT secret based on environment."""
+    env = os.getenv("ENVIRONMENT", "local")
+
+    if env in ["staging", "production"]:
+        from google.cloud import secretmanager
+        client = secretmanager.SecretManagerServiceClient()
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        secret_name = f"projects/{project_id}/secrets/jwt-secret/versions/latest"
+        response = client.access_secret_version(request={"name": secret_name})
+        return response.payload.data.decode("UTF-8")
+    else:
+        return os.getenv("JWT_SECRET", "YOUR_SECRET_KEY_CHANGE_THIS_IN_PRODUCTION")
+
+SECRET = get_jwt_secret()
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

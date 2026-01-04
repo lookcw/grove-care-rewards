@@ -1,0 +1,11 @@
+.gcloudignore
+.git
+.gitignore
+*.pyc
+__pycache__/
+.env
+Dockerfile
+docker-compose.yml
+atlas.hcl
+migrations/
+*.md

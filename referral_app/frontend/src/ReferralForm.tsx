@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './contexts/AuthContext'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 // TypeScript interfaces
 interface PatientFormData {
   first_name: string
@@ -82,9 +84,9 @@ export default function ReferralForm() {
       setLoading(true)
       try {
         const [providersRes, institutionsRes, patientsRes] = await Promise.all([
-          fetch('http://localhost:8000/providers'),
-          fetch('http://localhost:8000/provider-institutions'),
-          fetch('http://localhost:8000/patients')
+          fetch(`${API_URL}/providers`),
+          fetch(`${API_URL}/provider-institutions`),
+          fetch(`${API_URL}/patients`)
         ])
 
         if (!providersRes.ok || !institutionsRes.ok || !patientsRes.ok) {
@@ -357,7 +359,7 @@ export default function ReferralForm() {
         requestBody.provider_institution_id = formData.provider_institution_id
       }
 
-      const response = await fetch('http://localhost:8000/referrals', {
+      const response = await fetch(`${API_URL}/referrals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

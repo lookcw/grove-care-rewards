@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,9 +19,18 @@ from schemas import UserCreate, UserRead, UserUpdate, PatientCreate, ReferralCre
 app = FastAPI(title="Referral App API", version="1.0.0")
 
 # Configure CORS
+def get_allowed_origins():
+    env = os.getenv("ENVIRONMENT", "local")
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+    if env == "local":
+        return ["http://localhost:5173", "http://localhost:5174"]
+    else:
+        return [frontend_url]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend URL
+    allow_origins=get_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

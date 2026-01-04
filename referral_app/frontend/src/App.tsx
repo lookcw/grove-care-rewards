@@ -7,6 +7,8 @@ import Signup from './Signup'
 import Login from './Login'
 import ReferralForm from './ReferralForm'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 interface HealthStatus {
   status: string
   message?: string
@@ -21,7 +23,7 @@ function Home() {
   useEffect(() => {
     const fetchBackendStatus = async () => {
       try {
-        const response = await fetch('http://localhost:8000/')
+        const response = await fetch(`${API_URL}/`)
         if (!response.ok) {
           throw new Error('Failed to connect to backend')
         }

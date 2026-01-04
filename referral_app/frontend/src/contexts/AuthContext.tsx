@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 interface User {
   id: string
   email: string
@@ -41,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchCurrentUser = async () => {
     try {
-      const response = await fetch('http://localhost:8000/users/me', {
+      const response = await fetch(`${API_URL}/users/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     formData.append('username', email)
     formData.append('password', password)
 
-    const response = await fetch('http://localhost:8000/auth/jwt/login', {
+    const response = await fetch(`${API_URL}/auth/jwt/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -90,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(newToken)
 
     // Fetch user data immediately
-    const userResponse = await fetch('http://localhost:8000/users/me', {
+    const userResponse = await fetch(`${API_URL}/users/me`, {
       headers: {
         'Authorization': `Bearer ${newToken}`
       }
