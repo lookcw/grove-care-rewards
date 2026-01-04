@@ -14,7 +14,11 @@
       "WebFetch(domain:samuelkraft.com)",
       "WebFetch(domain:codepen.io)",
       "Bash(~/.zshrc)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(git checkout:*)",
+      "Bash(direnv allow:*)",
+      "Bash(echo:*)",
+      "Bash(direnv exec:*)"
     ],
     "deny": [],
     "ask": []

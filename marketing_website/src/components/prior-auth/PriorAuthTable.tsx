@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Phone, AlertCircle, CheckCircle2, X, FileText } from 'lucide-react';
-import { RequestModal } from './RequestModal';
+import { CheckCircle2, FileText, Printer, UserCheck, Pill, Send } from 'lucide-react';
 import { NewPatientsTable } from './NewPatientsTable';
 import { NewPatientModal, NewPatientFormData } from './NewPatientModal';
+import { MedicationModal, MedicationFormData } from './MedicationModal';
+import { FMLAFormModal, FMLAFormData } from './FMLAFormModal';
 
 type TabType = 'scheduler' | 'priorAuth';
 
@@ -33,13 +34,14 @@ interface Patient {
     phone: string;
   };
   needsSchedulingForm?: boolean;
+  needsMedication?: boolean;
+  needsFMLAForm?: boolean;
 }
 
-const itemLabels = {
+const itemLabels: Record<string, string> = {
   schedulingOrtho: 'Scheduling form from ortho clinic',
   schedulingFacility: 'Scheduling form to facility',
   consent: 'Consent form',
-  preAdmission: 'Pre-admission testing form',
   surgeryScheduled: 'Surgery date scheduled',
   insuranceCard: 'Insurance card',
   demographics: 'Demographics',
@@ -47,6 +49,9 @@ const itemLabels = {
   ptEvidence: 'Evidence of PT',
   icdCodes: 'ICD 10 codes'
 };
+
+// Items to skip when showing missing items
+const skipMissingItems = ['preAdmission'];
 
 export function PriorAuthTable() {
   const [activeTab, setActiveTab] = useState<TabType>('priorAuth');
@@ -57,8 +62,8 @@ export function PriorAuthTable() {
       mrn: 'MRN-001240',
       surgeryDate: '2025-02-05',
       items: {
-        schedulingOrtho: false,
-        schedulingFacility: false,
+        schedulingOrtho: true,
+        schedulingFacility: true,
         consent: true,
         preAdmission: true,
         surgeryScheduled: true,
@@ -68,8 +73,8 @@ export function PriorAuthTable() {
         ptEvidence: true,
         icdCodes: true
       },
-      problems: ['Surgery Schedule Form Missing'],
-      needsSchedulingForm: true
+      problems: ['FMLA Form Required'],
+      needsFMLAForm: true
     },
     {
       id: '1',
@@ -134,7 +139,7 @@ export function PriorAuthTable() {
         ptEvidence: false,
         icdCodes: false
       },
-      problems: ['Instrumentation may not be approved by insurance', 'Prior authorization expired']
+      problems: ['Missing MRI report', 'Missing MRI review appointment', 'Prior authorization expired']
       // No facility info
     },
     {
@@ -154,7 +159,8 @@ export function PriorAuthTable() {
         ptEvidence: true,
         icdCodes: true
       },
-      problems: []
+      problems: [],
+      needsMedication: true
     },
     {
       id: '5',
@@ -210,6 +216,25 @@ export function PriorAuthTable() {
 
   const [requestedItems, setRequestedItems] = useState<{ [patientId: string]: Set<string> }>({});
   const [schedulingFormCompleted, setSchedulingFormCompleted] = useState<{ [patientId: string]: boolean }>({});
+  const [approvedPatients, setApprovedPatients] = useState<{ [patientId: string]: boolean }>({});
+  const [schedulingFormSent, setSchedulingFormSent] = useState<{ [patientId: string]: boolean }>({});
+  const [medicationPrescribed, setMedicationPrescribed] = useState<{ [patientId: string]: string[] }>({});
+  const [medicationSent, setMedicationSent] = useState<{ [patientId: string]: boolean }>({});
+  const [fmlaFormCompleted, setFmlaFormCompleted] = useState<{ [patientId: string]: boolean }>({});
+  const [fmlaModalState, setFmlaModalState] = useState<{
+    isOpen: boolean;
+    patientId: string | null;
+  }>({
+    isOpen: false,
+    patientId: null
+  });
+  const [medicationModalState, setMedicationModalState] = useState<{
+    isOpen: boolean;
+    patientId: string | null;
+  }>({
+    isOpen: false,
+    patientId: null
+  });
   const [schedulingModalState, setSchedulingModalState] = useState<{
     isOpen: boolean;
     patientId: string | null;
@@ -217,67 +242,33 @@ export function PriorAuthTable() {
     isOpen: false,
     patientId: null
   });
-  const [modalState, setModalState] = useState<{
-    isOpen: boolean;
-    patientId: string | null;
-    requestType: 'mriScan' | 'ptEvidence' | null;
-  }>({
-    isOpen: false,
-    patientId: null,
-    requestType: null
-  });
 
   const getMissingItems = (items: Patient['items']) => {
     const missing: string[] = [];
     (Object.keys(items) as Array<keyof Patient['items']>).forEach(key => {
-      if (!items[key]) {
+      if (!items[key] && !skipMissingItems.includes(key) && itemLabels[key]) {
         missing.push(itemLabels[key]);
       }
     });
     return missing;
   };
 
-  const handleRequest = (patientId: string, itemType: 'mriScan' | 'ptEvidence', patientName: string) => {
-    setModalState({
-      isOpen: true,
-      patientId,
-      requestType: itemType
-    });
+  const handleSendMriReferral = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    setRequestedItems(prev => ({
+      ...prev,
+      [patientId]: new Set([...(prev[patientId] || []), 'mriScan'])
+    }));
+    alert(`MRI referral sent to ${patient?.name}`);
   };
 
-  const handleRequestFromPatient = () => {
-    if (modalState.patientId && modalState.requestType) {
-      const patient = patients.find(p => p.id === modalState.patientId);
-      const itemName = modalState.requestType === 'mriScan' ? 'Radiology facility' : 'PT facility';
-
-      setRequestedItems(prev => ({
-        ...prev,
-        [modalState.patientId!]: new Set([...(prev[modalState.patientId!] || []), modalState.requestType!])
-      }));
-
-      setModalState({ isOpen: false, patientId: null, requestType: null });
-      alert(`Request sent to ${patient?.name} for ${itemName} information`);
-    }
-  };
-
-  const handleCallFacility = () => {
-    if (modalState.patientId && modalState.requestType) {
-      const patient = patients.find(p => p.id === modalState.patientId);
-      const facility = modalState.requestType === 'mriScan' ? patient?.mriFacility : patient?.ptFacility;
-      const itemName = modalState.requestType === 'mriScan' ? 'Radiology report' : 'PT evidence';
-
-      setRequestedItems(prev => ({
-        ...prev,
-        [modalState.patientId!]: new Set([...(prev[modalState.patientId!] || []), modalState.requestType!])
-      }));
-
-      setModalState({ isOpen: false, patientId: null, requestType: null });
-      alert(`Calling ${facility?.name} at ${facility?.phone} to request ${itemName} for ${patient?.name}`);
-    }
-  };
-
-  const closeModal = () => {
-    setModalState({ isOpen: false, patientId: null, requestType: null });
+  const handleSendPtReferral = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    setRequestedItems(prev => ({
+      ...prev,
+      [patientId]: new Set([...(prev[patientId] || []), 'ptEvidence'])
+    }));
+    alert(`PT referral sent to ${patient?.name}`);
   };
 
   const handleOpenSchedulingForm = (patientId: string) => {
@@ -301,6 +292,69 @@ export function PriorAuthTable() {
     handleCloseSchedulingModal();
   };
 
+  const handleSendSchedulingForm = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    setSchedulingFormSent(prev => ({
+      ...prev,
+      [patientId]: true
+    }));
+    alert(`Scheduling form faxed to surgery center for ${patient?.name}`);
+  };
+
+  const handleApprovePatient = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    setApprovedPatients(prev => ({
+      ...prev,
+      [patientId]: true
+    }));
+    alert(`Patient ${patient?.name} approved`);
+  };
+
+  const handleOpenMedicationModal = (patientId: string) => {
+    setMedicationModalState({ isOpen: true, patientId });
+  };
+
+  const handleCloseMedicationModal = () => {
+    setMedicationModalState({ isOpen: false, patientId: null });
+  };
+
+  const handleMedicationSubmit = (data: MedicationFormData) => {
+    const patient = patients.find(p => p.id === medicationModalState.patientId);
+    setMedicationPrescribed(prev => ({
+      ...prev,
+      [medicationModalState.patientId!]: data.medications
+    }));
+    alert(`Medications prescribed for ${patient?.name}:\n\n${data.medications.join('\n')}`);
+    handleCloseMedicationModal();
+  };
+
+  const handleSendMedicationToPatient = (patientId: string) => {
+    const patient = patients.find(p => p.id === patientId);
+    setMedicationSent(prev => ({
+      ...prev,
+      [patientId]: true
+    }));
+    alert(`Prescription sent to ${patient?.name}`);
+  };
+
+  const handleOpenFMLAModal = (patientId: string) => {
+    setFmlaModalState({ isOpen: true, patientId });
+  };
+
+  const handleCloseFMLAModal = () => {
+    setFmlaModalState({ isOpen: false, patientId: null });
+  };
+
+  const handleFMLAFormSubmit = (data: FMLAFormData) => {
+    const patient = patients.find(p => p.id === fmlaModalState.patientId);
+    setFmlaFormCompleted(prev => ({
+      ...prev,
+      [fmlaModalState.patientId!]: true
+    }));
+    alert(`FMLA Form completed and sent for ${patient?.name}\n\nProcedure: ${data.procedure}\nDiagnosis: ${data.diagnosis}\nICD-10: ${data.icd10Code}\nSurgery Date: ${data.surgeryDate}\nExpected Recovery: ${data.expectedRecoveryWeeks} weeks`);
+    handleCloseFMLAModal();
+  };
+
   const isRequested = (patientId: string, itemType: string) => {
     return requestedItems[patientId]?.has(itemType) || false;
   };
@@ -309,11 +363,6 @@ export function PriorAuthTable() {
     const completed = Object.values(items).filter(Boolean).length;
     return { completed, total: 10 };
   };
-
-  const currentPatient = patients.find(p => p.id === modalState.patientId);
-  const currentFacilityInfo = modalState.requestType === 'mriScan'
-    ? currentPatient?.mriFacility
-    : currentPatient?.ptFacility;
 
   return (
     <div className="p-6 max-w-[1600px] mx-auto">
@@ -341,11 +390,7 @@ export function PriorAuthTable() {
             Surgery Scheduler
           </button>
         </div>
-        <img
-          src="https://www.capitalhealth.org/sites/default/files/inline-images/Rothman.jpg"
-          alt="Rothman Logo"
-          className="h-12 object-contain"
-        />
+        <div className="text-xl font-bold text-blue-800">Avante Orthopedics</div>
       </div>
 
       {/* Surgery Scheduler Tab */}
@@ -423,23 +468,32 @@ export function PriorAuthTable() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-center gap-2">
-                        {patient.needsSchedulingForm && (
+                        {patient.needsSchedulingForm && !schedulingFormCompleted[patient.id] && (
                           <button
                             onClick={() => handleOpenSchedulingForm(patient.id)}
-                            disabled={schedulingFormCompleted[patient.id]}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-blue-600 text-white hover:bg-blue-700"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Fill Out Scheduling Form
+                          </button>
+                        )}
+                        {patient.needsSchedulingForm && schedulingFormCompleted[patient.id] && (
+                          <button
+                            onClick={() => handleSendSchedulingForm(patient.id)}
+                            disabled={schedulingFormSent[patient.id]}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
-                              schedulingFormCompleted[patient.id]
+                              schedulingFormSent[patient.id]
                                 ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                           >
-                            <FileText className="w-4 h-4" />
-                            {schedulingFormCompleted[patient.id] ? 'Form Completed' : 'Fill Out Scheduling Form'}
+                            <Printer className="w-4 h-4" />
+                            {schedulingFormSent[patient.id] ? 'Form Sent' : 'Send Scheduling Form'}
                           </button>
                         )}
                         {isMriMissing && (
                           <button
-                            onClick={() => handleRequest(patient.id, 'mriScan', patient.name)}
+                            onClick={() => handleSendMriReferral(patient.id)}
                             disabled={isRequested(patient.id, 'mriScan')}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
                               isRequested(patient.id, 'mriScan')
@@ -447,13 +501,13 @@ export function PriorAuthTable() {
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                           >
-                            <Phone className="w-4 h-4" />
-                            {isRequested(patient.id, 'mriScan') ? 'Radiology Requested' : 'Request Radiology'}
+                            <Send className="w-4 h-4" />
+                            {isRequested(patient.id, 'mriScan') ? 'MRI Referral Sent' : 'Send MRI Referral to Patient'}
                           </button>
                         )}
                         {isPtMissing && (
                           <button
-                            onClick={() => handleRequest(patient.id, 'ptEvidence', patient.name)}
+                            onClick={() => handleSendPtReferral(patient.id)}
                             disabled={isRequested(patient.id, 'ptEvidence')}
                             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors ${
                               isRequested(patient.id, 'ptEvidence')
@@ -461,12 +515,63 @@ export function PriorAuthTable() {
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                           >
-                            <Phone className="w-4 h-4" />
-                            {isRequested(patient.id, 'ptEvidence') ? 'PT Requested' : 'Request PT'}
+                            <Send className="w-4 h-4" />
+                            {isRequested(patient.id, 'ptEvidence') ? 'PT Referral Sent' : 'Send PT Referral to Patient'}
                           </button>
                         )}
-                        {!isMriMissing && !isPtMissing && !patient.needsSchedulingForm && (
-                          <span className="text-gray-400 text-sm">No actions needed</span>
+                        {patient.needsMedication && !medicationPrescribed[patient.id] && (
+                          <button
+                            onClick={() => handleOpenMedicationModal(patient.id)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-purple-600 text-white hover:bg-purple-700"
+                          >
+                            <Pill className="w-4 h-4" />
+                            Prescribe Medication
+                          </button>
+                        )}
+                        {patient.needsMedication && medicationPrescribed[patient.id] && !medicationSent[patient.id] && (
+                          <button
+                            onClick={() => handleSendMedicationToPatient(patient.id)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-purple-600 text-white hover:bg-purple-700"
+                          >
+                            <Send className="w-4 h-4" />
+                            Send to Patient
+                          </button>
+                        )}
+                        {patient.needsMedication && medicationSent[patient.id] && (
+                          <span className="text-purple-600 text-sm flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Prescription Sent
+                          </span>
+                        )}
+                        {patient.needsFMLAForm && !fmlaFormCompleted[patient.id] && (
+                          <button
+                            onClick={() => handleOpenFMLAModal(patient.id)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-orange-600 text-white hover:bg-orange-700"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Fill Out & Send FMLA Form
+                          </button>
+                        )}
+                        {patient.needsFMLAForm && fmlaFormCompleted[patient.id] && (
+                          <span className="text-orange-600 text-sm flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4" />
+                            FMLA Form Sent
+                          </span>
+                        )}
+                        {!isMriMissing && !isPtMissing && !patient.needsSchedulingForm && !patient.needsMedication && !patient.needsFMLAForm && !approvedPatients[patient.id] && (
+                          <button
+                            onClick={() => handleApprovePatient(patient.id)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors bg-green-600 text-white hover:bg-green-700"
+                          >
+                            <UserCheck className="w-4 h-4" />
+                            Approve Patient
+                          </button>
+                        )}
+                        {approvedPatients[patient.id] && (
+                          <span className="text-green-600 text-sm flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Approved
+                          </span>
                         )}
                       </div>
                     </td>
@@ -500,23 +605,29 @@ export function PriorAuthTable() {
         </div>
       )}
 
-      {/* Request Modal */}
-      <RequestModal
-        isOpen={modalState.isOpen}
-        onClose={closeModal}
-        patientName={currentPatient?.name || ''}
-        requestType={modalState.requestType || 'mriScan'}
-        facilityInfo={currentFacilityInfo}
-        onRequestFromPatient={handleRequestFromPatient}
-        onCallFacility={handleCallFacility}
-      />
-
       {/* Scheduling Form Modal */}
       <NewPatientModal
         isOpen={schedulingModalState.isOpen}
         onClose={handleCloseSchedulingModal}
         patientName={patients.find(p => p.id === schedulingModalState.patientId)?.name || ''}
         onSubmit={handleSchedulingFormSubmit}
+      />
+
+      {/* Medication Modal */}
+      <MedicationModal
+        isOpen={medicationModalState.isOpen}
+        onClose={handleCloseMedicationModal}
+        patientName={patients.find(p => p.id === medicationModalState.patientId)?.name || ''}
+        onSubmit={handleMedicationSubmit}
+      />
+
+      {/* FMLA Form Modal */}
+      <FMLAFormModal
+        isOpen={fmlaModalState.isOpen}
+        onClose={handleCloseFMLAModal}
+        patientName={patients.find(p => p.id === fmlaModalState.patientId)?.name || ''}
+        surgeryDate={patients.find(p => p.id === fmlaModalState.patientId)?.surgeryDate || ''}
+        onSubmit={handleFMLAFormSubmit}
       />
     </div>
   );
