@@ -5,15 +5,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from typing import List
-from database import engine, Base, get_db
-from models.provider import Provider
-from models.provider_institution import ProviderInstitution
-from models.address import Address
-from models.user import User
-from models.patient import Patient
-from models.referral import Referral, ReferralStatus
-from auth import auth_backend, fastapi_users, current_active_user
-from schemas import UserCreate, UserRead, UserUpdate, PatientCreate, ReferralCreate, ReferralRead
+from .database import engine, Base, get_db
+from .models.provider import Provider
+from .models.provider_institution import ProviderInstitution
+from .models.address import Address
+from .models.user import User
+from .models.patient import Patient
+from .models.referral import Referral, ReferralStatus
+from .auth import auth_backend, fastapi_users, current_active_user
+from .schemas import UserCreate, UserRead, UserUpdate, PatientCreate, ReferralCreate, ReferralRead
 
 # Create FastAPI app
 app = FastAPI(title="Referral App API", version="1.0.0")

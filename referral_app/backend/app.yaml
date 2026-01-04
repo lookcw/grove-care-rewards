@@ -13,6 +13,5 @@ env_variables:
   PYTHONUNBUFFERED: "1"
   FRONTEND_URL: "https://storage.googleapis.com/referral-app-dev-frontend"
 
-# Replace <PROJECT_ID> with your actual GCP project ID
 beta_settings:
-  cloud_sql_instances: "<PROJECT_ID>:us-central1:referral-app-dev-db"
+  cloud_sql_instances: "grove-health-staging:us-central1:referral-app-dev-db"
