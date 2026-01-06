@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from models.base import BaseModel
+from .base import BaseModel
 
 
 class Provider(BaseModel):
