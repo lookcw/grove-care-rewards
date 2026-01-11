@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 interface Address {
   street_address_1: string
   street_address_2: string | null
@@ -37,7 +39,7 @@ function Providers() {
   useEffect(() => {
     const fetchProviders = async () => {
       try {
-        const response = await fetch('http://localhost:8000/providers')
+        const response = await fetch(`${API_URL}/providers`)
         if (!response.ok) {
           throw new Error('Failed to fetch providers')
         }

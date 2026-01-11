@@ -14,6 +14,7 @@ COPY . .
 
 # Expose port
 EXPOSE 5173
+EXPOSE 5174
 
 # Start development server
 CMD ["npm", "run", "dev"]

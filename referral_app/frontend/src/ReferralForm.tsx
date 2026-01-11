@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './contexts/AuthContext'
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 // TypeScript interfaces
 interface PatientFormData {
   first_name: string
@@ -82,9 +84,13 @@ export default function ReferralForm() {
       setLoading(true)
       try {
         const [providersRes, institutionsRes, patientsRes] = await Promise.all([
-          fetch('http://localhost:8000/providers'),
-          fetch('http://localhost:8000/provider-institutions'),
-          fetch('http://localhost:8000/patients')
+          fetch(`${API_URL}/providers`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          fetch(`${API_URL}/provider-institutions`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }),
+          fetch(`${API_URL}/patients`)
         ])
 
         if (!providersRes.ok || !institutionsRes.ok || !patientsRes.ok) {
@@ -112,6 +118,13 @@ export default function ReferralForm() {
         // Combine and sort alphabetically
         const allTargets = [...providerOptions, ...institutionOptions]
           .sort((a, b) => a.label.localeCompare(b.label))
+
+        // Check if network is empty
+        if (allTargets.length === 0) {
+          setError('Your network is empty. Please add providers to your network first.')
+          setLoading(false)
+          return
+        }
 
         setReferralTargets(allTargets)
 
@@ -357,7 +370,7 @@ export default function ReferralForm() {
         requestBody.provider_institution_id = formData.provider_institution_id
       }
 
-      const response = await fetch('http://localhost:8000/referrals', {
+      const response = await fetch(`${API_URL}/referrals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -491,13 +504,32 @@ export default function ReferralForm() {
       {error && (
         <div className="error-message" style={{
           padding: '15px',
-          background: '#f8d7da',
-          border: '1px solid #f5c6cb',
+          background: error.includes('network is empty') ? '#fff3cd' : '#f8d7da',
+          border: `1px solid ${error.includes('network is empty') ? '#ffeaa7' : '#f5c6cb'}`,
           borderRadius: '5px',
           marginBottom: '20px',
-          color: '#721c24'
+          color: error.includes('network is empty') ? '#856404' : '#721c24'
         }}>
           {error}
+          {error.includes('network is empty') && (
+            <div style={{ marginTop: '10px' }}>
+              <button
+                onClick={() => navigate('/network')}
+                type="button"
+                style={{
+                  padding: '8px 16px',
+                  background: '#ffc107',
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+              >
+                Go to My Network
+              </button>
+            </div>
+          )}
         </div>
       )}
 

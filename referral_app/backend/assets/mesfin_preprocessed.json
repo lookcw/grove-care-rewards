@@ -1,0 +1,110 @@
+[
+  {
+    "name": "MedStar Health Radiology at Chevy Chase",
+    "type": "Radiology / Imaging",
+    "address": "5454 Wisconsin Ave #1700, Chevy Chase, MD 20815",
+    "phone": "301-841-8300",
+    "email": null,
+    "website": "https://www.medstarhealth.org/locations/radiology-at-chevy-chase",
+    "id": "a95cefea-e364-450f-80ba-b458868ab8f0"
+  },
+  {
+    "name": "Community Radiology Associates – Bethesda Imaging Center",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #620, Bethesda, MD 20817",
+    "phone": "888-601-0934",
+    "email": null,
+    "website": "https://www.communityradiology.com",
+    "id": "ca8792ba-23f8-4672-a30c-b2ffd9b5c4a6"
+  },
+  {
+    "name": "Washington Radiology – Bethesda MRI & CT",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #40, Bethesda, MD 20817",
+    "phone": "240-673-1500",
+    "email": null,
+    "website": "https://www.washingtonradiology.com/locations/bethesda-md-mri-ct",
+    "id": "831df6d7-1ef0-40ac-a153-f67df0b2d367"
+  },
+  {
+    "name": "Washington Radiology – Bethesda",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #103, Bethesda, MD 20817",
+    "phone": "301-564-1053",
+    "email": null,
+    "website": "https://www.washingtonradiology.com/locations/bethesda-md",
+    "id": "7800d234-c70d-418b-a228-24678f4b26ed"
+  },
+  {
+    "name": "Washington Open MRI",
+    "type": "Open MRI / Imaging",
+    "address": "5530 Wisconsin Ave Ste 529, Chevy Chase, MD 20815",
+    "phone": "301-656-6399",
+    "email": null,
+    "website": "http://www.washingtonopenmri.com",
+    "id": "6dec8fc0-7f38-47cf-ac4d-89bffae9c096"
+  },
+  {
+    "name": "NovaCare Rehabilitation – Bethesda Democracy",
+    "type": "Physical Therapy",
+    "address": "6308 Democracy Blvd, Bethesda, MD 20817",
+    "phone": "301-530-2383",
+    "email": null,
+    "website": "https://www.novacare.com/contact/find-a-location/md/bethesda/bethesda-democracy/",
+    "id": "e3a716ac-4913-490a-a884-5ead027ff774"
+  },
+  {
+    "name": "NovaCare Rehabilitation – Bethesda Metro Center",
+    "type": "Physical Therapy",
+    "address": "3 Bethesda Metro Center STE B-001, Bethesda, MD 20814",
+    "phone": "301-986-9252",
+    "email": null,
+    "website": "https://www.novacare.com/contact/find-a-location/md/bethesda/bethesda-metro/",
+    "id": "19ade1d7-0564-4539-be2d-da50fca7a08b"
+  },
+  {
+    "name": "The Jackson Clinics – Centreville, VA",
+    "type": "Physical Therapy",
+    "address": "5900 Fort Dr Ste 208, Centreville, VA 20121",
+    "phone": "703-830-6360",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/centreville/",
+    "id": "b5323a08-6323-45f3-91d9-20b706564425"
+  },
+  {
+    "name": "The Jackson Clinics – Falls Church, VA",
+    "type": "Physical Therapy",
+    "address": "5115 Leesburg Pike Ste 206, Falls Church, VA 22041",
+    "phone": "703-820-3100",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/falls-church/",
+    "id": "404889fe-9ad6-40e5-8e9b-76741982dce9"
+  },
+  {
+    "name": "The Jackson Clinics – Fairfax / Merrifield, VA",
+    "type": "Physical Therapy",
+    "address": "8100 Boone Blvd Ste 210, Vienna, VA 22182",
+    "phone": "703-204-1919",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/fairfax/",
+    "id": "929351ac-0579-48fa-9195-6cfad209f16f"
+  },
+  {
+    "name": "The Jackson Clinics – Leesburg, VA",
+    "type": "Physical Therapy",
+    "address": "44125 Woodridge Pkwy Ste 170, Leesburg, VA 20176",
+    "phone": "703-777-1030",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/leesburg/",
+    "id": "2822f9ea-3102-4c71-9680-28a9a9cea30e"
+  },
+  {
+    "name": "The Jackson Clinics – Lorton, VA",
+    "type": "Physical Therapy",
+    "address": "9506 Old Keene Mill Rd, Burke, VA 22015",
+    "phone": "703-440-1020",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/lorton/",
+    "id": "9e21ddac-cce8-4596-9717-45212ac25a9e"
+  }
+]

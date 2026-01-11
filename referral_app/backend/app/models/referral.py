@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, ForeignKey, Enum, DateTime, CheckConstrai
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, validates
 from sqlalchemy.sql import func
-from models.base import BaseModel
+from app.models.base import BaseModel
 
 
 class ReferralStatus(str, PyEnum):

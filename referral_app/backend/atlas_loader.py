@@ -8,7 +8,7 @@ from atlas_provider_sqlalchemy.ddl import print_ddl
 from app.database import Base
 
 # Import all models to ensure they're registered with Base
-from app.models import Address, Provider, ProviderInstitution, User, Referral
+from app.models import Address, Provider, ProviderInstitution, User, Patient, Referral
 
 # Print the DDL for Atlas
 print_ddl("postgresql://postgres:postgres@localhost/dev", Base.metadata)

@@ -1,0 +1,17 @@
+.gcloudignore
+.git
+.gitignore
+*.pyc
+__pycache__/
+.env
+Dockerfile
+docker-compose.yml
+atlas.hcl
+migrations/
+*.md
+.python-version
+uv.lock
+.venv/
+.ruff_cache/
+Makefile
+build.sh
