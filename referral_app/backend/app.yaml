@@ -1,3 +1,26 @@
+handlers:
+  # Serve static directory (CSS, JS, images, fonts, etc.)
+  - url: /assets
+    static_dir: static/assets
+    secure: always
+
+  # Serve specific files from root (favicon, robots.txt, etc.)
+  - url: /(.*\.(ico|txt|json|png|jpg|jpeg|gif|svg|webp))$
+    static_files: static/\1
+    upload: static/.*\.(ico|txt|json|png|jpg|jpeg|gif|svg|webp)$
+    secure: always
+
+  # API routes go to FastAPI
+  - url: /api/.*
+    script: auto
+    secure: always
+
+  # Catch-all: serve index.html for client-side routing
+  - url: /.*
+    static_files: static/index.html
+    upload: static/index.html
+    secure: always
+
 runtime: python311
 entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind :$PORT --timeout 120
 

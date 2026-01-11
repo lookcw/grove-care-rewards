@@ -16,8 +16,9 @@ from fastapi_users.authentication import (
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .models.user import User
-from .database import get_db
+from app.models.user import User
+from app.database import get_db
+from app.gmail_service import send_password_reset_email, send_verification_email
 
 # Secret key for JWT - In production, use environment variable
 def get_jwt_secret():
@@ -51,12 +52,14 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     ):
         """Called after user requests password reset."""
         print(f"User {user.id} has forgot their password. Reset token: {token}")
+        await send_password_reset_email(user.email, token)
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
     ):
         """Called after user requests email verification."""
         print(f"Verification requested for user {user.id}. Verification token: {token}")
+        await send_verification_email(user.email, token)
 
 
 async def get_user_db(session: AsyncSession = Depends(get_db)):

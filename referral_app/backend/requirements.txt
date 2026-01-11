@@ -11,3 +11,10 @@ python-multipart==0.0.9
 gunicorn==21.2.0
 google-cloud-secret-manager==2.18.0
 cloud-sql-python-connector[asyncpg]==1.11.0
+google-auth==2.47.0
+google-auth-oauthlib==1.2.0
+google-api-python-client==2.187.0
+google-cloud-logging==3.12.0
+google-cloud-error-reporting==1.10.0
+sqladmin==0.20.0
+itsdangerous==2.2.0

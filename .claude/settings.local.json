@@ -45,7 +45,17 @@
       "Bash(gcloud app logs:*)",
       "Bash(gcloud app versions:*)",
       "Bash(gcloud auth login:*)",
-      "Bash(jq:*)"
+      "Bash(jq:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.astral.sh)",
+      "Bash(chmod:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(gcloud secrets list:*)",
+      "Bash(docker-compose restart:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(docker compose restart:*)",
+      "Bash(grep:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

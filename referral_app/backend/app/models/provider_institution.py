@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from .base import BaseModel
+from app.models.base import BaseModel
 
 
 class ProviderInstitution(BaseModel):
@@ -12,6 +12,9 @@ class ProviderInstitution(BaseModel):
     __tablename__ = "provider_institutions"
 
     name = Column(String(255), nullable=False, index=True)
+    type = Column(String(255), nullable=True)
+    phone = Column(String(20), nullable=True)
+    email = Column(String(255), nullable=True)
     website = Column(String(500), nullable=True)
 
     # Foreign key to Address

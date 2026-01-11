@@ -1,0 +1,98 @@
+[
+  {
+    "name": "MedStar Health Radiology at Chevy Chase",
+    "type": "Radiology / Imaging",
+    "address": "5454 Wisconsin Ave #1700, Chevy Chase, MD 20815",
+    "phone": "301-841-8300",
+    "email": null,
+    "website": "https://www.medstarhealth.org/locations/radiology-at-chevy-chase"
+  },
+  {
+    "name": "Community Radiology Associates \u2013 Bethesda Imaging Center",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #620, Bethesda, MD 20817",
+    "phone": "888-601-0934",
+    "email": null,
+    "website": "https://www.communityradiology.com"
+  },
+  {
+    "name": "Washington Radiology \u2013 Bethesda MRI & CT",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #40, Bethesda, MD 20817",
+    "phone": "240-673-1500",
+    "email": null,
+    "website": "https://www.washingtonradiology.com/locations/bethesda-md-mri-ct"
+  },
+  {
+    "name": "Washington Radiology \u2013 Bethesda",
+    "type": "Radiology / Imaging",
+    "address": "10215 Fernwood Rd #103, Bethesda, MD 20817",
+    "phone": "301-564-1053",
+    "email": null,
+    "website": "https://www.washingtonradiology.com/locations/bethesda-md"
+  },
+  {
+    "name": "Washington Open MRI",
+    "type": "Open MRI / Imaging",
+    "address": "5530 Wisconsin Ave Ste 529, Chevy Chase, MD 20815",
+    "phone": "301-656-6399",
+    "email": null,
+    "website": "http://www.washingtonopenmri.com"
+  },
+  {
+    "name": "NovaCare Rehabilitation \u2013 Bethesda Democracy",
+    "type": "Physical Therapy",
+    "address": "6308 Democracy Blvd, Bethesda, MD 20817",
+    "phone": "301-530-2383",
+    "email": null,
+    "website": "https://www.novacare.com/contact/find-a-location/md/bethesda/bethesda-democracy/"
+  },
+  {
+    "name": "NovaCare Rehabilitation \u2013 Bethesda Metro Center",
+    "type": "Physical Therapy",
+    "address": "3 Bethesda Metro Center STE B-001, Bethesda, MD 20814",
+    "phone": "301-986-9252",
+    "email": null,
+    "website": "https://www.novacare.com/contact/find-a-location/md/bethesda/bethesda-metro/"
+  },
+  {
+    "name": "The Jackson Clinics \u2013 Centreville, VA",
+    "type": "Physical Therapy",
+    "address": "5900 Fort Dr Ste 208, Centreville, VA 20121",
+    "phone": "703-830-6360",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/centreville/"
+  },
+  {
+    "name": "The Jackson Clinics \u2013 Falls Church, VA",
+    "type": "Physical Therapy",
+    "address": "5115 Leesburg Pike Ste 206, Falls Church, VA 22041",
+    "phone": "703-820-3100",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/falls-church/"
+  },
+  {
+    "name": "The Jackson Clinics \u2013 Fairfax / Merrifield, VA",
+    "type": "Physical Therapy",
+    "address": "8100 Boone Blvd Ste 210, Vienna, VA 22182",
+    "phone": "703-204-1919",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/fairfax/"
+  },
+  {
+    "name": "The Jackson Clinics \u2013 Leesburg, VA",
+    "type": "Physical Therapy",
+    "address": "44125 Woodridge Pkwy Ste 170, Leesburg, VA 20176",
+    "phone": "703-777-1030",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/leesburg/"
+  },
+  {
+    "name": "The Jackson Clinics \u2013 Lorton, VA",
+    "type": "Physical Therapy",
+    "address": "9506 Old Keene Mill Rd, Burke, VA 22015",
+    "phone": "703-440-1020",
+    "email": null,
+    "website": "https://thejacksonclinics.com/location/lorton/"
+  }
+]
