@@ -251,3 +251,24 @@ h1 {
   font-size: 1.2rem;
   margin-top: 3rem;
 }
+
+/* Progressive Disclosure Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-completed {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.step-active {
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}

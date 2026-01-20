@@ -78,6 +78,11 @@ export default function ReferralForm() {
   const [showDropdown, setShowDropdown] = useState(false)
   const [selectedTargetLabel, setSelectedTargetLabel] = useState('')
 
+  // Progressive disclosure state
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [referralType, setReferralType] = useState<'open' | 'provider' | null>(null)
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
+
   // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
@@ -150,6 +155,31 @@ export default function ReferralForm() {
 
     fetchData()
   }, [])
+
+  // Auto-progression logic
+  useEffect(() => {
+    // Auto-advance to next step when current step is completed
+    if (currentStep === 1 && isStep1Complete() && referralType === 'open') {
+      // Skip step 2 for open referrals
+      setCurrentStep(3)
+      setCompletedSteps(prev => new Set(prev).add(1).add(2))
+    } else if (currentStep === 1 && isStep1Complete()) {
+      setCurrentStep(2)
+      setCompletedSteps(prev => new Set(prev).add(1))
+    } else if (currentStep === 2 && isStep2Complete()) {
+      setCurrentStep(3)
+      setCompletedSteps(prev => new Set(prev).add(2))
+    } else if (currentStep === 3 && isStep3Complete()) {
+      // Don't auto-advance, wait for user to fill patient details
+      setCurrentStep(4)
+      setCompletedSteps(prev => new Set(prev).add(3))
+    } else if (currentStep === 4 && isStep4Complete()) {
+      setCurrentStep(5)
+      setCompletedSteps(prev => new Set(prev).add(4))
+    }
+  }, [referralType, formData.provider_id, formData.provider_institution_id,
+      patientMode, patientFormData.first_name, patientFormData.last_name,
+      patientFormData.date_of_birth, formData.patient_id, currentStep])
 
   // Handle patient mode toggle
   const handlePatientModeToggle = (mode: 'new' | 'existing') => {
@@ -231,22 +261,8 @@ export default function ReferralForm() {
   }
 
   // Handle appointment timeframe change
-  const handleTimeframeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTimeframeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, appointment_timeframe: e.target.value }))
-  }
-
-  // Generate appointment timeframe options
-  const generateTimeframeOptions = () => {
-    const options = []
-    // First 14 days
-    for (let i = 1; i <= 14; i++) {
-      options.push({ value: `day_${i}`, label: `Day ${i}` })
-    }
-    // Weeks 3-8
-    for (let i = 3; i <= 8; i++) {
-      options.push({ value: `week_${i}`, label: `Week ${i}` })
-    }
-    return options
   }
 
   // Generate message text/email preview
@@ -262,12 +278,16 @@ export default function ReferralForm() {
       }
     }
 
-    // Get provider/institution name
-    const providerName = selectedTargetLabel || '[Provider/Institution]'
-
     // Get logged in user's last name
     const userLastName = user?.last_name || 'Doctor'
 
+    // Handle open referrals
+    if (referralType === 'open') {
+      return `Hi ${patientFirstName}, this is Dr. ${userLastName}'s team. We're recommending that you see a specialist. Please text back with your insurance information and preferred location, and we'll help you find the right provider.`
+    }
+
+    // Handle provider-specific referrals
+    const providerName = selectedTargetLabel || '[Provider/Institution]'
     return `Hi ${patientFirstName}, this is Dr. ${userLastName}'s team. We're messaging you to schedule your appointment with ${providerName}. Text back to this with some available times and we'll get you started.`
   }
 
@@ -287,9 +307,15 @@ export default function ReferralForm() {
     setSuccess(false)
     setCompletedReferral(null)
     setError(null)
+
+    // Reset progressive disclosure state
+    setCurrentStep(1)
+    setCompletedSteps(new Set())
+    setReferralType(null)
+
     setPatientMode('new')
     setFormData({
-      referral_target_type: 'provider',
+      referral_target_type: 'open',
       notes: '',
       appointment_timeframe: undefined
     })
@@ -304,8 +330,55 @@ export default function ReferralForm() {
     setSelectedTargetLabel('')
   }
 
+  // Step validation functions
+  const isStep1Complete = () => {
+    return referralType !== null
+  }
+
+  const isStep2Complete = () => {
+    // Step 2 is skipped for open referrals
+    if (referralType === 'open') return true
+    // For provider-specific, need a selection
+    return formData.provider_id !== undefined || formData.provider_institution_id !== undefined
+  }
+
+  const isStep3Complete = () => {
+    return patientMode !== null
+  }
+
+  const isStep4Complete = () => {
+    if (patientMode === 'new') {
+      return patientFormData.first_name.trim() !== '' &&
+             patientFormData.last_name.trim() !== '' &&
+             patientFormData.date_of_birth !== ''
+    } else {
+      return formData.patient_id !== undefined
+    }
+  }
+
+  const canProceedToStep = (step: number): boolean => {
+    if (step === 1) return true
+    if (step === 2) return isStep1Complete()
+    if (step === 3) return isStep1Complete() && isStep2Complete()
+    if (step === 4) return isStep1Complete() && isStep2Complete() && isStep3Complete()
+    if (step === 5) return isStep1Complete() && isStep2Complete() && isStep3Complete() && isStep4Complete()
+    return false
+  }
+
   // Form validation
   const validateForm = (): string | null => {
+    // Validate referral type
+    if (!referralType) {
+      return 'Please select a referral type'
+    }
+
+    // Validate provider selection for provider-specific referrals
+    if (referralType === 'provider') {
+      if (!formData.provider_id && !formData.provider_institution_id) {
+        return 'Please select a provider or institution'
+      }
+    }
+
     // Validate patient selection
     if (patientMode === 'new') {
       if (!patientFormData.first_name || !patientFormData.last_name) {
@@ -318,11 +391,6 @@ export default function ReferralForm() {
       if (!formData.patient_id) {
         return 'Please select an existing patient'
       }
-    }
-
-    // Validate referral target
-    if (!formData.provider_id && !formData.provider_institution_id) {
-      return 'Please select a referral target (provider or institution)'
     }
 
     return null
@@ -345,7 +413,7 @@ export default function ReferralForm() {
     try {
       // Construct request body
       const requestBody: any = {
-        referral_target_type: formData.referral_target_type,
+        referral_target_type: referralType,
         notes: formData.notes || undefined,
         appointment_timeframe: formData.appointment_timeframe || undefined
       }
@@ -363,12 +431,17 @@ export default function ReferralForm() {
         requestBody.patient_id = formData.patient_id
       }
 
-      // Add referral target
-      if (formData.referral_target_type === 'provider') {
-        requestBody.provider_id = formData.provider_id
-      } else {
-        requestBody.provider_institution_id = formData.provider_institution_id
+      // Add referral target based on type
+      if (referralType === 'provider') {
+        // Provider-specific can be either provider or institution
+        if (formData.provider_id) {
+          requestBody.provider_id = formData.provider_id
+        } else if (formData.provider_institution_id) {
+          requestBody.provider_institution_id = formData.provider_institution_id
+          requestBody.referral_target_type = 'provider_institution'
+        }
       }
+      // For 'open' type, no target fields are set
 
       const response = await fetch(`${API_URL}/referrals`, {
         method: 'POST',
@@ -533,173 +606,92 @@ export default function ReferralForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        {/* Patient Information Section */}
-        <div style={{
-          background: '#f8f9fa',
-          border: '1px solid #dee2e6',
-          borderRadius: '8px',
-          padding: '20px',
-          marginBottom: '25px'
-        }}>
-          <h3 style={{
-            fontSize: '18px',
-            fontWeight: 600,
-            marginTop: 0,
-            marginBottom: '15px',
-            color: '#333',
-            paddingBottom: '10px',
-            borderBottom: '1px solid #dee2e6'
-          }}>
-            Patient Information
-          </h3>
-
-          {/* Patient Mode Toggle */}
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* Step 1: Referral Type Selection */}
+        {canProceedToStep(1) && (
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
-              Patient Selection
+            <label style={{ display: 'block', marginBottom: '15px', fontWeight: 'bold', fontSize: '16px' }}>
+              What type of referral?
             </label>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input
-                  type="radio"
-                  checked={patientMode === 'new'}
-                  onChange={() => handlePatientModeToggle('new')}
-                  style={{ cursor: 'pointer' }}
-                />
-                <span>New Patient</span>
-              </label>
-              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <input
-                  type="radio"
-                  checked={patientMode === 'existing'}
-                  onChange={() => handlePatientModeToggle('existing')}
-                  style={{ cursor: 'pointer' }}
-                />
-                <span>Existing Patient</span>
-              </label>
+            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setReferralType('open')
+                  setFormData(prev => ({
+                    ...prev,
+                    referral_target_type: 'open',
+                    provider_id: undefined,
+                    provider_institution_id: undefined
+                  }))
+                }}
+                style={{
+                  flex: '1',
+                  minWidth: '200px',
+                  padding: '20px',
+                  background: referralType === 'open' ? '#007bff' : 'white',
+                  color: referralType === 'open' ? 'white' : '#333',
+                  border: '2px solid #007bff',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s',
+                  textAlign: 'center'
+                }}
+              >
+                <div>Open Referral</div>
+                <div style={{ fontSize: '14px', fontWeight: 'normal', marginTop: '8px', opacity: 0.9 }}>
+                  No specific provider
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setReferralType('provider')
+                }}
+                disabled={referralTargets.length === 0}
+                style={{
+                  flex: '1',
+                  minWidth: '200px',
+                  padding: '20px',
+                  background: referralType === 'provider' ? '#007bff' : 'white',
+                  color: referralType === 'provider' ? 'white' : '#333',
+                  border: '2px solid #007bff',
+                  borderRadius: '8px',
+                  cursor: referralTargets.length === 0 ? 'not-allowed' : 'pointer',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s',
+                  opacity: referralTargets.length === 0 ? 0.5 : 1,
+                  textAlign: 'center'
+                }}
+              >
+                <div>Provider-Specific</div>
+                <div style={{ fontSize: '14px', fontWeight: 'normal', marginTop: '8px', opacity: 0.9 }}>
+                  {referralTargets.length === 0 ? 'Network is empty' : 'Choose from your network'}
+                </div>
+              </button>
             </div>
           </div>
-        {/* Conditional Patient Fields */}
-        {patientMode === 'new' ? (
-          <>
-            <div>
-              <label htmlFor="first_name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                First Name *
-              </label>
-              <input
-                type="text"
-                id="first_name"
-                name="first_name"
-                value={patientFormData.first_name}
-                onChange={handlePatientFieldChange}
-                required
-                maxLength={100}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  fontSize: '16px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
+        )}
 
-            <div>
-              <label htmlFor="last_name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                Last Name *
-              </label>
-              <input
-                type="text"
-                id="last_name"
-                name="last_name"
-                value={patientFormData.last_name}
-                onChange={handlePatientFieldChange}
-                required
-                maxLength={100}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  fontSize: '16px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="date_of_birth" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                Date of Birth *
-              </label>
-              <input
-                type="date"
-                id="date_of_birth"
-                name="date_of_birth"
-                value={patientFormData.date_of_birth}
-                onChange={handlePatientFieldChange}
-                required
-                max={new Date().toISOString().split('T')[0]}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  fontSize: '16px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={patientFormData.phone}
-                onChange={handlePatientFieldChange}
-                placeholder="(555) 123-4567"
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  fontSize: '16px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={patientFormData.email}
-                onChange={handlePatientFieldChange}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  fontSize: '16px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <div>
-            <label htmlFor="patient" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Select Patient *
+        {/* Step 2: Provider Selection (Conditional) */}
+        {referralType === 'provider' && canProceedToStep(2) && (
+          <div style={{ marginBottom: '20px', position: 'relative' }}>
+            <label htmlFor="referral_target" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+              Referral To *
             </label>
-            <select
-              id="patient"
-              value={formData.patient_id || ''}
-              onChange={handlePatientChange}
-              required
+            <input
+              type="text"
+              id="referral_target"
+              value={searchText}
+              onChange={handleSearchChange}
+              onFocus={() => setShowDropdown(true)}
+              onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              placeholder="Type to search provider or institution..."
+              required={referralType === 'provider'}
               style={{
                 width: '100%',
                 padding: '10px',
@@ -707,196 +699,340 @@ export default function ReferralForm() {
                 border: '1px solid #ccc',
                 borderRadius: '5px'
               }}
-            >
-              <option value="">-- Select a patient --</option>
-              {patients.map(p => (
-                <option key={p.id} value={p.id}>{p.label}</option>
-              ))}
-            </select>
+            />
+
+            {showDropdown && filteredTargets.length > 0 && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                maxHeight: '300px',
+                overflowY: 'auto',
+                backgroundColor: 'white',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                marginTop: '2px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                zIndex: 1000
+              }}>
+                {filteredTargets.map(target => (
+                  <div
+                    key={target.id}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      handleSelectTarget(target)
+                    }}
+                    style={{
+                      padding: '10px',
+                      cursor: 'pointer',
+                      borderBottom: '1px solid #f0f0f0',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f5f5f5'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'white'
+                    }}
+                  >
+                    {target.label}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {showDropdown && searchText && filteredTargets.length === 0 && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'white',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                marginTop: '2px',
+                padding: '10px',
+                color: '#666',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                zIndex: 1000
+              }}>
+                No matches found
+              </div>
+            )}
           </div>
         )}
-        </div>
-        {/* End Patient Information Section */}
 
-        {/* Referral Target Autocomplete */}
-        <div style={{ position: 'relative' }}>
-          <label htmlFor="referral_target" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Referral To *
-          </label>
-          <input
-            type="text"
-            id="referral_target"
-            value={searchText}
-            onChange={handleSearchChange}
-            onFocus={() => setShowDropdown(true)}
-            onBlur={() => {
-              // Delay hiding dropdown to allow click on option
-              setTimeout(() => setShowDropdown(false), 200)
-            }}
-            placeholder="Type to search provider or institution..."
-            required
-            style={{
-              width: '100%',
-              padding: '10px',
-              fontSize: '16px',
-              border: '1px solid #ccc',
-              borderRadius: '5px'
-            }}
-          />
+        {/* Step 3: Patient Type Selection */}
+        {canProceedToStep(3) && (
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '15px', fontWeight: 'bold' }}>
+              Patient Selection
+            </label>
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input
+                  type="radio"
+                  checked={patientMode === 'new'}
+                  onChange={() => handlePatientModeToggle('new')}
+                  style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                />
+                <span style={{ fontSize: '16px' }}>New Patient</span>
+              </label>
+              <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input
+                  type="radio"
+                  checked={patientMode === 'existing'}
+                  onChange={() => handlePatientModeToggle('existing')}
+                  style={{ cursor: 'pointer', width: '18px', height: '18px' }}
+                />
+                <span style={{ fontSize: '16px' }}>Existing Patient</span>
+              </label>
+            </div>
+          </div>
+        )}
 
-          {/* Dropdown list */}
-          {showDropdown && filteredTargets.length > 0 && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              maxHeight: '300px',
-              overflowY: 'auto',
-              backgroundColor: 'white',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              marginTop: '2px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              zIndex: 1000
-            }}>
-              {filteredTargets.map(target => (
-                <div
-                  key={target.id}
-                  onMouseDown={(e) => {
-                    e.preventDefault()
-                    handleSelectTarget(target)
-                  }}
+        {/* Step 4: Patient Details */}
+        {canProceedToStep(4) && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '20px' }}>
+            {patientMode === 'new' ? (
+              <>
+                <div>
+                  <label htmlFor="first_name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    value={patientFormData.first_name}
+                    onChange={handlePatientFieldChange}
+                    required
+                    maxLength={100}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="last_name" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    value={patientFormData.last_name}
+                    onChange={handlePatientFieldChange}
+                    required
+                    maxLength={100}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="date_of_birth" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Date of Birth *
+                  </label>
+                  <input
+                    type="date"
+                    id="date_of_birth"
+                    name="date_of_birth"
+                    value={patientFormData.date_of_birth}
+                    onChange={handlePatientFieldChange}
+                    required
+                    max={new Date().toISOString().split('T')[0]}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="phone" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={patientFormData.phone}
+                    onChange={handlePatientFieldChange}
+                    placeholder="(555) 123-4567"
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={patientFormData.email}
+                    onChange={handlePatientFieldChange}
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      fontSize: '16px',
+                      border: '1px solid #ccc',
+                      borderRadius: '5px'
+                    }}
+                  />
+                </div>
+              </>
+            ) : (
+              <div>
+                <label htmlFor="patient" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Select Patient *
+                </label>
+                <select
+                  id="patient"
+                  value={formData.patient_id || ''}
+                  onChange={handlePatientChange}
+                  required
                   style={{
+                    width: '100%',
                     padding: '10px',
-                    cursor: 'pointer',
-                    borderBottom: '1px solid #f0f0f0',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f5f5f5'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'white'
+                    fontSize: '16px',
+                    border: '1px solid #ccc',
+                    borderRadius: '5px'
                   }}
                 >
-                  {target.label}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* No results message */}
-          {showDropdown && searchText && filteredTargets.length === 0 && (
-            <div style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              backgroundColor: 'white',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              marginTop: '2px',
-              padding: '10px',
-              color: '#666',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-              zIndex: 1000
-            }}>
-              No matches found
-            </div>
-          )}
-        </div>
-
-        {/* Notes */}
-        <div>
-          <label htmlFor="notes" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Notes
-          </label>
-          <textarea
-            id="notes"
-            name="notes"
-            value={formData.notes}
-            onChange={handleNotesChange}
-            rows={4}
-            placeholder="Enter referral notes (optional)"
-            style={{
-              width: '100%',
-              padding: '10px',
-              fontSize: '16px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              resize: 'vertical'
-            }}
-          />
-        </div>
-
-        {/* Appointment Timeframe */}
-        <div>
-          <label htmlFor="appointment_timeframe" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Suggested Appointment Timeframe
-          </label>
-          <select
-            id="appointment_timeframe"
-            value={formData.appointment_timeframe || ''}
-            onChange={handleTimeframeChange}
-            style={{
-              width: '100%',
-              padding: '10px',
-              fontSize: '16px',
-              border: '1px solid #ccc',
-              borderRadius: '5px'
-            }}
-          >
-            <option value="">-- Select timeframe --</option>
-            {generateTimeframeOptions().map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Message Preview */}
-        <div style={{
-          background: '#f8f9fa',
-          border: '1px solid #dee2e6',
-          borderRadius: '8px',
-          padding: '15px'
-        }}>
-          <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
-            {getContactMethod() === 'email' ? 'Email' : 'Text'} Message Preview
-          </label>
-          <div style={{
-            background: 'white',
-            padding: '12px',
-            borderRadius: '5px',
-            border: '1px solid #dee2e6',
-            fontSize: '14px',
-            lineHeight: '1.5',
-            color: '#495057',
-            fontStyle: 'italic'
-          }}>
-            {generateMessagePreview()}
+                  <option value="">-- Select a patient --</option>
+                  {patients.map(p => (
+                    <option key={p.id} value={p.id}>{p.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          style={{
-            padding: '12px 20px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            background: submitting ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: submitting ? 'not-allowed' : 'pointer',
-            marginTop: '10px'
-          }}
-        >
-          {submitting ? 'Creating Referral...' : 'Create Referral'}
-        </button>
+        {/* Step 5: Final Details */}
+        {canProceedToStep(5) && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '10px' }}>
+            {/* Notes */}
+            <div>
+              <label htmlFor="notes" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Notes
+              </label>
+              <textarea
+                id="notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleNotesChange}
+                rows={4}
+                placeholder="Enter referral notes (optional)"
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  fontSize: '16px',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+
+            {/* Appointment Timeframe */}
+            <div>
+              <label htmlFor="appointment_timeframe" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Appointment Deadline
+              </label>
+              <input
+                type="date"
+                id="appointment_timeframe"
+                name="appointment_timeframe"
+                value={formData.appointment_timeframe || ''}
+                onChange={handleTimeframeChange}
+                min={new Date().toISOString().split('T')[0]}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  fontSize: '16px',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px'
+                }}
+              />
+              <small style={{ color: '#666', marginTop: '5px', display: 'block' }}>
+                Date by which the appointment should be scheduled (optional)
+              </small>
+            </div>
+
+            {/* Message Preview */}
+            <div style={{
+              background: '#f8f9fa',
+              border: '1px solid #dee2e6',
+              borderRadius: '8px',
+              padding: '15px'
+            }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+                {getContactMethod() === 'email' ? 'Email' : 'Text'} Message Preview
+              </label>
+              <div style={{
+                background: 'white',
+                padding: '12px',
+                borderRadius: '5px',
+                border: '1px solid #dee2e6',
+                fontSize: '14px',
+                lineHeight: '1.5',
+                color: '#495057',
+                fontStyle: 'italic'
+              }}>
+                {generateMessagePreview()}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={submitting}
+              style={{
+                padding: '14px 20px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                background: submitting ? '#ccc' : '#28a745',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: submitting ? 'not-allowed' : 'pointer',
+                transition: 'background 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                if (!submitting) e.currentTarget.style.background = '#218838'
+              }}
+              onMouseLeave={(e) => {
+                if (!submitting) e.currentTarget.style.background = '#28a745'
+              }}
+            >
+              {submitting ? 'Creating Referral...' : 'Create Referral'}
+            </button>
+          </div>
+        )}
       </form>
     </div>
   )

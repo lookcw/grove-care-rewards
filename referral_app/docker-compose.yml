@@ -30,12 +30,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/app:/app/app
-      - ./backend/service-account-key.json:/app/service-account-key.json:ro
+      - ./backend:/app
+      - /app/.venv  # Exclude - keep container's virtual environment
     depends_on:
       postgres:
         condition: service_healthy
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:

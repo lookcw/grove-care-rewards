@@ -9,6 +9,7 @@ from app.models.base import BaseModel
 from app.models.address import Address
 from app.models.provider_institution import ProviderInstitution
 from app.models.provider import Provider
+from app.models.insurance import Insurance
 from app.models.patient import Patient
 from app.models.user import User
 from app.models.referral import Referral, ReferralStatus
@@ -20,6 +21,7 @@ __all__ = [
     "Address",
     "ProviderInstitution",
     "Provider",
+    "Insurance",
     "Patient",
     "User",
     "Referral",

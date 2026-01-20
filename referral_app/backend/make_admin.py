@@ -14,9 +14,7 @@ async def make_user_admin(email: str):
     """Set is_admin=True for a user with the given email."""
     async with AsyncSessionLocal() as session:
         # Find user by email
-        result = await session.execute(
-            select(User).filter(User.email == email)
-        )
+        result = await session.execute(select(User).filter(User.email == email))
         user = result.scalar_one_or_none()
 
         if not user:

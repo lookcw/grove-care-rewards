@@ -8,6 +8,7 @@ class Address(BaseModel):
     Address model for storing location information.
     Can be associated with providers, patients, or other entities.
     """
+
     __tablename__ = "addresses"
 
     street_address_1 = Column(String(255), nullable=False)

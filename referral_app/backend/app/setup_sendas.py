@@ -2,19 +2,22 @@
 Setup script to configure Gmail "Send As" alias for service account.
 Run this once to allow sending emails from help@grovehealth.us
 """
+
 import os
 import sys
 import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.settings.basic']
+SCOPES = ["https://www.googleapis.com/auth/gmail.settings.basic"]
 
 
 def setup_send_as_alias():
@@ -26,7 +29,7 @@ def setup_send_as_alias():
         print("Error: GMAIL_SERVICE_ACCOUNT_FILE not set")
         return False
 
-    with open(key_file, 'r') as f:
+    with open(key_file, "r") as f:
         service_account_info = json.load(f)
 
     # Impersonate the main email account
@@ -39,18 +42,16 @@ def setup_send_as_alias():
 
     # Create credentials with domain-wide delegation
     credentials = service_account.Credentials.from_service_account_info(
-        service_account_info,
-        scopes=SCOPES,
-        subject=sender_email
+        service_account_info, scopes=SCOPES, subject=sender_email
     )
 
     # Build Gmail API service
-    service = build('gmail', 'v1', credentials=credentials)
+    service = build("gmail", "v1", credentials=credentials)
 
     try:
         # Check if alias already exists
-        send_as_list = service.users().settings().sendAs().list(userId='me').execute()
-        existing_aliases = [alias['sendAsEmail'] for alias in send_as_list.get('sendAs', [])]
+        send_as_list = service.users().settings().sendAs().list(userId="me").execute()
+        existing_aliases = [alias["sendAsEmail"] for alias in send_as_list.get("sendAs", [])]
 
         if from_email in existing_aliases:
             print(f"✓ Alias {from_email} already configured")
@@ -58,24 +59,21 @@ def setup_send_as_alias():
 
         # Create the send-as alias
         send_as_config = {
-            'sendAsEmail': from_email,
-            'displayName': 'Grove Health Support',
-            'replyToAddress': sender_email,
-            'treatAsAlias': True,
-            'isDefault': False
+            "sendAsEmail": from_email,
+            "displayName": "Grove Health Support",
+            "replyToAddress": sender_email,
+            "treatAsAlias": True,
+            "isDefault": False,
         }
 
-        result = service.users().settings().sendAs().create(
-            userId='me',
-            body=send_as_config
-        ).execute()
+        result = service.users().settings().sendAs().create(userId="me", body=send_as_config).execute()
 
         print(f"✓ Successfully configured send-as alias: {from_email}")
         print(f"  Display name: {result.get('displayName')}")
         print(f"  Reply-to: {result.get('replyToAddress')}")
         return True
 
-    except Exception as e:
+    except (HttpError, OSError, ValueError, KeyError) as e:
         print(f"✗ Error setting up send-as alias: {e}")
         print("\nManual setup required:")
         print(f"1. Log into Gmail as {sender_email}")

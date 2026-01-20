@@ -6,6 +6,7 @@ from app.database import Base
 
 class User(SQLAlchemyBaseUserTableUUID, Base):
     """User model representing healthcare professionals who can make referrals."""
+
     __tablename__ = "users"
 
     # Custom fields for our application
@@ -20,6 +21,14 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
     # Relationship to provider network
     provider_networks = relationship("UserProviderNetwork", back_populates="user", cascade="all, delete-orphan")
+
+    # Relationship to user's own institution
+    my_institution = relationship(
+        "ProviderInstitution",
+        foreign_keys="[ProviderInstitution.created_by_user_id]",
+        back_populates="created_by",
+        uselist=False,
+    )
 
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email})>"

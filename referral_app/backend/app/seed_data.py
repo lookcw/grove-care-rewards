@@ -1,10 +1,12 @@
 """
 Seed script to populate the database with sample data.
 """
+
 from database import SessionLocal
 from models.provider import Provider
 from models.provider_institution import ProviderInstitution
 from models.address import Address
+from sqlalchemy.exc import SQLAlchemyError
 
 
 def seed_providers():
@@ -25,7 +27,7 @@ def seed_providers():
                 "city": "San Francisco",
                 "state": "CA",
                 "zip_code": "94102",
-                "country": "USA"
+                "country": "USA",
             },
             {
                 "street_address_1": "456 Healthcare Blvd",
@@ -33,7 +35,7 @@ def seed_providers():
                 "city": "Los Angeles",
                 "state": "CA",
                 "zip_code": "90001",
-                "country": "USA"
+                "country": "USA",
             },
             {
                 "street_address_1": "789 Wellness Way",
@@ -41,7 +43,7 @@ def seed_providers():
                 "city": "New York",
                 "state": "NY",
                 "zip_code": "10001",
-                "country": "USA"
+                "country": "USA",
             },
             {
                 "street_address_1": "321 Orthopedic Drive",
@@ -49,7 +51,7 @@ def seed_providers():
                 "city": "Boston",
                 "state": "MA",
                 "zip_code": "02101",
-                "country": "USA"
+                "country": "USA",
             },
             {
                 "street_address_1": "555 Physical Therapy Lane",
@@ -57,8 +59,8 @@ def seed_providers():
                 "city": "Seattle",
                 "state": "WA",
                 "zip_code": "98101",
-                "country": "USA"
-            }
+                "country": "USA",
+            },
         ]
 
         # Create addresses
@@ -73,45 +75,23 @@ def seed_providers():
 
         # Sample provider institutions
         institutions_data = [
-            {
-                "name": "Pivot Physical Therapy",
-                "website": "https://pivotpt.com",
-                "address": addresses[0]
-            },
-            {
-                "name": "Elite Orthopedic Center",
-                "website": "https://eliteortho.com",
-                "address": addresses[1]
-            },
+            {"name": "Pivot Physical Therapy", "website": "https://pivotpt.com", "address": addresses[0]},
+            {"name": "Elite Orthopedic Center", "website": "https://eliteortho.com", "address": addresses[1]},
             {
                 "name": "Wellness & Recovery Institute",
                 "website": "https://wellnessrecovery.com",
-                "address": addresses[2]
+                "address": addresses[2],
             },
-            {
-                "name": "Boston Sports Medicine",
-                "website": "https://bostonsportsmed.com",
-                "address": addresses[3]
-            },
-            {
-                "name": "Pacific Rehabilitation Center",
-                "website": "https://pacificrehab.com",
-                "address": addresses[4]
-            },
-            {
-                "name": "Bay Area Chiropractic",
-                "website": "https://bayareachiro.com",
-                "address": addresses[0]
-            }
+            {"name": "Boston Sports Medicine", "website": "https://bostonsportsmed.com", "address": addresses[3]},
+            {"name": "Pacific Rehabilitation Center", "website": "https://pacificrehab.com", "address": addresses[4]},
+            {"name": "Bay Area Chiropractic", "website": "https://bayareachiro.com", "address": addresses[0]},
         ]
 
         # Create institutions
         institutions = []
         for inst_data in institutions_data:
             institution = ProviderInstitution(
-                name=inst_data["name"],
-                website=inst_data["website"],
-                address_id=inst_data["address"].id
+                name=inst_data["name"], website=inst_data["website"], address_id=inst_data["address"].id
             )
             db.add(institution)
             institutions.append(institution)
@@ -127,7 +107,7 @@ def seed_providers():
                 "email": "sarah.johnson@healthcare.com",
                 "phone": "(415) 555-0101",
                 "address": addresses[0],
-                "institution": institutions[0]  # Pivot PT
+                "institution": institutions[0],  # Pivot PT
             },
             {
                 "first_name": "Michael",
@@ -135,7 +115,7 @@ def seed_providers():
                 "email": "michael.chen@orthopedics.com",
                 "phone": "(213) 555-0102",
                 "address": addresses[1],
-                "institution": institutions[1]  # Elite Orthopedic Center
+                "institution": institutions[1],  # Elite Orthopedic Center
             },
             {
                 "first_name": "Emily",
@@ -143,7 +123,7 @@ def seed_providers():
                 "email": "emily.rodriguez@physicaltherapy.com",
                 "phone": "(212) 555-0103",
                 "address": addresses[2],
-                "institution": institutions[2]  # Wellness & Recovery Institute
+                "institution": institutions[2],  # Wellness & Recovery Institute
             },
             {
                 "first_name": "David",
@@ -151,7 +131,7 @@ def seed_providers():
                 "email": "david.williams@sportsmedicine.com",
                 "phone": "(617) 555-0104",
                 "address": addresses[3],
-                "institution": institutions[3]  # Boston Sports Medicine
+                "institution": institutions[3],  # Boston Sports Medicine
             },
             {
                 "first_name": "Jennifer",
@@ -159,7 +139,7 @@ def seed_providers():
                 "email": "jennifer.thompson@rehabilitation.com",
                 "phone": "(206) 555-0105",
                 "address": addresses[4],
-                "institution": institutions[4]  # Pacific Rehabilitation Center
+                "institution": institutions[4],  # Pacific Rehabilitation Center
             },
             {
                 "first_name": "Robert",
@@ -167,7 +147,7 @@ def seed_providers():
                 "email": "robert.martinez@chiropractor.com",
                 "phone": "(415) 555-0106",
                 "address": addresses[0],
-                "institution": institutions[5]  # Bay Area Chiropractic
+                "institution": institutions[5],  # Bay Area Chiropractic
             },
             {
                 "first_name": "Lisa",
@@ -175,7 +155,7 @@ def seed_providers():
                 "email": "lisa.anderson@wellness.com",
                 "phone": "(213) 555-0107",
                 "address": addresses[1],
-                "institution": institutions[0]  # Pivot PT
+                "institution": institutions[0],  # Pivot PT
             },
             {
                 "first_name": "James",
@@ -183,8 +163,8 @@ def seed_providers():
                 "email": "james.taylor@acupuncture.com",
                 "phone": "(212) 555-0108",
                 "address": addresses[2],
-                "institution": institutions[2]  # Wellness & Recovery Institute
-            }
+                "institution": institutions[2],  # Wellness & Recovery Institute
+            },
         ]
 
         # Create providers
@@ -195,14 +175,14 @@ def seed_providers():
                 email=provider_data["email"],
                 phone=provider_data["phone"],
                 address_id=provider_data["address"].id,
-                institution_id=provider_data["institution"].id
+                institution_id=provider_data["institution"].id,
             )
             db.add(provider)
 
         db.commit()
         print(f"Successfully created {len(providers_data)} providers")
 
-    except Exception as e:
+    except (SQLAlchemyError, KeyError, ValueError, AttributeError) as e:
         print(f"Error seeding database: {e}")
         db.rollback()
     finally:

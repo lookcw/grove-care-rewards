@@ -7,7 +7,9 @@ from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, delete
 from sqlalchemy.orm import selectinload
+from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional
+import json
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
 from app.database import engine, Base, get_db
@@ -20,11 +22,26 @@ from app.models.referral import Referral, ReferralStatus
 from app.models.user_provider_network import UserProviderNetwork
 from app.auth import auth_backend, fastapi_users, current_active_user
 from app.schemas import (
-    UserCreate, UserRead, UserUpdate, PatientCreate, ReferralCreate, ReferralRead,
-    NetworkEntryCreate, NetworkEntryRead, ProviderCreate, ProviderUpdate,
-    ProviderRead, AddressCreate
+    UserCreate,
+    UserRead,
+    UserUpdate,
+    PatientCreate,
+    ReferralCreate,
+    ReferralRead,
+    NetworkEntryCreate,
+    NetworkEntryRead,
+    ProviderCreate,
+    ProviderUpdate,
+    ProviderRead,
+    AddressCreate,
+    MyInstitutionCreate,
+    MyInstitutionUpdate,
+    MyInstitutionRead,
 )
 from app.gmail_service import send_referral_notification_email
+from app.documo_service import verify_webhook_auth, download_fax_pdf, store_fax_pdf
+from app.documo_schemas import DocumoFaxWebhookPayload
+from googleapiclient.errors import HttpError
 
 # Configure logging for Google Cloud
 if os.getenv("ENVIRONMENT") != "local":
@@ -41,15 +58,13 @@ if os.getenv("ENVIRONMENT") != "local":
     root_logger.addHandler(handler)
 else:
     # Local development logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(title="Referral App API", version="1.0.0")
+
 
 # Configure CORS
 def get_allowed_origins():
@@ -61,6 +76,7 @@ def get_allowed_origins():
     else:
         return [frontend_url]
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_allowed_origins(),
@@ -70,10 +86,8 @@ app.add_middleware(
 )
 
 # Add session middleware for SQLAdmin authentication
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("SECRET_KEY", "your-secret-key-here")
-)
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "your-secret-key-here"))
+
 
 # Global exception handler for Error Reporting
 @app.exception_handler(Exception)
@@ -89,14 +103,12 @@ async def global_exception_handler(request: Request, exc: Exception):
             "url": str(request.url),
             "method": request.method,
             "client_host": request.client.host if request.client else None,
-        }
+        },
     )
 
     # Return a generic error response to the client
-    return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "Internal server error"}
-    )
+    return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content={"detail": "Internal server error"})
+
 
 # Include authentication routes under /api prefix
 app.include_router(
@@ -120,6 +132,7 @@ app.include_router(
     tags=["users"],
 )
 
+
 # Create database tables on startup
 @app.on_event("startup")
 async def startup():
@@ -128,10 +141,12 @@ async def startup():
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database tables created/verified")
 
+
 # API health check endpoints
 @app.get("/api")
 def read_root():
     return {"status": "ok", "message": "Hello World from FastAPI!"}
+
 
 @app.get("/api/health")
 async def health_check(db: AsyncSession = Depends(get_db)):
@@ -139,52 +154,44 @@ async def health_check(db: AsyncSession = Depends(get_db)):
         # Try to execute a simple query
         await db.execute(select(1))
         return {"status": "healthy", "database": "connected"}
-    except Exception as e:
+    except (SQLAlchemyError, OSError) as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
         return {"status": "unhealthy", "database": "disconnected", "error": str(e)}
 
+
 # Frontend error reporting endpoint
 @app.post("/api/log-error")
-async def log_frontend_error(
-    request: Request,
-    user: User = Depends(current_active_user)
-):
+async def log_frontend_error(request: Request, user: User = Depends(current_active_user)):
     """
     Endpoint for frontend to report JavaScript errors to Cloud Error Reporting.
     """
-    try:
-        body = await request.json()
-        error_message = body.get("message", "Unknown error")
-        stack = body.get("stack", "")
-        url = body.get("url", "")
-        line = body.get("line", "")
-        column = body.get("column", "")
+    body = await request.json()
+    error_message = body.get("message", "Unknown error")
+    stack = body.get("stack", "")
+    url = body.get("url", "")
+    line = body.get("line", "")
+    column = body.get("column", "")
 
-        # Log frontend error with ERROR severity
-        logger.error(
-            f"Frontend Error: {error_message}",
-            extra={
-                "error_type": "frontend_error",
-                "stack": stack,
-                "url": url,
-                "line": line,
-                "column": column,
-                "user_id": str(user.id),
-                "user_email": user.email,
-            }
-        )
+    # Log frontend error with ERROR severity
+    logger.error(
+        f"Frontend Error: {error_message}",
+        extra={
+            "error_type": "frontend_error",
+            "stack": stack,
+            "url": url,
+            "line": line,
+            "column": column,
+            "user_id": str(user.id),
+            "user_email": user.email,
+        },
+    )
 
-        return {"status": "logged"}
-    except Exception as e:
-        logger.error(f"Failed to log frontend error: {e}", exc_info=True)
-        return {"status": "error", "message": str(e)}
+    return {"status": "logged"}
+
 
 # Provider endpoints (FILTERED BY USER NETWORK)
 @app.get("/api/providers")
-async def get_providers(
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
-):
+async def get_providers(user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)):
     """
     Get providers in user's network.
     MODIFIED: Now requires authentication and filters by user's network.
@@ -192,8 +199,7 @@ async def get_providers(
     # Get user's network provider IDs
     network_result = await db.execute(
         select(UserProviderNetwork.provider_id).filter(
-            UserProviderNetwork.user_id == user.id,
-            UserProviderNetwork.provider_id.isnot(None)
+            UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_id.isnot(None)
         )
     )
     network_provider_ids = [row[0] for row in network_result.all()]
@@ -206,53 +212,63 @@ async def get_providers(
     result = await db.execute(
         select(Provider)
         .options(
-            selectinload(Provider.address),
-            selectinload(Provider.institution).selectinload(ProviderInstitution.address)
+            selectinload(Provider.address), selectinload(Provider.institution).selectinload(ProviderInstitution.address)
         )
         .filter(Provider.id.in_(network_provider_ids))
     )
     providers = result.scalars().all()
 
-    return [{
-        "id": str(provider.id),
-        "first_name": provider.first_name,
-        "last_name": provider.last_name,
-        "full_name": provider.full_name,
-        "email": provider.email,
-        "phone": provider.phone,
-        "address": {
-            "street_address_1": provider.address.street_address_1,
-            "street_address_2": provider.address.street_address_2,
-            "city": provider.address.city,
-            "state": provider.address.state,
-            "zip_code": provider.address.zip_code,
-            "country": provider.address.country,
-        } if provider.address else None,
-        "institution": {
-            "id": str(provider.institution.id),
-            "name": provider.institution.name,
-            "website": provider.institution.website,
+    return [
+        {
+            "id": str(provider.id),
+            "first_name": provider.first_name,
+            "last_name": provider.last_name,
+            "full_name": provider.full_name,
+            "email": provider.email,
+            "phone": provider.phone,
             "address": {
-                "street_address_1": provider.institution.address.street_address_1,
-                "street_address_2": provider.institution.address.street_address_2,
-                "city": provider.institution.address.city,
-                "state": provider.institution.address.state,
-                "zip_code": provider.institution.address.zip_code,
-                "country": provider.institution.address.country,
-            } if provider.institution.address else None,
-        } if provider.institution else None,
-        "created_at": provider.datetime_created.isoformat() if provider.datetime_created else None,
-        "updated_at": provider.datetime_updated.isoformat() if provider.datetime_updated else None,
-    } for provider in providers]
+                "street_address_1": provider.address.street_address_1,
+                "street_address_2": provider.address.street_address_2,
+                "city": provider.address.city,
+                "state": provider.address.state,
+                "zip_code": provider.address.zip_code,
+                "country": provider.address.country,
+            }
+            if provider.address
+            else None,
+            "institution": {
+                "id": str(provider.institution.id),
+                "name": provider.institution.name,
+                "website": provider.institution.website,
+                "address": {
+                    "street_address_1": provider.institution.address.street_address_1,
+                    "street_address_2": provider.institution.address.street_address_2,
+                    "city": provider.institution.address.city,
+                    "state": provider.institution.address.state,
+                    "zip_code": provider.institution.address.zip_code,
+                    "country": provider.institution.address.country,
+                }
+                if provider.institution.address
+                else None,
+            }
+            if provider.institution
+            else None,
+            "created_at": provider.datetime_created.isoformat() if provider.datetime_created else None,
+            "updated_at": provider.datetime_updated.isoformat() if provider.datetime_updated else None,
+        }
+        for provider in providers
+    ]
+
 
 @app.get("/api/providers/{provider_id}")
 async def get_provider(provider_id: str, db: AsyncSession = Depends(get_db)):
     """Get a specific provider by ID."""
     result = await db.execute(
-        select(Provider).options(
-            selectinload(Provider.address),
-            selectinload(Provider.institution).selectinload(ProviderInstitution.address)
-        ).filter(Provider.id == provider_id)
+        select(Provider)
+        .options(
+            selectinload(Provider.address), selectinload(Provider.institution).selectinload(ProviderInstitution.address)
+        )
+        .filter(Provider.id == provider_id)
     )
     provider = result.scalar_one_or_none()
     if not provider:
@@ -272,7 +288,9 @@ async def get_provider(provider_id: str, db: AsyncSession = Depends(get_db)):
             "state": provider.address.state,
             "zip_code": provider.address.zip_code,
             "country": provider.address.country,
-        } if provider.address else None,
+        }
+        if provider.address
+        else None,
         "institution": {
             "id": str(provider.institution.id),
             "name": provider.institution.name,
@@ -284,8 +302,12 @@ async def get_provider(provider_id: str, db: AsyncSession = Depends(get_db)):
                 "state": provider.institution.address.state,
                 "zip_code": provider.institution.address.zip_code,
                 "country": provider.institution.address.country,
-            } if provider.institution.address else None,
-        } if provider.institution else None,
+            }
+            if provider.institution.address
+            else None,
+        }
+        if provider.institution
+        else None,
         "created_at": provider.datetime_created.isoformat() if provider.datetime_created else None,
         "updated_at": provider.datetime_updated.isoformat() if provider.datetime_updated else None,
     }
@@ -293,9 +315,7 @@ async def get_provider(provider_id: str, db: AsyncSession = Depends(get_db)):
 
 @app.post("/api/providers", response_model=ProviderRead, status_code=status.HTTP_201_CREATED)
 async def create_custom_provider(
-    provider_data: ProviderCreate,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    provider_data: ProviderCreate, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Create a new custom provider.
@@ -317,16 +337,13 @@ async def create_custom_provider(
         institution_id=provider_data.institution_id,
         address_id=address.id if address else None,
         global_provider=False,
-        created_by_user_id=user.id
+        created_by_user_id=user.id,
     )
     db.add(provider)
     await db.flush()
 
     # Automatically add to user's network
-    network_entry = UserProviderNetwork(
-        user_id=user.id,
-        provider_id=provider.id
-    )
+    network_entry = UserProviderNetwork(user_id=user.id, provider_id=provider.id)
     db.add(network_entry)
 
     await db.commit()
@@ -335,10 +352,7 @@ async def create_custom_provider(
     # Load relationships for response
     result = await db.execute(
         select(Provider)
-        .options(
-            selectinload(Provider.address),
-            selectinload(Provider.institution)
-        )
+        .options(selectinload(Provider.address), selectinload(Provider.institution))
         .filter(Provider.id == provider.id)
     )
     provider = result.scalar_one()
@@ -351,7 +365,7 @@ async def update_provider(
     provider_id: str,
     provider_data: ProviderUpdate,
     user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ):
     """
     Update a provider.
@@ -361,9 +375,7 @@ async def update_provider(
     """
     # Fetch provider with relationships
     result = await db.execute(
-        select(Provider)
-        .options(selectinload(Provider.address))
-        .filter(Provider.id == provider_id)
+        select(Provider).options(selectinload(Provider.address)).filter(Provider.id == provider_id)
     )
     provider = result.scalar_one_or_none()
 
@@ -400,11 +412,13 @@ async def update_provider(
             last_name=provider_data.last_name if provider_data.last_name is not None else provider.last_name,
             email=provider_data.email if provider_data.email is not None else provider.email,
             phone=provider_data.phone if provider_data.phone is not None else provider.phone,
-            institution_id=provider_data.institution_id if provider_data.institution_id is not None else provider.institution_id,
+            institution_id=provider_data.institution_id
+            if provider_data.institution_id is not None
+            else provider.institution_id,
             address_id=new_address.id if new_address else None,
             global_provider=False,
             created_by_user_id=user.id,
-            copied_from_provider_id=provider.id
+            copied_from_provider_id=provider.id,
         )
         db.add(new_provider)
         await db.flush()
@@ -412,15 +426,11 @@ async def update_provider(
         # Remove old provider from network, add new custom provider
         await db.execute(
             delete(UserProviderNetwork).filter(
-                UserProviderNetwork.user_id == user.id,
-                UserProviderNetwork.provider_id == provider_id
+                UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_id == provider_id
             )
         )
 
-        network_entry = UserProviderNetwork(
-            user_id=user.id,
-            provider_id=new_provider.id
-        )
+        network_entry = UserProviderNetwork(user_id=user.id, provider_id=new_provider.id)
         db.add(network_entry)
 
         await db.commit()
@@ -428,10 +438,7 @@ async def update_provider(
         # Load relationships for response
         result = await db.execute(
             select(Provider)
-            .options(
-                selectinload(Provider.address),
-                selectinload(Provider.institution)
-            )
+            .options(selectinload(Provider.address), selectinload(Provider.institution))
             .filter(Provider.id == new_provider.id)
         )
         new_provider = result.scalar_one()
@@ -441,10 +448,7 @@ async def update_provider(
     else:
         # CUSTOM PROVIDER: Update directly
         if provider.created_by_user_id != user.id:
-            raise HTTPException(
-                status_code=403,
-                detail="You can only edit providers you created"
-            )
+            raise HTTPException(status_code=403, detail="You can only edit providers you created")
 
         # Update address if provided
         if provider_data.address:
@@ -480,10 +484,7 @@ async def update_provider(
         # Load relationships for response
         result = await db.execute(
             select(Provider)
-            .options(
-                selectinload(Provider.address),
-                selectinload(Provider.institution)
-            )
+            .options(selectinload(Provider.address), selectinload(Provider.institution))
             .filter(Provider.id == provider.id)
         )
         provider = result.scalar_one()
@@ -497,22 +498,22 @@ async def get_patients(db: AsyncSession = Depends(get_db)):
     """Get all patients for dropdown."""
     result = await db.execute(select(Patient))
     patients = result.scalars().all()
-    return [{
-        "id": str(patient.id),
-        "first_name": patient.first_name,
-        "last_name": patient.last_name,
-        "date_of_birth": patient.date_of_birth.isoformat(),
-        "phone": patient.phone,
-        "email": patient.email
-    } for patient in patients]
+    return [
+        {
+            "id": str(patient.id),
+            "first_name": patient.first_name,
+            "last_name": patient.last_name,
+            "date_of_birth": patient.date_of_birth.isoformat(),
+            "phone": patient.phone,
+            "email": patient.email,
+        }
+        for patient in patients
+    ]
 
 
 # Provider institution endpoints (FILTERED BY USER NETWORK)
 @app.get("/api/provider-institutions")
-async def get_provider_institutions(
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
-):
+async def get_provider_institutions(user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)):
     """
     Get provider institutions in user's network.
     MODIFIED: Now requires authentication and filters by user's network.
@@ -520,8 +521,7 @@ async def get_provider_institutions(
     # Get user's network institution IDs
     network_result = await db.execute(
         select(UserProviderNetwork.provider_institution_id).filter(
-            UserProviderNetwork.user_id == user.id,
-            UserProviderNetwork.provider_institution_id.isnot(None)
+            UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_institution_id.isnot(None)
         )
     )
     network_institution_ids = [row[0] for row in network_result.all()]
@@ -531,27 +531,248 @@ async def get_provider_institutions(
         return []
 
     # Fetch institutions in network
-    result = await db.execute(
-        select(ProviderInstitution).filter(
-            ProviderInstitution.id.in_(network_institution_ids)
-        )
-    )
+    result = await db.execute(select(ProviderInstitution).filter(ProviderInstitution.id.in_(network_institution_ids)))
     institutions = result.scalars().all()
 
-    return [{
-        "id": str(inst.id),
-        "name": inst.name
-    } for inst in institutions]
+    return [{"id": str(inst.id), "name": inst.name} for inst in institutions]
+
+
+# My Institution endpoints (user's own institution)
+
+
+@app.get("/api/my-institution", response_model=MyInstitutionRead)
+async def get_my_institution(user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)):
+    """
+    Get current user's institution.
+    Returns 404 if user hasn't created their institution yet.
+    """
+    result = await db.execute(
+        select(ProviderInstitution)
+        .options(selectinload(ProviderInstitution.address))
+        .filter(ProviderInstitution.created_by_user_id == user.id)
+    )
+    institution = result.scalar_one_or_none()
+
+    if not institution:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Institution not found. Please create your institution profile.",
+        )
+
+    # Build response with nested address
+    response_data = {
+        "id": institution.id,
+        "created_by_user_id": institution.created_by_user_id,
+        "name": institution.name,
+        "type": institution.type,
+        "phone": institution.phone,
+        "email": institution.email,
+        "website": institution.website,
+        "address_id": institution.address_id,
+        "address": {
+            "street_address_1": institution.address.street_address_1,
+            "street_address_2": institution.address.street_address_2,
+            "city": institution.address.city,
+            "state": institution.address.state,
+            "zip_code": institution.address.zip_code,
+            "country": institution.address.country,
+        }
+        if institution.address
+        else None,
+        "datetime_created": institution.datetime_created,
+        "datetime_updated": institution.datetime_updated,
+    }
+
+    return response_data
+
+
+@app.post("/api/my-institution", response_model=MyInstitutionRead, status_code=status.HTTP_201_CREATED)
+async def create_my_institution(
+    institution_data: MyInstitutionCreate, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
+):
+    """
+    Create user's institution.
+    Returns 409 Conflict if user already has an institution.
+    """
+    # Check if user already has an institution
+    existing_result = await db.execute(
+        select(ProviderInstitution).filter(ProviderInstitution.created_by_user_id == user.id)
+    )
+    existing_institution = existing_result.scalar_one_or_none()
+
+    if existing_institution:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="You already have an institution. Use PUT to update it."
+        )
+
+    # Create address if provided
+    address_id = None
+    if institution_data.address:
+        address = Address(**institution_data.address.dict())
+        db.add(address)
+        await db.flush()
+        address_id = address.id
+
+    # Create institution
+    institution = ProviderInstitution(
+        name=institution_data.name,
+        type=institution_data.type,
+        phone=institution_data.phone,
+        email=institution_data.email,
+        website=institution_data.website,
+        address_id=address_id,
+        created_by_user_id=user.id,
+    )
+    db.add(institution)
+    await db.commit()
+    await db.refresh(institution)
+
+    # Load address relationship
+    await db.refresh(institution, ["address"])
+
+    # Build response
+    response_data = {
+        "id": institution.id,
+        "created_by_user_id": institution.created_by_user_id,
+        "name": institution.name,
+        "type": institution.type,
+        "phone": institution.phone,
+        "email": institution.email,
+        "website": institution.website,
+        "address_id": institution.address_id,
+        "address": {
+            "street_address_1": institution.address.street_address_1,
+            "street_address_2": institution.address.street_address_2,
+            "city": institution.address.city,
+            "state": institution.address.state,
+            "zip_code": institution.address.zip_code,
+            "country": institution.address.country,
+        }
+        if institution.address
+        else None,
+        "datetime_created": institution.datetime_created,
+        "datetime_updated": institution.datetime_updated,
+    }
+
+    return response_data
+
+
+@app.put("/api/my-institution", response_model=MyInstitutionRead)
+async def update_my_institution(
+    institution_data: MyInstitutionUpdate, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
+):
+    """
+    Update user's institution.
+    Returns 404 if user hasn't created their institution yet.
+    """
+    # Get user's institution
+    result = await db.execute(
+        select(ProviderInstitution)
+        .options(selectinload(ProviderInstitution.address))
+        .filter(ProviderInstitution.created_by_user_id == user.id)
+    )
+    institution = result.scalar_one_or_none()
+
+    if not institution:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Institution not found. Use POST to create it first."
+        )
+
+    # Update basic fields
+    if institution_data.name is not None:
+        institution.name = institution_data.name
+    if institution_data.type is not None:
+        institution.type = institution_data.type
+    if institution_data.phone is not None:
+        institution.phone = institution_data.phone
+    if institution_data.email is not None:
+        institution.email = institution_data.email
+    if institution_data.website is not None:
+        institution.website = institution_data.website
+
+    # Handle address update/create
+    if institution_data.address:
+        if institution.address:
+            # Update existing address
+            institution.address.street_address_1 = institution_data.address.street_address_1
+            institution.address.street_address_2 = institution_data.address.street_address_2
+            institution.address.city = institution_data.address.city
+            institution.address.state = institution_data.address.state
+            institution.address.zip_code = institution_data.address.zip_code
+            institution.address.country = institution_data.address.country
+        else:
+            # Create new address
+            address = Address(**institution_data.address.dict())
+            db.add(address)
+            await db.flush()
+            institution.address_id = address.id
+
+    await db.commit()
+    await db.refresh(institution)
+    await db.refresh(institution, ["address"])
+
+    # Build response
+    response_data = {
+        "id": institution.id,
+        "created_by_user_id": institution.created_by_user_id,
+        "name": institution.name,
+        "type": institution.type,
+        "phone": institution.phone,
+        "email": institution.email,
+        "website": institution.website,
+        "address_id": institution.address_id,
+        "address": {
+            "street_address_1": institution.address.street_address_1,
+            "street_address_2": institution.address.street_address_2,
+            "city": institution.address.city,
+            "state": institution.address.state,
+            "zip_code": institution.address.zip_code,
+            "country": institution.address.country,
+        }
+        if institution.address
+        else None,
+        "datetime_created": institution.datetime_created,
+        "datetime_updated": institution.datetime_updated,
+    }
+
+    return response_data
+
+
+@app.delete("/api/my-institution", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_my_institution(user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)):
+    """
+    Delete user's institution.
+    Returns 204 No Content on success, 404 if not found.
+    """
+    result = await db.execute(select(ProviderInstitution).filter(ProviderInstitution.created_by_user_id == user.id))
+    institution = result.scalar_one_or_none()
+
+    if not institution:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Institution not found")
+
+    await db.delete(institution)
+    await db.commit()
+    return None
 
 
 # Referral endpoints
 @app.post("/api/referrals", response_model=ReferralRead)
 async def create_referral(
-    referral_data: ReferralCreate,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    referral_data: ReferralCreate, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """Create a new referral (requires authentication)."""
+    # Check if user has created their institution
+    institution_result = await db.execute(
+        select(ProviderInstitution).filter(ProviderInstitution.created_by_user_id == user.id)
+    )
+    user_institution = institution_result.scalar_one_or_none()
+
+    if not user_institution:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Please complete your institution profile at /my-institution before creating referrals",
+        )
+
     # Get or create patient
     if referral_data.patient_id:
         result = await db.execute(select(Patient).filter(Patient.id == referral_data.patient_id))
@@ -568,13 +789,15 @@ async def create_referral(
         "user_id": user.id,
         "patient_id": patient.id,
         "status": ReferralStatus.PENDING,
-        "notes": referral_data.notes
+        "notes": referral_data.notes,
+        "appointment_timeframe": referral_data.appointment_timeframe,
     }
 
     if referral_data.referral_target_type == "provider":
         referral_dict["provider_id"] = referral_data.provider_id
-    else:
+    elif referral_data.referral_target_type == "provider_institution":
         referral_dict["provider_institution_id"] = referral_data.provider_institution_id
+    # For "open" referrals, neither provider_id nor provider_institution_id is set
 
     referral = Referral(**referral_dict)
     db.add(referral)
@@ -582,46 +805,168 @@ async def create_referral(
     await db.refresh(referral)
 
     # Send email notification to help@grovehealth.us
-    try:
-        # Get referral target name
-        if referral_data.referral_target_type == "provider":
-            provider_result = await db.execute(
-                select(Provider).filter(Provider.id == referral_data.provider_id)
-            )
-            provider = provider_result.scalar_one_or_none()
-            referral_target_name = provider.full_name if provider else "Unknown Provider"
-        else:
-            institution_result = await db.execute(
-                select(ProviderInstitution).filter(ProviderInstitution.id == referral_data.provider_institution_id)
-            )
-            institution = institution_result.scalar_one_or_none()
-            referral_target_name = institution.name if institution else "Unknown Institution"
-
-        patient_name = f"{patient.first_name} {patient.last_name}"
-
-        # Send email notification asynchronously (don't block the response)
-        await send_referral_notification_email(
-            referral_id=str(referral.id),
-            user_email=user.email,
-            patient_name=patient_name,
-            referral_target_name=referral_target_name,
-            referral_target_type=referral_data.referral_target_type,
-            notes=referral_data.notes
+    # Get referral target name
+    if referral_data.referral_target_type == "open":
+        referral_target_name = "Open Referral (No specific provider)"
+    elif referral_data.referral_target_type == "provider":
+        provider_result = await db.execute(select(Provider).filter(Provider.id == referral_data.provider_id))
+        provider = provider_result.scalar_one_or_none()
+        referral_target_name = provider.full_name if provider else "Unknown Provider"
+    else:
+        institution_result = await db.execute(
+            select(ProviderInstitution).filter(ProviderInstitution.id == referral_data.provider_institution_id)
         )
-    except Exception as e:
-        # Log the error but don't fail the referral creation
-        logger.error(f"Failed to send referral notification email: {e}")
+        institution = institution_result.scalar_one_or_none()
+        referral_target_name = institution.name if institution else "Unknown Institution"
+
+    patient_name = f"{patient.first_name} {patient.last_name}"
+
+    # Send email notification (will fail the entire request if email fails)
+    await send_referral_notification_email(
+        referral_id=str(referral.id),
+        user_email=user.email,
+        patient_name=patient_name,
+        referral_target_name=referral_target_name,
+        referral_target_type=referral_data.referral_target_type,
+        notes=referral_data.notes,
+    )
 
     return referral
 
 
+# Documo Webhook Endpoints
+
+
+@app.post("/api/webhooks/documo/fax", status_code=status.HTTP_200_OK)
+async def documo_fax_webhook(request: Request):
+    """
+    Webhook endpoint for Documo fax notifications.
+    Receives notifications when faxes arrive and downloads them as PDFs.
+
+    Security:
+    - Validates Basic Auth credentials from Authorization header
+    - Verifies x-webhook-event header matches expected event type
+    - Validates payload structure using Pydantic schema
+
+    Returns:
+    - 200 OK: Webhook processed successfully
+    - 401 Unauthorized: Invalid credentials
+    - 400 Bad Request: Invalid payload or wrong event type
+    """
+    # Log incoming request details
+    logger.info("=" * 80)
+    logger.info("DOCUMO WEBHOOK: Incoming request")
+    logger.info("=" * 80)
+    logger.info(f"Request URL: {request.url}")
+    logger.info(f"Request method: {request.method}")
+    logger.info(f"Client host: {request.client.host if request.client else 'unknown'}")
+
+    # Log headers
+    logger.info("\nRequest Headers:")
+    for header_name, header_value in request.headers.items():
+        # Mask Authorization header value for security
+        if header_name.lower() == "authorization":
+            logger.info(f"  {header_name}: [REDACTED]")
+        else:
+            logger.info(f"  {header_name}: {header_value}")
+
+    # Get and log raw request body
+    raw_body = await request.body()
+    logger.info("\nRaw Request Body:")
+    logger.info(raw_body.decode('utf-8'))
+    logger.info("=" * 80)
+
+    # Parse and validate the payload
+    try:
+        body_json = json.loads(raw_body.decode('utf-8'))
+        payload = DocumoFaxWebhookPayload(**body_json)
+        logger.info("\n✓ Payload validation successful")
+    except Exception as e:
+        logger.error(f"Failed to parse/validate payload: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Invalid payload: {str(e)}"
+        )
+
+    # Get environment variables
+    webhook_username = os.getenv("DOCUMO_WEBHOOK_USERNAME")
+    webhook_password = os.getenv("DOCUMO_WEBHOOK_PASSWORD")
+    api_key = os.getenv("DOCUMO_API_KEY")
+    base_url = os.getenv("DOCUMO_API_BASE_URL", "https://api.documo.com/v1")
+
+    if not webhook_username or not webhook_password:
+        logger.error("Documo webhook credentials not configured")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Webhook credentials not configured"
+        )
+
+    # Verify Basic Auth
+    authorization = request.headers.get("Authorization")
+    if not verify_webhook_auth(authorization, webhook_username, webhook_password):
+        logger.warning("Documo webhook: Authentication failed")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+    # Verify event type
+    event_type = request.headers.get("x-webhook-event")
+    if event_type != "fax.v1.inbound.complete":
+        logger.info(f"Documo webhook: Ignoring event type {event_type}")
+        return {"status": "ignored", "reason": f"Unexpected event type: {event_type}"}
+
+    # Verify direction is inbound
+    if payload.direction != "inbound":
+        logger.info(f"Documo webhook: Ignoring {payload.direction} fax")
+        return {"status": "ignored", "reason": f"Not an inbound fax: {payload.direction}"}
+
+    # Extract fax details (handle optional fields safely)
+    message_id = payload.messageId
+    from_number = payload.faxCallerId or "unknown"
+    to_number = payload.faxNumber or "unknown"
+    page_count = payload.pagesCount or 0
+
+    logger.info(
+        f"Documo webhook: Received fax {message_id} from {from_number} to {to_number} ({page_count} pages, status: {payload.status or 'unknown'})"
+    )
+
+    try:
+        # Download fax PDF
+        logger.info(f"Documo webhook: Downloading PDF for message {message_id}...")
+        pdf_data = await download_fax_pdf(message_id, api_key, base_url)
+        logger.info(f"Documo webhook: Downloaded {len(pdf_data)} bytes")
+
+        # Store PDF locally
+        logger.info(f"Documo webhook: Storing PDF to filesystem...")
+        pdf_path = await store_fax_pdf(message_id, pdf_data)
+
+        logger.info("=" * 80)
+        logger.info(f"✓ PDF SAVED TO: {pdf_path}")
+        logger.info("=" * 80)
+
+        return {
+            "status": "success",
+            "message_id": message_id,
+            "pdf_path": pdf_path,
+            "from_caller_id": from_number,
+            "to_fax_number": to_number,
+            "page_count": page_count,
+            "delivery_status": payload.status or "unknown",
+            "created_at": payload.createdAt or None,
+        }
+
+    except Exception as e:
+        # Log error but return 200 to prevent Documo from retrying
+        logger.error(f"Documo webhook: Failed to download fax {message_id}: {e}")
+        return {
+            "status": "error",
+            "message_id": message_id,
+            "error": str(e),
+        }
+
+
 # Network Management Endpoints
 
+
 @app.get("/api/network")
-async def get_user_network(
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
-):
+async def get_user_network(user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)):
     """
     Get current user's provider network with full details.
     Returns both providers and institutions with all relevant information.
@@ -630,8 +975,10 @@ async def get_user_network(
         select(UserProviderNetwork)
         .options(
             selectinload(UserProviderNetwork.provider).selectinload(Provider.address),
-            selectinload(UserProviderNetwork.provider).selectinload(Provider.institution).selectinload(ProviderInstitution.address),
-            selectinload(UserProviderNetwork.provider_institution).selectinload(ProviderInstitution.address)
+            selectinload(UserProviderNetwork.provider)
+            .selectinload(Provider.institution)
+            .selectinload(ProviderInstitution.address),
+            selectinload(UserProviderNetwork.provider_institution).selectinload(ProviderInstitution.address),
         )
         .filter(UserProviderNetwork.user_id == user.id)
         .order_by(UserProviderNetwork.datetime_created.desc())
@@ -642,58 +989,68 @@ async def get_user_network(
     network_items = []
     for entry in network_entries:
         if entry.provider:
-            network_items.append({
-                "id": str(entry.id),
-                "target_type": "provider",
-                "provider_id": str(entry.provider_id),
-                "first_name": entry.provider.first_name,
-                "last_name": entry.provider.last_name,
-                "full_name": entry.provider.full_name,
-                "email": entry.provider.email,
-                "phone": entry.provider.phone,
-                "global_provider": entry.provider.global_provider,
-                "created_by_user_id": str(entry.provider.created_by_user_id) if entry.provider.created_by_user_id else None,
-                "address": {
-                    "street_address_1": entry.provider.address.street_address_1,
-                    "street_address_2": entry.provider.address.street_address_2,
-                    "city": entry.provider.address.city,
-                    "state": entry.provider.address.state,
-                    "zip_code": entry.provider.address.zip_code,
-                    "country": entry.provider.address.country,
-                } if entry.provider.address else None,
-                "institution": {
-                    "id": str(entry.provider.institution.id),
-                    "name": entry.provider.institution.name,
-                    "website": entry.provider.institution.website,
-                } if entry.provider.institution else None,
-                "datetime_added": entry.datetime_created.isoformat()
-            })
+            network_items.append(
+                {
+                    "id": str(entry.id),
+                    "target_type": "provider",
+                    "provider_id": str(entry.provider_id),
+                    "first_name": entry.provider.first_name,
+                    "last_name": entry.provider.last_name,
+                    "full_name": entry.provider.full_name,
+                    "email": entry.provider.email,
+                    "phone": entry.provider.phone,
+                    "global_provider": entry.provider.global_provider,
+                    "created_by_user_id": str(entry.provider.created_by_user_id)
+                    if entry.provider.created_by_user_id
+                    else None,
+                    "address": {
+                        "street_address_1": entry.provider.address.street_address_1,
+                        "street_address_2": entry.provider.address.street_address_2,
+                        "city": entry.provider.address.city,
+                        "state": entry.provider.address.state,
+                        "zip_code": entry.provider.address.zip_code,
+                        "country": entry.provider.address.country,
+                    }
+                    if entry.provider.address
+                    else None,
+                    "institution": {
+                        "id": str(entry.provider.institution.id),
+                        "name": entry.provider.institution.name,
+                        "website": entry.provider.institution.website,
+                    }
+                    if entry.provider.institution
+                    else None,
+                    "datetime_added": entry.datetime_created.isoformat(),
+                }
+            )
         else:
-            network_items.append({
-                "id": str(entry.id),
-                "target_type": "provider_institution",
-                "provider_institution_id": str(entry.provider_institution_id),
-                "name": entry.provider_institution.name,
-                "website": entry.provider_institution.website,
-                "address": {
-                    "street_address_1": entry.provider_institution.address.street_address_1,
-                    "street_address_2": entry.provider_institution.address.street_address_2,
-                    "city": entry.provider_institution.address.city,
-                    "state": entry.provider_institution.address.state,
-                    "zip_code": entry.provider_institution.address.zip_code,
-                    "country": entry.provider_institution.address.country,
-                } if entry.provider_institution.address else None,
-                "datetime_added": entry.datetime_created.isoformat()
-            })
+            network_items.append(
+                {
+                    "id": str(entry.id),
+                    "target_type": "provider_institution",
+                    "provider_institution_id": str(entry.provider_institution_id),
+                    "name": entry.provider_institution.name,
+                    "website": entry.provider_institution.website,
+                    "address": {
+                        "street_address_1": entry.provider_institution.address.street_address_1,
+                        "street_address_2": entry.provider_institution.address.street_address_2,
+                        "city": entry.provider_institution.address.city,
+                        "state": entry.provider_institution.address.state,
+                        "zip_code": entry.provider_institution.address.zip_code,
+                        "country": entry.provider_institution.address.country,
+                    }
+                    if entry.provider_institution.address
+                    else None,
+                    "datetime_added": entry.datetime_created.isoformat(),
+                }
+            )
 
     return network_items
 
 
 @app.post("/api/network", status_code=status.HTTP_201_CREATED)
 async def add_to_network(
-    network_entry: NetworkEntryCreate,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    network_entry: NetworkEntryCreate, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Add a provider or institution to user's network.
@@ -703,36 +1060,27 @@ async def add_to_network(
     if network_entry.target_type == "provider":
         existing = await db.execute(
             select(UserProviderNetwork).filter(
-                UserProviderNetwork.user_id == user.id,
-                UserProviderNetwork.provider_id == network_entry.provider_id
+                UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_id == network_entry.provider_id
             )
         )
     else:
         existing = await db.execute(
             select(UserProviderNetwork).filter(
                 UserProviderNetwork.user_id == user.id,
-                UserProviderNetwork.provider_institution_id == network_entry.provider_institution_id
+                UserProviderNetwork.provider_institution_id == network_entry.provider_institution_id,
             )
         )
 
     if existing.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Provider/institution already in network"
-        )
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Provider/institution already in network")
 
     # Verify provider/institution exists
     if network_entry.target_type == "provider":
-        provider_check = await db.execute(
-            select(Provider).filter(Provider.id == network_entry.provider_id)
-        )
+        provider_check = await db.execute(select(Provider).filter(Provider.id == network_entry.provider_id))
         if not provider_check.scalar_one_or_none():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Provider not found")
 
-        new_entry = UserProviderNetwork(
-            user_id=user.id,
-            provider_id=network_entry.provider_id
-        )
+        new_entry = UserProviderNetwork(user_id=user.id, provider_id=network_entry.provider_id)
     else:
         institution_check = await db.execute(
             select(ProviderInstitution).filter(ProviderInstitution.id == network_entry.provider_institution_id)
@@ -740,26 +1088,18 @@ async def add_to_network(
         if not institution_check.scalar_one_or_none():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Institution not found")
 
-        new_entry = UserProviderNetwork(
-            user_id=user.id,
-            provider_institution_id=network_entry.provider_institution_id
-        )
+        new_entry = UserProviderNetwork(user_id=user.id, provider_institution_id=network_entry.provider_institution_id)
 
     db.add(new_entry)
     await db.commit()
     await db.refresh(new_entry)
 
-    return {
-        "id": str(new_entry.id),
-        "message": "Added to network successfully"
-    }
+    return {"id": str(new_entry.id), "message": "Added to network successfully"}
 
 
 @app.delete("/api/network/{entry_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_from_network(
-    entry_id: str,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    entry_id: str, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Remove a provider/institution from user's network.
@@ -768,16 +1108,13 @@ async def remove_from_network(
     result = await db.execute(
         select(UserProviderNetwork).filter(
             UserProviderNetwork.id == entry_id,
-            UserProviderNetwork.user_id == user.id  # Security: only user's own entries
+            UserProviderNetwork.user_id == user.id,  # Security: only user's own entries
         )
     )
     entry = result.scalar_one_or_none()
 
     if not entry:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Network entry not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Network entry not found")
 
     await db.delete(entry)
     await db.commit()
@@ -787,11 +1124,10 @@ async def remove_from_network(
 
 # Browse Endpoints (for adding to network)
 
+
 @app.get("/api/browse/providers")
 async def browse_all_providers(
-    search: Optional[str] = None,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    search: Optional[str] = None, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Browse ALL global providers for adding to network.
@@ -802,17 +1138,19 @@ async def browse_all_providers(
     # Get user's network provider IDs
     network_result = await db.execute(
         select(UserProviderNetwork.provider_id).filter(
-            UserProviderNetwork.user_id == user.id,
-            UserProviderNetwork.provider_id.isnot(None)
+            UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_id.isnot(None)
         )
     )
     network_provider_ids = set([row[0] for row in network_result.all()])
 
     # Build query for all global providers only
-    query = select(Provider).options(
-        selectinload(Provider.address),
-        selectinload(Provider.institution).selectinload(ProviderInstitution.address)
-    ).filter(Provider.global_provider == True)
+    query = (
+        select(Provider)
+        .options(
+            selectinload(Provider.address), selectinload(Provider.institution).selectinload(ProviderInstitution.address)
+        )
+        .filter(Provider.global_provider == True)
+    )
 
     # Apply search filter if provided
     if search:
@@ -821,42 +1159,47 @@ async def browse_all_providers(
             or_(
                 Provider.first_name.ilike(search_term),
                 Provider.last_name.ilike(search_term),
-                Provider.email.ilike(search_term)
+                Provider.email.ilike(search_term),
             )
         )
 
     result = await db.execute(query)
     providers = result.scalars().all()
 
-    return [{
-        "id": str(provider.id),
-        "first_name": provider.first_name,
-        "last_name": provider.last_name,
-        "full_name": provider.full_name,
-        "email": provider.email,
-        "phone": provider.phone,
-        "in_network": provider.id in network_provider_ids,  # NEW FIELD
-        "address": {
-            "street_address_1": provider.address.street_address_1,
-            "street_address_2": provider.address.street_address_2,
-            "city": provider.address.city,
-            "state": provider.address.state,
-            "zip_code": provider.address.zip_code,
-            "country": provider.address.country,
-        } if provider.address else None,
-        "institution": {
-            "id": str(provider.institution.id),
-            "name": provider.institution.name,
-            "website": provider.institution.website,
-        } if provider.institution else None,
-    } for provider in providers]
+    return [
+        {
+            "id": str(provider.id),
+            "first_name": provider.first_name,
+            "last_name": provider.last_name,
+            "full_name": provider.full_name,
+            "email": provider.email,
+            "phone": provider.phone,
+            "in_network": provider.id in network_provider_ids,  # NEW FIELD
+            "address": {
+                "street_address_1": provider.address.street_address_1,
+                "street_address_2": provider.address.street_address_2,
+                "city": provider.address.city,
+                "state": provider.address.state,
+                "zip_code": provider.address.zip_code,
+                "country": provider.address.country,
+            }
+            if provider.address
+            else None,
+            "institution": {
+                "id": str(provider.institution.id),
+                "name": provider.institution.name,
+                "website": provider.institution.website,
+            }
+            if provider.institution
+            else None,
+        }
+        for provider in providers
+    ]
 
 
 @app.get("/api/browse/provider-institutions")
 async def browse_all_institutions(
-    search: Optional[str] = None,
-    user: User = Depends(current_active_user),
-    db: AsyncSession = Depends(get_db)
+    search: Optional[str] = None, user: User = Depends(current_active_user), db: AsyncSession = Depends(get_db)
 ):
     """
     Browse ALL provider institutions for adding to network.
@@ -866,16 +1209,13 @@ async def browse_all_institutions(
     # Get user's network institution IDs
     network_result = await db.execute(
         select(UserProviderNetwork.provider_institution_id).filter(
-            UserProviderNetwork.user_id == user.id,
-            UserProviderNetwork.provider_institution_id.isnot(None)
+            UserProviderNetwork.user_id == user.id, UserProviderNetwork.provider_institution_id.isnot(None)
         )
     )
     network_institution_ids = set([row[0] for row in network_result.all()])
 
     # Build query for all institutions
-    query = select(ProviderInstitution).options(
-        selectinload(ProviderInstitution.address)
-    )
+    query = select(ProviderInstitution).options(selectinload(ProviderInstitution.address))
 
     # Apply search filter if provided
     if search:
@@ -885,23 +1225,28 @@ async def browse_all_institutions(
     result = await db.execute(query)
     institutions = result.scalars().all()
 
-    return [{
-        "id": str(inst.id),
-        "name": inst.name,
-        "type": inst.type,
-        "website": inst.website,
-        "phone": inst.phone,
-        "email": inst.email,
-        "in_network": inst.id in network_institution_ids,  # NEW FIELD
-        "address": {
-            "street_address_1": inst.address.street_address_1,
-            "street_address_2": inst.address.street_address_2,
-            "city": inst.address.city,
-            "state": inst.address.state,
-            "zip_code": inst.address.zip_code,
-            "country": inst.address.country,
-        } if inst.address else None,
-    } for inst in institutions]
+    return [
+        {
+            "id": str(inst.id),
+            "name": inst.name,
+            "type": inst.type,
+            "website": inst.website,
+            "phone": inst.phone,
+            "email": inst.email,
+            "in_network": inst.id in network_institution_ids,  # NEW FIELD
+            "address": {
+                "street_address_1": inst.address.street_address_1,
+                "street_address_2": inst.address.street_address_2,
+                "city": inst.address.city,
+                "state": inst.address.state,
+                "zip_code": inst.address.zip_code,
+                "country": inst.address.country,
+            }
+            if inst.address
+            else None,
+        }
+        for inst in institutions
+    ]
 
 
 # SQLAdmin Authentication Backend
@@ -914,25 +1259,21 @@ class AdminAuth(AuthenticationBackend):
 
         # Verify credentials using the same password helper as fastapi-users
         from pwdlib import PasswordHash
+
         password_hash = PasswordHash.recommended()
 
         async for session in get_db():
             try:
                 # Get user by email
-                result = await session.execute(
-                    select(User).filter(User.email == email)
-                )
+                result = await session.execute(select(User).filter(User.email == email))
                 user = result.scalar_one_or_none()
 
                 if not user:
                     return False
 
                 # Verify password
-                try:
-                    verified, _ = password_hash.verify_and_update(password, user.hashed_password)
-                    if not verified:
-                        return False
-                except Exception:
+                verified, _ = password_hash.verify_and_update(password, user.hashed_password)
+                if not verified:
                     return False
 
                 # Check if user is admin
@@ -961,9 +1302,7 @@ class AdminAuth(AuthenticationBackend):
 
         async for session in get_db():
             try:
-                result = await session.execute(
-                    select(User).filter(User.id == user_id)
-                )
+                result = await session.execute(select(User).filter(User.id == user_id))
                 user = result.scalar_one_or_none()
 
                 if not user or not user.is_admin:
@@ -988,7 +1327,7 @@ class UserAdmin(ModelView, model=User):
         User.is_admin,
         User.is_active,
         User.is_verified,
-        User.is_superuser
+        User.is_superuser,
     ]
     column_searchable_list = [User.email, User.first_name, User.last_name, User.npi]
     column_sortable_list = [User.email, User.first_name, User.last_name, User.is_admin, User.is_active]
@@ -1007,7 +1346,7 @@ class ProviderAdmin(ModelView, model=Provider):
         Provider.address_id,
         Provider.institution_id,
         Provider.datetime_created,
-        Provider.datetime_updated
+        Provider.datetime_updated,
     ]
     column_searchable_list = [Provider.first_name, Provider.last_name, Provider.email]
     column_sortable_list = [Provider.first_name, Provider.last_name, Provider.email, Provider.datetime_created]
@@ -1026,7 +1365,7 @@ class ProviderInstitutionAdmin(ModelView, model=ProviderInstitution):
         ProviderInstitution.website,
         ProviderInstitution.address_id,
         ProviderInstitution.datetime_created,
-        ProviderInstitution.datetime_updated
+        ProviderInstitution.datetime_updated,
     ]
     column_searchable_list = [ProviderInstitution.name, ProviderInstitution.email]
     column_sortable_list = [ProviderInstitution.name, ProviderInstitution.type, ProviderInstitution.datetime_created]
@@ -1040,15 +1379,17 @@ class PatientAdmin(ModelView, model=Patient):
         Patient.id,
         Patient.first_name,
         Patient.last_name,
+        Patient.sex,
         Patient.phone,
+        Patient.phone_home,
+        Patient.phone_mobile,
         Patient.email,
         Patient.date_of_birth,
-        Patient.insurance_provider,
-        Patient.insurance_policy_number,
+        Patient.patient_id,
         Patient.medical_record_number,
         Patient.address_id,
         Patient.datetime_created,
-        Patient.datetime_updated
+        Patient.datetime_updated,
     ]
     column_searchable_list = [Patient.first_name, Patient.last_name, Patient.email, Patient.medical_record_number]
     column_sortable_list = [Patient.first_name, Patient.last_name, Patient.date_of_birth, Patient.datetime_created]
@@ -1068,7 +1409,7 @@ class ReferralAdmin(ModelView, model=Referral):
         Referral.notes,
         Referral.referral_date,
         Referral.datetime_created,
-        Referral.datetime_updated
+        Referral.datetime_updated,
     ]
     column_searchable_list = [Referral.notes]
     column_sortable_list = [Referral.status, Referral.referral_date, Referral.datetime_created]
@@ -1087,7 +1428,7 @@ class AddressAdmin(ModelView, model=Address):
         Address.zip_code,
         Address.country,
         Address.datetime_created,
-        Address.datetime_updated
+        Address.datetime_updated,
     ]
     column_searchable_list = [Address.city, Address.state, Address.zip_code, Address.street_address_1]
     column_sortable_list = [Address.city, Address.state, Address.zip_code, Address.datetime_created]
@@ -1103,7 +1444,7 @@ class UserProviderNetworkAdmin(ModelView, model=UserProviderNetwork):
         UserProviderNetwork.provider_id,
         UserProviderNetwork.provider_institution_id,
         UserProviderNetwork.datetime_created,
-        UserProviderNetwork.datetime_updated
+        UserProviderNetwork.datetime_updated,
     ]
     column_sortable_list = [UserProviderNetwork.datetime_created]
     can_create = True

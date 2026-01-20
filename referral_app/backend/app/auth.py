@@ -20,6 +20,7 @@ from app.models.user import User
 from app.database import get_db
 from app.gmail_service import send_password_reset_email, send_verification_email
 
+
 # Secret key for JWT - In production, use environment variable
 def get_jwt_secret():
     """Get JWT secret based on environment."""
@@ -27,6 +28,7 @@ def get_jwt_secret():
 
     if env in ["staging", "production"]:
         from google.cloud import secretmanager
+
         client = secretmanager.SecretManagerServiceClient()
         project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
         secret_name = f"projects/{project_id}/secrets/jwt-secret/versions/latest"
@@ -35,11 +37,13 @@ def get_jwt_secret():
     else:
         return os.getenv("JWT_SECRET", "YOUR_SECRET_KEY_CHANGE_THIS_IN_PRODUCTION")
 
+
 SECRET = get_jwt_secret()
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
     """User manager for handling user operations."""
+
     reset_password_token_secret = SECRET
     verification_token_secret = SECRET
 
@@ -47,16 +51,12 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         """Called after successful user registration."""
         print(f"User {user.id} has registered.")
 
-    async def on_after_forgot_password(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
+    async def on_after_forgot_password(self, user: User, token: str, request: Optional[Request] = None):
         """Called after user requests password reset."""
         print(f"User {user.id} has forgot their password. Reset token: {token}")
         await send_password_reset_email(user.email, token)
 
-    async def on_after_request_verify(
-        self, user: User, token: str, request: Optional[Request] = None
-    ):
+    async def on_after_request_verify(self, user: User, token: str, request: Optional[Request] = None):
         """Called after user requests email verification."""
         print(f"Verification requested for user {user.id}. Verification token: {token}")
         await send_verification_email(user.email, token)

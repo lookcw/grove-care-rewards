@@ -18,15 +18,21 @@ dependencies = [
     "google-cloud-secret-manager==2.18.0",
     "cloud-sql-python-connector[asyncpg]==1.11.0",
     "usaddress==0.5.10",
-    "google-auth==2.28.0",
+    "google-auth==2.47.0",
     "google-auth-oauthlib==1.2.0",
-    "google-api-python-client==2.116.0",
+    "google-api-python-client==2.187.0",
+    "google-cloud-logging==3.12.0",
+    "google-cloud-error-reporting==1.10.0",
+    "sqladmin==0.20.0",
+    "itsdangerous==2.2.0",
+    "google-cloud-documentai==3.8.0",
+    "google-cloud-storage==2.18.2",
+    "httpx==0.28.1",
 ]
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.8.0",
-    "ty>=0.1.0",
 ]
 
 [build-system]
@@ -34,28 +40,52 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py311"
+src = ["."]
+extend-exclude = [
+    ".mypy_cache",
+    "migrations/versions/",
+]
 
 [tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
-    "ARG", # flake8-unused-arguments
-    "SIM", # flake8-simplify
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings  
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "T20",    # flake8-print
+    "S",      # flake8-bandit
+    "SIM",    # flake8-simplify
+    "ARG",    # flake8-unused-arguments
+    "FAST",   # FastAPI specific rules
+    "B904",   # Exception chaining with raise ... from
+    "TRY"     # tryceratops (note some rules don't work with loguru; they expect built-in logging module)
 ]
 ignore = [
-    "E501",  # line too long (handled by formatter)
-    "B008",  # do not perform function calls in argument defaults
+    "S101",    # Use of assert detected
+    "ARG001",  # Unused function argument
+    "ARG002",  # Unused method argument
+    "ARG005",  # Unused lambda argument
+    "N818",    # Exception naming
+    "B904",    # Exception chaining with raise ... from # [FRTN-806] to unignore
+    "FAST002", # FastAPI dependency without Annotated
+    "TRY003",  # Messages in raise statements
+    "TRY300",  # Don't return inside try
+    "TRY301"   # Abstracting raise outside try
 ]
 
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "typer.Option", "typer.Argument", "routers.middleware.auth.get_m2m_client_required"]
+
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]  # unused imports in __init__.py
+"scripts/*" = ["T201"]  # Allow print statements in scripts
+"scripts/one_time_migrations/*" = ["T201", "N999"]  # Allow print statements and invalid module names for one-time migrations
+"lib/bot_handling/bot_results_processing/constants/*" = ["N815"]  # Allow mixed-case for external API fields
 
 [tool.ruff.format]
 quote-style = "double"
@@ -66,3 +96,11 @@ line-ending = "auto"
 [tool.ty]
 # ty type checker configuration
 # Run with: uv run ty check
+
+[tool.uv]
+package = false
+add-bounds = "exact"
+required-version = ">=0.8.6"
+dev-dependencies = [
+    "ruff>=0.8.0",
+]

@@ -11,6 +11,7 @@ import uuid
 
 class UserRead(schemas.BaseUser[uuid.UUID]):
     """Schema for reading user data (response)."""
+
     phone_number: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -19,6 +20,7 @@ class UserRead(schemas.BaseUser[uuid.UUID]):
 
 class UserCreate(schemas.BaseUserCreate):
     """Schema for creating a new user (registration)."""
+
     phone_number: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -27,6 +29,7 @@ class UserCreate(schemas.BaseUserCreate):
 
 class UserUpdate(schemas.BaseUserUpdate):
     """Schema for updating user data."""
+
     phone_number: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
@@ -35,29 +38,36 @@ class UserUpdate(schemas.BaseUserUpdate):
 
 # Patient schemas
 
+
 class PatientCreate(BaseModel):
     """Schema for creating a new patient."""
+
     first_name: str = Field(..., max_length=100)
     last_name: str = Field(..., max_length=100)
-    phone: Optional[str] = Field(None, max_length=20)
+    phone: Optional[str] = Field(None, max_length=20)  # Deprecated - use phone_home
+    phone_home: Optional[str] = Field(None, max_length=20)
+    phone_mobile: Optional[str] = Field(None, max_length=20)
     email: Optional[EmailStr] = Field(None, max_length=255)
     date_of_birth: date
-    insurance_provider: Optional[str] = Field(None, max_length=255)
-    insurance_policy_number: Optional[str] = Field(None, max_length=100)
+    sex: Optional[str] = Field(None, max_length=20)
+    patient_id: Optional[str] = Field(None, max_length=100)
     medical_record_number: Optional[str] = Field(None, max_length=100)
     address_id: Optional[uuid.UUID] = None
 
 
 class PatientRead(BaseModel):
     """Schema for reading patient data (response)."""
+
     id: uuid.UUID
     first_name: str
     last_name: str
-    phone: Optional[str]
+    phone: Optional[str]  # Deprecated - use phone_home
+    phone_home: Optional[str]
+    phone_mobile: Optional[str]
     email: Optional[str]
     date_of_birth: date
-    insurance_provider: Optional[str]
-    insurance_policy_number: Optional[str]
+    sex: Optional[str]
+    patient_id: Optional[str]
     medical_record_number: Optional[str]
     address_id: Optional[uuid.UUID]
     datetime_created: datetime
@@ -69,58 +79,84 @@ class PatientRead(BaseModel):
 
 class PatientUpdate(BaseModel):
     """Schema for updating patient data."""
+
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
-    phone: Optional[str] = Field(None, max_length=20)
+    phone: Optional[str] = Field(None, max_length=20)  # Deprecated - use phone_home
+    phone_home: Optional[str] = Field(None, max_length=20)
+    phone_mobile: Optional[str] = Field(None, max_length=20)
     email: Optional[EmailStr] = Field(None, max_length=255)
     date_of_birth: Optional[date] = None
-    insurance_provider: Optional[str] = Field(None, max_length=255)
-    insurance_policy_number: Optional[str] = Field(None, max_length=100)
+    sex: Optional[str] = Field(None, max_length=20)
+    patient_id: Optional[str] = Field(None, max_length=100)
     medical_record_number: Optional[str] = Field(None, max_length=100)
     address_id: Optional[uuid.UUID] = None
 
 
 # Referral schemas
 
+
 class ReferralCreate(BaseModel):
     """Schema for creating a new referral."""
+
     # Patient (mutually exclusive)
     patient_id: Optional[uuid.UUID] = None
     patient_data: Optional[PatientCreate] = None
 
-    # Referral target (mutually exclusive)
-    referral_target_type: str = Field(..., pattern="^(provider|provider_institution)$")
+    # Referral target (mutually exclusive, or both None for open referrals)
+    referral_target_type: str = Field(..., pattern="^(provider|provider_institution|open)$")
     provider_id: Optional[uuid.UUID] = None
     provider_institution_id: Optional[uuid.UUID] = None
 
     # Metadata
     notes: Optional[str] = None
+    appointment_timeframe: Optional[datetime] = None
 
-    @validator('patient_id')
+    @validator("patient_id")
     def validate_patient_selection(cls, v, values):
         """Ensure exactly one of patient_id or patient_data is provided."""
-        if v is None and values.get('patient_data') is None:
+        if v is None and values.get("patient_data") is None:
             raise ValueError("Either patient_id or patient_data must be provided")
-        if v is not None and values.get('patient_data') is not None:
+        if v is not None and values.get("patient_data") is not None:
             raise ValueError("Cannot provide both patient_id and patient_data")
         return v
 
-    @validator('provider_institution_id')
+    @validator("provider_institution_id")
     def validate_referral_target(cls, v, values):
-        """Ensure exactly one referral target is provided."""
-        referral_type = values.get('referral_target_type')
-        provider_id = values.get('provider_id')
+        """Validate referral target based on referral_target_type.
 
-        if referral_type == 'provider' and provider_id is None:
-            raise ValueError("provider_id required when referral_target_type is 'provider'")
-        if referral_type == 'provider_institution' and v is None:
-            raise ValueError("provider_institution_id required when referral_target_type is 'provider_institution'")
+        Three valid states:
+        - 'open': both provider_id and provider_institution_id must be None
+        - 'provider': provider_id required, provider_institution_id must be None
+        - 'provider_institution': provider_institution_id required, provider_id must be None
+        """
+        referral_type = values.get("referral_target_type")
+        provider_id = values.get("provider_id")
+
+        if referral_type == "open":
+            # Open referrals cannot have any target
+            if provider_id is not None or v is not None:
+                raise ValueError("open referrals cannot have provider or institution targets")
+            return None
+
+        if referral_type == "provider":
+            if provider_id is None:
+                raise ValueError("provider_id required when referral_target_type is 'provider'")
+            if v is not None:
+                raise ValueError("cannot set provider_institution_id for provider referrals")
+
+        if referral_type == "provider_institution":
+            if v is None:
+                raise ValueError("provider_institution_id required when referral_target_type is 'provider_institution'")
+            if provider_id is not None:
+                raise ValueError("cannot set provider_id for institution referrals")
 
         return v
 
 
 class ReferralRead(BaseModel):
     """Schema for reading referral data (response)."""
+
     id: uuid.UUID
     user_id: uuid.UUID
     patient_id: uuid.UUID
@@ -129,6 +165,7 @@ class ReferralRead(BaseModel):
     status: str
     notes: Optional[str]
     referral_date: datetime
+    appointment_timeframe: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -136,21 +173,23 @@ class ReferralRead(BaseModel):
 
 # Network Management Schemas
 
+
 class NetworkEntryCreate(BaseModel):
     """Schema for adding provider/institution to network."""
+
     target_type: Literal["provider", "provider_institution"]
     provider_id: Optional[uuid.UUID] = None
     provider_institution_id: Optional[uuid.UUID] = None
 
-    @validator('provider_institution_id')
+    @validator("provider_institution_id")
     def validate_network_target(cls, v, values):
         """Ensure exactly one target is provided based on target_type."""
-        target_type = values.get('target_type')
-        provider_id = values.get('provider_id')
+        target_type = values.get("target_type")
+        provider_id = values.get("provider_id")
 
-        if target_type == 'provider' and provider_id is None:
+        if target_type == "provider" and provider_id is None:
             raise ValueError("provider_id required when target_type is 'provider'")
-        if target_type == 'provider_institution' and v is None:
+        if target_type == "provider_institution" and v is None:
             raise ValueError("provider_institution_id required when target_type is 'provider_institution'")
 
         return v
@@ -158,6 +197,7 @@ class NetworkEntryCreate(BaseModel):
 
 class NetworkEntryRead(BaseModel):
     """Schema for reading network entries."""
+
     id: uuid.UUID
     user_id: uuid.UUID
     provider_id: Optional[uuid.UUID]
@@ -171,8 +211,10 @@ class NetworkEntryRead(BaseModel):
 
 # Address schemas
 
+
 class AddressCreate(BaseModel):
     """Schema for creating a new address."""
+
     street_address_1: str = Field(..., max_length=255)
     street_address_2: Optional[str] = Field(None, max_length=255)
     city: str = Field(..., max_length=100)
@@ -183,8 +225,10 @@ class AddressCreate(BaseModel):
 
 # Provider schemas
 
+
 class ProviderCreate(BaseModel):
     """Schema for creating a new custom provider."""
+
     first_name: str = Field(..., max_length=100)
     last_name: str = Field(..., max_length=100)
     email: EmailStr = Field(..., max_length=255)
@@ -195,6 +239,7 @@ class ProviderCreate(BaseModel):
 
 class ProviderUpdate(BaseModel):
     """Schema for updating a provider."""
+
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
     email: Optional[EmailStr] = Field(None, max_length=255)
@@ -205,6 +250,7 @@ class ProviderUpdate(BaseModel):
 
 class ProviderRead(BaseModel):
     """Schema for reading provider data (response)."""
+
     id: uuid.UUID
     first_name: str
     last_name: str
@@ -217,6 +263,50 @@ class ProviderRead(BaseModel):
     address_id: Optional[uuid.UUID]
     address: Optional[dict]
     institution: Optional[dict]
+    datetime_created: datetime
+    datetime_updated: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# My Institution schemas
+
+
+class MyInstitutionCreate(BaseModel):
+    """Schema for creating user's institution."""
+
+    name: str = Field(..., max_length=255, min_length=1)
+    type: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=20)
+    email: Optional[EmailStr] = Field(None, max_length=255)
+    website: Optional[str] = Field(None, max_length=500)
+    address: Optional[AddressCreate] = None
+
+
+class MyInstitutionUpdate(BaseModel):
+    """Schema for updating user's institution."""
+
+    name: Optional[str] = Field(None, max_length=255, min_length=1)
+    type: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, max_length=20)
+    email: Optional[EmailStr] = Field(None, max_length=255)
+    website: Optional[str] = Field(None, max_length=500)
+    address: Optional[AddressCreate] = None
+
+
+class MyInstitutionRead(BaseModel):
+    """Schema for reading user's institution (response)."""
+
+    id: uuid.UUID
+    created_by_user_id: uuid.UUID
+    name: str
+    type: Optional[str]
+    phone: Optional[str]
+    email: Optional[str]
+    website: Optional[str]
+    address_id: Optional[uuid.UUID]
+    address: Optional[dict]
     datetime_created: datetime
     datetime_updated: datetime
 

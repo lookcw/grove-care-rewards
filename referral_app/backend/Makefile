@@ -23,7 +23,7 @@ help:
 	@echo "Docker Alternatives:"
 	@echo "  make migrate-diff-docker  - Generate migration from Docker container"
 	@echo "  make migrate-apply-docker - Apply migrations from Docker container"
-	@echo "  make install-deps         - Install dependencies from requirements.txt in Docker"
+	@echo "  make install-deps         - Install dependencies from pyproject.toml in Docker"
 
 # Run ruff linter and formatter
 ruff:
@@ -122,8 +122,8 @@ migrate-diff-docker:
 	@mkdir -p migrations
 	@docker-compose exec backend atlas migrate diff --env docker
 
-# Install dependencies from requirements.txt in Docker container
+# Install dependencies from pyproject.toml in Docker container
 install-deps:
 	@echo "Installing dependencies in Docker container..."
-	@docker-compose exec backend pip install -r requirements.txt
+	@docker-compose exec backend uv sync
 	@echo "Dependencies installed successfully!"

@@ -9,6 +9,7 @@ import ResetPassword from './ResetPassword'
 import ReferralForm from './ReferralForm'
 import MyNetwork from './MyNetwork'
 import BrowseProviders from './BrowseProviders'
+import MyInstitution from './MyInstitution'
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -82,6 +83,7 @@ function Navigation() {
         <Link to="/" className="nav-brand">Referral App</Link>
         <div className="nav-links">
           {isAuthenticated && <Link to="/network">My Network</Link>}
+          {isAuthenticated && <Link to="/my-institution">My Institution</Link>}
           {isAuthenticated && <Link to="/referrals/new">New Referral</Link>}
           {!isAuthenticated && <Link to="/login">Log In</Link>}
           {!isAuthenticated && <Link to="/signup">Sign Up</Link>}
@@ -139,6 +141,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <BrowseProviders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-institution"
+              element={
+                <ProtectedRoute>
+                  <MyInstitution />
                 </ProtectedRoute>
               }
             />

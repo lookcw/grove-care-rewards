@@ -1,5 +1,7 @@
 data "external_schema" "sqlalchemy" {
   program = [
+    "uv",
+    "run",
     "python",
     "atlas_loader.py"
   ]
@@ -23,8 +25,8 @@ env "local" {
 
 env "docker" {
   src = data.external_schema.sqlalchemy.url
-  dev = "docker://postgres/15/dev?search_path=public"
-  url = "postgresql://postgres:postgres@postgres:5432/referral_db"
+  dev = "postgresql://postgres:postgres@postgres:5432/dev?search_path=public&sslmode=disable"
+  url = "postgresql://postgres:postgres@postgres:5432/referral_db?sslmode=disable"
 
   migration {
     dir = "file://migrations"

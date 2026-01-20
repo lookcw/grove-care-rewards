@@ -1,8 +1,10 @@
-.PHONY: help build up down restart logs seed clean db-reset
+.PHONY: help build up down restart logs seed clean db-reset deploy-staging
 
 # Default target
 help:
 	@echo "Available commands:"
+	@echo ""
+	@echo "Development:"
 	@echo "  make build       - Build all Docker containers"
 	@echo "  make up          - Start all services"
 	@echo "  make down        - Stop all services"
@@ -16,6 +18,9 @@ help:
 	@echo "  make shell-backend - Open shell in backend container"
 	@echo "  make shell-db    - Open psql shell in database"
 	@echo "  make clean       - Stop and remove all containers, volumes"
+	@echo ""
+	@echo "Deployment:"
+	@echo "  make deploy-staging - Deploy to App Engine staging"
 
 # Build containers
 build:
@@ -46,6 +51,11 @@ logs-frontend:
 logs-db:
 	docker-compose logs -f postgres
 
+rebuild-backend:
+	docker-compose down backend
+	docker-compose build backend
+	docker-compose up -d backend
+
 # Seed database
 seed:
 	docker-compose exec backend python seed_data.py
@@ -72,3 +82,22 @@ shell-db:
 clean:
 	docker-compose down -v
 	docker system prune -f
+
+# ============================================================================
+# Deployment Commands
+# ============================================================================
+
+GCP_PROJECT := grove-health-staging
+
+# Deploy to staging (builds frontend, copies to backend/static, deploys to App Engine)
+deploy-staging:
+	@echo "🏗️  Building frontend..."
+	cd frontend && npm run build
+	@echo "📋 Copying frontend build to backend/static/..."
+	rm -rf backend/static
+	mkdir -p backend/static
+	cp -r frontend/dist/* backend/static/
+	@echo "🚀 Deploying to App Engine (staging)..."
+	cd backend && gcloud app deploy app.yaml --project=$(GCP_PROJECT) --quiet
+	@echo "✅ Deployment complete!"
+	@echo "🌐 App URL: https://grove-health-staging.uc.r.appspot.com"
