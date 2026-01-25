@@ -36,7 +36,7 @@ const Index = () => {
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center max-w-7xl mx-auto">
             <div className="space-y-8">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-primary">Outbound Referral Management Made Easy... For Free</span>
+                <span className="text-primary">Outbound Referral Management Made Easy</span>
               </h1>
 
               <div className="text-lg lg:text-xl text-muted-foreground leading-relaxed space-y-4">
