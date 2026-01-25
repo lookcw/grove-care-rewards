@@ -66,12 +66,6 @@ const Index = () => {
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </a>
                 </Button>
-                <Button variant="outline" size="lg" className="group" asChild>
-                  <Link to="/referral-demos">
-                    See Digital Demo
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
               </div>
             </div>
 
@@ -134,6 +128,35 @@ const Index = () => {
                 </p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-background via-accent/5 to-background">
+        <div className="container mx-auto">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-6">How It Works</h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              We give you a fax number to send referrals to, and we take care of the rest.
+            </p>
+            <div className="grid md:grid-cols-3 gap-8 text-left">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
+                <h3 className="font-bold mb-2">Fax Your Referral</h3>
+                <p className="text-muted-foreground">Send referrals to your dedicated Grove Health fax number. Works with or without a receiving provider specified.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+                <h3 className="font-bold mb-2">We Start Scheduling</h3>
+                <p className="text-muted-foreground">The referral appears on your dashboard and we begin reaching out to the patient to schedule their appointment.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
+                <h3 className="font-bold mb-2">Track Progress</h3>
+                <p className="text-muted-foreground">Monitor every referral in real-time. Get alerts if a patient isn't following through.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
