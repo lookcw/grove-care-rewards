@@ -25,6 +25,7 @@ def upload_blob(
     source_data: bytes,
     destination_blob_name: str,
     content_type: Optional[str] = None,
+    metadata: Optional[dict[str, str]] = None,
 ) -> str:
     """
     Upload data to Google Cloud Storage bucket.
@@ -34,6 +35,7 @@ def upload_blob(
         source_data: Bytes data to upload
         destination_blob_name: Path/name for the blob in the bucket (e.g., "faxes/file.pdf")
         content_type: Optional MIME type (e.g., "application/pdf", "image/jpeg")
+        metadata: Optional custom metadata dict to attach to the blob
 
     Returns:
         Public URL of the uploaded blob
@@ -49,6 +51,10 @@ def upload_blob(
         client = get_storage_client()
         bucket = client.bucket(bucket_name)
         blob = bucket.blob(destination_blob_name)
+
+        # Set custom metadata if provided
+        if metadata:
+            blob.metadata = metadata
 
         # Upload the data
         blob.upload_from_string(source_data, content_type=content_type)

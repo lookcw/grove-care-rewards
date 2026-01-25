@@ -38,9 +38,11 @@ from app.schemas import (
     MyInstitutionUpdate,
     MyInstitutionRead,
 )
+from datetime import datetime
 from app.gmail_service import send_referral_notification_email
-from app.documo_service import verify_webhook_auth, download_fax_pdf, store_fax_pdf
+from app.documo_service import verify_webhook_auth, download_fax_pdf
 from app.documo_schemas import DocumoFaxWebhookPayload
+from app.gcs_service import upload_blob
 from googleapiclient.errors import HttpError
 
 # Configure logging for Google Cloud
@@ -933,18 +935,38 @@ async def documo_fax_webhook(request: Request):
         pdf_data = await download_fax_pdf(message_id, api_key, base_url)
         logger.info(f"Documo webhook: Downloaded {len(pdf_data)} bytes")
 
-        # Store PDF locally
-        logger.info(f"Documo webhook: Storing PDF to filesystem...")
-        pdf_path = await store_fax_pdf(message_id, pdf_data)
+        # Upload PDF to GCS with metadata
+        bucket_name = os.getenv("INBOUND_FAXES_BUCKET", "grove-health-inbound-faxes")
+        now = datetime.utcnow()
+        blob_path = f"inbound/{now.year}/{now.month:02d}/{now.day:02d}/{message_id}.pdf"
+
+        metadata = {
+            "message_id": message_id,
+            "fax_caller_id": from_number,
+            "fax_number": to_number,
+            "pages_count": str(page_count),
+            "created_at": payload.createdAt or "",
+            "status": payload.status or "",
+            "direction": "inbound",
+        }
+
+        logger.info(f"Documo webhook: Uploading PDF to GCS bucket {bucket_name}...")
+        gcs_url = upload_blob(
+            bucket_name=bucket_name,
+            source_data=pdf_data,
+            destination_blob_name=blob_path,
+            content_type="application/pdf",
+            metadata=metadata,
+        )
 
         logger.info("=" * 80)
-        logger.info(f"✓ PDF SAVED TO: {pdf_path}")
+        logger.info(f"✓ PDF UPLOADED TO: {gcs_url}")
         logger.info("=" * 80)
 
         return {
             "status": "success",
             "message_id": message_id,
-            "pdf_path": pdf_path,
+            "gcs_url": gcs_url,
             "from_caller_id": from_number,
             "to_fax_number": to_number,
             "page_count": page_count,
