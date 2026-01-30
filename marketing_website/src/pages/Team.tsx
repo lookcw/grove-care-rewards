@@ -20,7 +20,7 @@ const Team = () => {
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </a>
 

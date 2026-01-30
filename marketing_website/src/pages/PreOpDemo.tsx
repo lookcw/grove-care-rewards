@@ -615,7 +615,7 @@ ${baseInfo || "No clinic information provided yet."}`;
       <div className="max-w-7xl mx-auto p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            Grove Health Pre-Op Portal
+            Ambara Health Pre-Op Portal
           </h1>
           <p className="text-sm text-muted-foreground mt-2">
             This is a demo only. Do not put any PII (Personally Identifiable Information) in this interface.
@@ -825,7 +825,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                               <HeartPulse className="w-5 h-5 text-primary" />
                             </div>
                           </div>
-                          <p className="text-sm font-semibold text-black dark:text-white">Grove Health</p>
+                          <p className="text-sm font-semibold text-black dark:text-white">Ambara Health</p>
                         </div>
                       </div>
 
@@ -944,7 +944,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                             <HeartPulse className="w-5 h-5 text-primary" />
                           </div>
                         </div>
-                        <p className="text-sm font-semibold text-black dark:text-white">Grove Health</p>
+                        <p className="text-sm font-semibold text-black dark:text-white">Ambara Health</p>
                       </div>
                     </div>
 
@@ -1056,7 +1056,7 @@ ${baseInfo || "No clinic information provided yet."}`;
                       <div className="bg-gray-100 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                         <div className="text-center">
                           <p className="text-sm font-semibold text-black dark:text-white">Pre-Op Checklist</p>
-                          <p className="text-xs text-gray-500">Grove Health</p>
+                          <p className="text-xs text-gray-500">Ambara Health</p>
                         </div>
                       </div>
 

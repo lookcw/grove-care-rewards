@@ -13,7 +13,7 @@ const PostSurgicalCare = () => {
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </a>
 
@@ -137,7 +137,7 @@ const PostSurgicalCare = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Measurable ROI Within 90 Days</h2>
             <p className="text-xl text-muted-foreground">
-              Grove Health helps you improve patient adherence post-discharge while reducing
+              Ambara Health helps you improve patient adherence post-discharge while reducing
               the labor cost of follow-up — with measurable impact on your bottom line
             </p>
           </div>
@@ -191,7 +191,7 @@ const PostSurgicalCare = () => {
                 <h2 className="text-3xl lg:text-4xl font-bold">Built by Patients, Providers, and Caregivers</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   I'm <a href="https://www.linkedin.com/in/adedoyin-o/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Adedoyin</a>,
-                  a former EMT now working on Grove Health. We're building this tool because we've experienced firsthand — as patients,
+                  a former EMT now working on Ambara Health. We're building this tool because we've experienced firsthand — as patients,
                   providers, and caregivers — how difficult it is to stay on track after surgery.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed">
@@ -225,7 +225,7 @@ const PostSurgicalCare = () => {
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Join forward-thinking specialty clinics that are reducing readmissions and
-              scaling their post-discharge care with Grove Health
+              scaling their post-discharge care with Ambara Health
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -251,7 +251,7 @@ const PostSurgicalCare = () => {
           <div className="text-center text-muted-foreground">
             <div className="flex items-center justify-center gap-2 mb-2">
               <HeartPulse className="h-6 w-6 text-primary" />
-              <p className="font-semibold text-foreground">Grove Health</p>
+              <p className="font-semibold text-foreground">Ambara Health</p>
             </div>
             <p className="text-sm">Improving post-surgical care through better patient adherence</p>
           </div>

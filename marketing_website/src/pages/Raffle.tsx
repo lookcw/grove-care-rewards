@@ -25,7 +25,7 @@ const Raffle = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">Grove Health</span>
+            <span className="text-xl font-bold text-primary">Ambara Health</span>
           </a>
         </div>
       </header>

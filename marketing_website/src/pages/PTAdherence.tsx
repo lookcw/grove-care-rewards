@@ -16,7 +16,7 @@ const PTAdherence = () => {
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </a>
 
@@ -45,7 +45,7 @@ const PTAdherence = () => {
                 <span className="bg-gradient-primary bg-clip-text text-transparent"> Adherence</span> with AI-Powered Verification
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Partner with Grove Health to boost therapy adherence, improve outcomes, and scale your practice. 
+                Partner with Ambara Health to boost therapy adherence, improve outcomes, and scale your practice. 
                 Our AI verifies exercise form through video, helping your clinic see more patients and bill more effectively.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -129,7 +129,7 @@ const PTAdherence = () => {
             <div className="order-2 lg:order-1">
               <img 
                 src={appDemo} 
-                alt="Grove Health app showing video verification and exercise tracking"
+                alt="Ambara Health app showing video verification and exercise tracking"
                 className="rounded-2xl shadow-xl"
               />
             </div>
@@ -290,7 +290,7 @@ const PTAdherence = () => {
               Ready to Transform Your Clinic?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join forward-thinking PT clinics that are improving patient outcomes and growing their practice with Grove Health
+              Join forward-thinking PT clinics that are improving patient outcomes and growing their practice with Ambara Health
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -321,7 +321,7 @@ const PTAdherence = () => {
       <footer className="py-8 border-t">
         <div className="container mx-auto px-6">
           <div className="text-center text-muted-foreground">
-            <p className="font-semibold text-foreground mb-2">Grove Health</p>
+            <p className="font-semibold text-foreground mb-2">Ambara Health</p>
             <p className="text-sm">Empowering PT clinics with AI-powered adherence solutions</p>
           </div>
         </div>

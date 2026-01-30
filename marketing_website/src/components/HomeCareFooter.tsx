@@ -8,13 +8,13 @@ const HomeCareFooter = () => {
           <div className="flex items-center gap-2">
             <HeartPulse className="h-6 w-6 text-primary" />
             <span className="text-lg font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </div>
           <p className="text-sm text-muted-foreground text-center">
             Making patient care clear and simple for caregivers everywhere.
           </p>
-          <p className="text-sm text-muted-foreground">© 2024 Grove Health. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">© 2024 Ambara Health. All rights reserved.</p>
         </div>
       </div>
     </footer>

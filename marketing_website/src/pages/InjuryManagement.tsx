@@ -13,7 +13,7 @@ const InjuryManagement = () => {
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </a>
 
@@ -137,7 +137,7 @@ const InjuryManagement = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">We Handle Everything Behind the Scenes</h2>
             <p className="text-xl text-muted-foreground">
-              Grove Health manages every aspect of workplace injury cases — from first report
+              Ambara Health manages every aspect of workplace injury cases — from first report
               to return-to-work — ensuring your employees get excellent care at the lowest cost
             </p>
           </div>
@@ -186,7 +186,7 @@ const InjuryManagement = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">How Grove Health Works</h2>
+            <h2 className="text-4xl font-bold mb-6">How Ambara Health Works</h2>
             <p className="text-xl text-muted-foreground">
               Simple, transparent injury case management that saves you time and money
             </p>
@@ -266,7 +266,7 @@ const InjuryManagement = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Measurable Results for Your Business</h2>
             <p className="text-xl text-muted-foreground">
-              Small businesses using Grove Health see immediate impact on their bottom line
+              Small businesses using Ambara Health see immediate impact on their bottom line
             </p>
           </div>
 
@@ -319,7 +319,7 @@ const InjuryManagement = () => {
                 <h2 className="text-3xl lg:text-4xl font-bold">Built for Small Businesses, By People Who Care</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   I'm <a href="https://www.linkedin.com/in/adedoyin-o/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Adedoyin</a>,
-                  a former EMT now working on Grove Health. We've seen firsthand how workplace injuries can devastate small businesses —
+                  a former EMT now working on Ambara Health. We've seen firsthand how workplace injuries can devastate small businesses —
                   both financially and emotionally. That's why we built a solution focused on doing what's right for your employees
                   while protecting your business.
                 </p>
@@ -379,7 +379,7 @@ const InjuryManagement = () => {
           <div className="text-center text-muted-foreground">
             <div className="flex items-center justify-center gap-2 mb-2">
               <HeartPulse className="h-6 w-6 text-primary" />
-              <p className="font-semibold text-foreground">Grove Health</p>
+              <p className="font-semibold text-foreground">Ambara Health</p>
             </div>
             <p className="text-sm">Expert injury case management for small businesses</p>
           </div>

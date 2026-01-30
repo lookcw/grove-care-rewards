@@ -11,7 +11,7 @@ const CTASection = () => {
               Ready to Transform Your Healthcare Costs?
             </h2>
             <p className="text-lg lg:text-xl mb-8 text-primary-foreground/90">
-              Join the SMBs who are reducing costs, boosting productivity, and creating healthier workforces with grove health.
+              Join the SMBs who are reducing costs, boosting productivity, and creating healthier workforces with ambara health.
             </p>
             <div className="flex justify-center">
               <Button 

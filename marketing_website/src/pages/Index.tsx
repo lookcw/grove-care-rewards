@@ -12,7 +12,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">Grove Health</span>
+            <span className="text-xl font-bold text-primary">Ambara Health</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -41,7 +41,7 @@ const Index = () => {
 
               <div className="text-lg lg:text-xl text-muted-foreground leading-relaxed space-y-4">
                 <p>
-                  Grove Health helps clinics increase completed referrals and reduce staff burden. We work closely with radiology clinics and specialists to ensure patients follow through and return for their follow-up care.
+                  Ambara Health helps clinics increase completed referrals and reduce staff burden. We work closely with radiology clinics and specialists to ensure patients follow through and return for their follow-up care.
                 </p>
                 <ul className="space-y-3 text-left">
                   <li className="flex items-start gap-3">
@@ -88,7 +88,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground">
-              Referral coordination is broken. Patients get lost between appointments, staff spend hours chasing follow-ups, and critical care gets delayed. Grove Health automates the entire outbound referral workflow, from patient reminders to insurance verification to provider matching. We work closely with radiology clinics and specialists to ensure patients follow through on their referrals and come back for the care they need.
+              Referral coordination is broken. Patients get lost between appointments, staff spend hours chasing follow-ups, and critical care gets delayed. Ambara Health automates the entire outbound referral workflow, from patient reminders to insurance verification to provider matching. We work closely with radiology clinics and specialists to ensure patients follow through on their referrals and come back for the care they need.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ const Index = () => {
               <div className="text-center">
                 <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
                 <h3 className="font-bold mb-2">Fax Your Referral</h3>
-                <p className="text-muted-foreground">Send referrals to your dedicated Grove Health fax number. Works with or without a receiving provider specified.</p>
+                <p className="text-muted-foreground">Send referrals to your dedicated Ambara Health fax number. Works with or without a receiving provider specified.</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
@@ -223,14 +223,14 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <HeartPulse className="h-6 w-6 text-primary" />
-              <span className="text-lg font-bold text-primary">Grove Health</span>
+              <span className="text-lg font-bold text-primary">Ambara Health</span>
             </div>
             <div className="flex items-center gap-6">
               <Link to="/team" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                 Team
               </Link>
               <p className="text-sm text-muted-foreground">
-                © 2025 Grove Health. All rights reserved.
+                © 2025 Ambara Health. All rights reserved.
               </p>
             </div>
           </div>

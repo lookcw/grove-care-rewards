@@ -29,7 +29,7 @@ const MedicalSpend = () => {
           <a href="/" className="flex items-center gap-2">
             <HeartPulse className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-primary">
-              Grove Health
+              Ambara Health
             </span>
           </a>
 
@@ -96,7 +96,7 @@ const MedicalSpend = () => {
                   </div>
                   <h2 className="text-3xl font-bold mb-4">Calculate Your Savings</h2>
                   <p className="text-muted-foreground">
-                    See how much you could save with Grove Health
+                    See how much you could save with Ambara Health
                   </p>
                 </div>
 
@@ -258,7 +258,7 @@ const MedicalSpend = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-4xl font-bold mb-6">How Grove Health Works</h2>
+            <h2 className="text-4xl font-bold mb-6">How Ambara Health Works</h2>
             <p className="text-xl text-muted-foreground">
               A simple approach to connecting employees with the right care
             </p>
@@ -443,11 +443,11 @@ const MedicalSpend = () => {
                 <h2 className="text-3xl lg:text-4xl font-bold">Built on Clinical Expertise</h2>
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   I'm <a href="https://www.linkedin.com/in/adedoyin-o/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">Adedoyin</a>,
-                  a former EMT now working on Grove Health. Throughout my healthcare career, I've seen how difficult it is for
+                  a former EMT now working on Ambara Health. Throughout my healthcare career, I've seen how difficult it is for
                   patients to know what the right care is — and how often they end up with expensive, unnecessary treatments.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  We built Grove Health to solve this problem by connecting employees with next-generation providers who focus on
+                  We built Ambara Health to solve this problem by connecting employees with next-generation providers who focus on
                   delivering the right care, not the most profitable care. Our team brings clinical expertise and a commitment
                   to quality that ensures every recommendation we make is in the patient's best interest.
                 </p>
@@ -503,7 +503,7 @@ const MedicalSpend = () => {
           <div className="text-center text-muted-foreground">
             <div className="flex items-center justify-center gap-2 mb-2">
               <HeartPulse className="h-6 w-6 text-primary" />
-              <p className="font-semibold text-foreground">Grove Health</p>
+              <p className="font-semibold text-foreground">Ambara Health</p>
             </div>
             <p className="text-sm">Connecting you with next-gen providers focused on quality for lower cost</p>
           </div>
